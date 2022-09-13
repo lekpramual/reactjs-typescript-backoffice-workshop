@@ -50,13 +50,8 @@ import Select from "@mui/material/Select";
 
 import thLocale from "date-fns/locale/th";
 
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-} from "@mui/material";
+import { Button, FormControl, InputLabel, OutlinedInput } from "@mui/material";
+import { BoxDataGrid } from "@/styles/AppStyle";
 
 const localeMap = {
   th: thLocale,
@@ -470,32 +465,7 @@ export default function Phone() {
         </Formik>
       </Paper>
       {/* 936  width: "100%"*/}
-      <Box
-        style={{ height: "100%", maxWidth: "100%" }}
-        sx={{
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeaders": {
-            borderTopLeftRadius: "0px",
-            borderTopRightRadius: "0px",
-          },
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeader .MuiDataGrid-iconButtonContainer":
-            {
-              color: "#fff",
-              width: "auto",
-              visibility: "visible",
-            },
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon":
-            {
-              color: "#fff",
-              opacity: 0.5,
-            },
-
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-            {
-              color: "#fff",
-              opacity: 0.5,
-            },
-        }}
-      >
+      <BoxDataGrid>
         <DataGrid
           components={{
             Toolbar: CustomToolbar,
@@ -533,7 +503,7 @@ export default function Phone() {
           columnBuffer={2}
           columnThreshold={2}
         />
-      </Box>
+      </BoxDataGrid>
     </>
   );
 }

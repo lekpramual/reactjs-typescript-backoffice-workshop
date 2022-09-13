@@ -18,6 +18,7 @@ import { numberWithCommas } from "@/utils";
 import { Typography, IconButton, TextField } from "@mui/material";
 
 import { Box, FormControl } from "@mui/material";
+import { BoxDataGrid } from "@/styles/AppStyle";
 
 interface QuickSearchToolbarProps {
   clearSearch: () => void;
@@ -123,32 +124,7 @@ export default function Car() {
   return (
     <>
       {/* 936  width: "100%"*/}
-      <Box
-        style={{ height: "100%", maxWidth: "100%" }}
-        sx={{
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeaders": {
-            borderTopLeftRadius: "0px",
-            borderTopRightRadius: "0px",
-          },
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeader .MuiDataGrid-iconButtonContainer":
-            {
-              color: "#fff",
-              width: "auto",
-              visibility: "visible",
-            },
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon":
-            {
-              color: "#fff",
-              opacity: 0.5,
-            },
-
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-            {
-              color: "#fff",
-              opacity: 0.5,
-            },
-        }}
-      >
+      <BoxDataGrid>
         <DataGrid
           components={{ Toolbar: QuickSearchToolbar }}
           componentsProps={{
@@ -195,7 +171,7 @@ export default function Car() {
             },
           }}
         />
-      </Box>
+      </BoxDataGrid>
     </>
   );
 }

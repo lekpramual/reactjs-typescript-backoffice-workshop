@@ -37,6 +37,7 @@ import {
 } from "@mui/material";
 
 import { Box, Button, FormControl } from "@mui/material";
+import { BoxDataGrid } from "@/styles/AppStyle";
 
 interface QuickSearchToolbarProps {
   clearSearch: () => void;
@@ -142,7 +143,7 @@ export default function Hosxp() {
       ),
     },
     {
-      headerName: "ACTION",
+      headerName: "จัดการ",
       field: ".",
       width: 120,
       sortable: false,
@@ -239,32 +240,8 @@ export default function Hosxp() {
   return (
     <>
       {/* 936  width: "100%"*/}
-      <Box
-        style={{ height: "100%", maxWidth: "100%" }}
-        sx={{
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeaders": {
-            borderTopLeftRadius: "0px",
-            borderTopRightRadius: "0px",
-          },
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeader .MuiDataGrid-iconButtonContainer":
-            {
-              color: "#fff",
-              width: "auto",
-              visibility: "visible",
-            },
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon":
-            {
-              color: "#fff",
-              opacity: 0.5,
-            },
 
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-            {
-              color: "#fff",
-              opacity: 0.5,
-            },
-        }}
-      >
+      <BoxDataGrid>
         <DataGrid
           components={{ Toolbar: QuickSearchToolbar }}
           componentsProps={{
@@ -303,7 +280,9 @@ export default function Hosxp() {
           rowsPerPageOptions={[20]}
           disableColumnMenu={true}
           loading={hosxpReducer.isFetching}
-          getRowId={(row) => parseInt(row.kskloginname) + Math.random() * (100 - 1)}
+          getRowId={(row) =>
+            parseInt(row.kskloginname) + Math.random() * (100 - 1)
+          }
           localeText={{
             MuiTablePagination: {
               labelDisplayedRows: ({ from, to, count }) =>
@@ -311,7 +290,7 @@ export default function Hosxp() {
             },
           }}
         />
-      </Box>
+      </BoxDataGrid>
 
       {showDialog()}
     </>

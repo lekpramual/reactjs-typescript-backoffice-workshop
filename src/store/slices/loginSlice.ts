@@ -82,7 +82,7 @@ export const loginUser = createAsyncThunk(
               });
               localStorage.setItem(LOGIN_STATUS, OK);
               localStorage.setItem(LOGIN_TOKENS, data.token);
-              navigate("/dashboard");
+              navigate("/home");
               return data;
             }, 1000);
           } else {

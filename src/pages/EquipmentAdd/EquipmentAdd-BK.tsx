@@ -30,10 +30,10 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 
+import DeleteIcon from "@mui/icons-material/Delete";
 import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -59,105 +59,16 @@ export default function EquipmentAdd() {
       id: 1,
       name: "จอ 42 นิ้ว",
       groupName: "อื่นๆ",
-      typeName: "พัสดุ มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 12500,
-      priceTotal: 35000,
-    },
-    {
-      id: 2,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 3,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 4,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 5,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-
-    {
-      id: 6,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 7,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 8,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 9,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 10,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
     },
   ];
-
   const hosxpColumns = [
     {
-      headerName: "#",
+      headerName: "ลำดับ",
       field: "id",
-
       flex: 1,
-      minWidth: 64,
       headerClassName:
         "bg-[#36474f] text-[#fff] text-[14px] h-[36px]  fill-[#fff] ",
-      sortable: false,
+      sortable: true,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
           {value}
@@ -168,9 +79,8 @@ export default function EquipmentAdd() {
       headerName: "ชื่อรายการ",
       field: "name",
       flex: 1,
-      minWidth: 300,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      sortable: false,
+      sortable: true,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
           {value}
@@ -180,11 +90,9 @@ export default function EquipmentAdd() {
     {
       headerName: "หมวดหมู่",
       field: "groupName",
-
       flex: 1,
-      minWidth: 200,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      sortable: false,
+      sortable: true,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
           {value}
@@ -192,89 +100,30 @@ export default function EquipmentAdd() {
       ),
     },
     {
-      headerName: "ชนิดวัสดุ/ครุภัณฑ์",
-      field: "typeName",
-
-      flex: 1,
-      minWidth: 200,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      sortable: false,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {value}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "จำนวน",
-      field: "qty",
-
-      flex: 1,
-      minWidth: 128,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      sortable: false,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {numberWithCommas(value)}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "ราคาต่อหน่วย",
-      field: "price",
-
-      flex: 1,
-      minWidth: 164,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      sortable: false,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {numberWithCommas(value)}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "ราคารวม",
-      field: "priceTotal",
-
-      flex: 1,
-      minWidth: 164,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      sortable: false,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {numberWithCommas(value)}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "จัดการ",
+      headerName: "ACTION",
       field: ".",
-      flex: 1,
-      minWidth: 120,
+      width: 120,
       sortable: false,
-      headerClassName:
-        "text-center bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       renderCell: ({ row }: GridRenderCellParams<string>) => (
-        <Stack direction="row" className="text-center">
-          <IconButton
+        <Stack direction="row">
+          {/* <IconButton
             aria-label="edit"
-            size="small"
+            size="large"
             onClick={() => {
-              console.log(row.id);
-              // navigate("/stock/edit/" + row.id);
+              navigate("/stock/edit/" + row.id);
             }}
           >
-            <EditTwoToneIcon fontSize="inherit" />
-          </IconButton>
+            <EditIcon fontSize="inherit" />
+          </IconButton> */}
           <IconButton
             aria-label="delete"
-            size="small"
+            size="large"
             onClick={() => {
               console.log(row);
             }}
           >
-            <DeleteTwoToneIcon fontSize="inherit" />
+            <DeleteIcon fontSize="inherit" />
           </IconButton>
         </Stack>
       ),
@@ -564,7 +413,7 @@ export default function EquipmentAdd() {
   };
 
   return (
-    <Box sx={{ mt: "-30px" }}>
+    <>
       <Paper
         sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: 2 }}
       >
@@ -638,9 +487,9 @@ export default function EquipmentAdd() {
         <BoxDataGrid>
           <DataGrid
             sx={{
+              // border-top-left-radius
               backgroundColor: "white",
               height: "450px",
-              width: "100%",
               margin: "auto",
               overflow: "hidden",
               "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
@@ -671,6 +520,6 @@ export default function EquipmentAdd() {
           />
         </BoxDataGrid>
       </Paper>
-    </Box>
+    </>
   );
 }
