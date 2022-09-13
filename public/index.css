@@ -1,0 +1,21 @@
+@font-face {
+  font-family: "Mitr-R";
+  src: local("Mitr-R"), url("fonts/mitr/Mitr-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Mitr-B";
+  src: local("Mitr-B"), url("fonts/mitr/Mitr-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Thonburi-R";
+  src: local("Thonburi-R"),
+    url("fonts/Thonburi/SFThonburi-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Thonburi-B";
+  src: local("Thonburi-B"),
+    url("fonts/Thonburi/SFThonburi-Bold.ttf") format("truetype");
+}
