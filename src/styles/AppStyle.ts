@@ -6,6 +6,7 @@ import {
   styled,
   Box,
   BoxProps,
+  Dialog,
 } from "@mui/material";
 import { green, purple, yellow } from "@mui/material/colors";
 
@@ -50,4 +51,13 @@ export const BoxDataGrid = styled(Box)<BoxProps>(({ theme }) => ({
       color: "#fff",
       opacity: 0.5,
     },
+}));
+
+export const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(1),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
 }));

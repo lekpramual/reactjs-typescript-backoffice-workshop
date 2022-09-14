@@ -163,7 +163,6 @@ export default function Hosxp() {
             aria-label="delete"
             size="large"
             onClick={() => {
-              console.log(row);
               setSelectedProduct(row);
               setOpenDialog(true);
             }}

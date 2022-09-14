@@ -1,6 +1,4 @@
 import * as React from "react";
-// @router
-import { Link } from "react-router-dom";
 // @form
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
@@ -8,6 +6,11 @@ import { TextField } from "formik-material-ui";
 import {
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControl,
   InputLabel,
   OutlinedInput,
@@ -29,11 +32,13 @@ import Stack from "@mui/material/Stack";
 // import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-
+import CloseIcon from "@mui/icons-material/Close";
 import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
+import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -41,7 +46,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { styled } from "@mui/material/styles";
 
 import thLocale from "date-fns/locale/th";
-import { BoxDataGrid } from "@/styles/AppStyle";
+import { BootstrapDialog, BoxDataGrid } from "@/styles/AppStyle";
 import { numberWithCommas } from "@/utils";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 const localeMap = {
@@ -52,7 +57,62 @@ const Input = styled("input")({
   display: "none",
 });
 
+interface CustomFooterTotalProps {
+  total: number;
+}
+
+export interface DialogTitleProps {
+  id: string;
+  children?: React.ReactNode;
+  onClose: () => void;
+}
+
+function CustomFooterTotal(props: CustomFooterTotalProps) {
+  return (
+    <Box
+      sx={{
+        padding: "10px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "right",
+      }}
+    >
+      <Typography variant="subtitle2" component={"b"}>
+        รวม : {numberWithCommas(props.total)}
+      </Typography>
+    </Box>
+  );
+}
+
+const BootstrapDialogTitle = (props: DialogTitleProps) => {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2, height: 48 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+};
+
 export default function EquipmentAdd() {
+  const [total, setTotal] = React.useState(0);
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+  const [openDialogCreate, setOpenDialogCreate] =
+    React.useState<boolean>(false);
   // คอลัมข้อมูลการแสดง
   const equipmentValue = [
     {
@@ -62,7 +122,7 @@ export default function EquipmentAdd() {
       typeName: "พัสดุ มีเลขครุภัณฑ์",
       qty: 28,
       price: 12500,
-      priceTotal: 35000,
+      priceTotal: 350000,
     },
     {
       id: 2,
@@ -75,76 +135,12 @@ export default function EquipmentAdd() {
     },
     {
       id: 3,
-      name: "ขาแขวนทีวี",
+      name: "สาย VGA",
       groupName: "อื่นๆ",
       typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
       qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 4,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 5,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-
-    {
-      id: 6,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 7,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 8,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 9,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
-    },
-    {
-      id: 10,
-      name: "ขาแขวนทีวี",
-      groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
-      qty: 28,
-      price: 950,
-      priceTotal: 26600,
+      price: 100,
+      priceTotal: 2800,
     },
   ];
 
@@ -152,9 +148,8 @@ export default function EquipmentAdd() {
     {
       headerName: "#",
       field: "id",
-
       flex: 1,
-      minWidth: 64,
+      minWidth: 32,
       headerClassName:
         "bg-[#36474f] text-[#fff] text-[14px] h-[36px]  fill-[#fff] ",
       sortable: false,
@@ -168,7 +163,7 @@ export default function EquipmentAdd() {
       headerName: "ชื่อรายการ",
       field: "name",
       flex: 1,
-      minWidth: 300,
+      minWidth: 256,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: false,
       renderCell: ({ value }: any) => (
@@ -180,7 +175,6 @@ export default function EquipmentAdd() {
     {
       headerName: "หมวดหมู่",
       field: "groupName",
-
       flex: 1,
       minWidth: 200,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
@@ -194,7 +188,6 @@ export default function EquipmentAdd() {
     {
       headerName: "ชนิดวัสดุ/ครุภัณฑ์",
       field: "typeName",
-
       flex: 1,
       minWidth: 200,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
@@ -208,9 +201,11 @@ export default function EquipmentAdd() {
     {
       headerName: "จำนวน",
       field: "qty",
-
+      type: "number",
       flex: 1,
-      minWidth: 128,
+      minWidth: 64,
+      align: "center" as "center",
+      headerAlign: "center" as "center",
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: false,
       renderCell: ({ value }: any) => (
@@ -220,11 +215,10 @@ export default function EquipmentAdd() {
       ),
     },
     {
-      headerName: "ราคาต่อหน่วย",
+      headerName: "ราคา/หน่วย",
       field: "price",
-
       flex: 1,
-      minWidth: 164,
+      minWidth: 96,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: false,
       renderCell: ({ value }: any) => (
@@ -236,9 +230,8 @@ export default function EquipmentAdd() {
     {
       headerName: "ราคารวม",
       field: "priceTotal",
-
       flex: 1,
-      minWidth: 164,
+      minWidth: 96,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: false,
       renderCell: ({ value }: any) => (
@@ -251,8 +244,10 @@ export default function EquipmentAdd() {
       headerName: "จัดการ",
       field: ".",
       flex: 1,
-      minWidth: 120,
+      minWidth: 96,
       sortable: false,
+      align: "center" as "center",
+      headerAlign: "center" as "center",
       headerClassName:
         "text-center bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       renderCell: ({ row }: GridRenderCellParams<string>) => (
@@ -262,6 +257,7 @@ export default function EquipmentAdd() {
             size="small"
             onClick={() => {
               console.log(row.id);
+              setOpenDialogCreate(true);
               // navigate("/stock/edit/" + row.id);
             }}
           >
@@ -272,6 +268,7 @@ export default function EquipmentAdd() {
             size="small"
             onClick={() => {
               console.log(row);
+              setOpenDialog(true);
             }}
           >
             <DeleteTwoToneIcon fontSize="inherit" />
@@ -307,7 +304,7 @@ export default function EquipmentAdd() {
     );
   };
 
-  const showFormAdd = ({
+  const showFormCreate = ({
     handleSubmit,
     handleChange,
     isSubmitting,
@@ -396,28 +393,34 @@ export default function EquipmentAdd() {
           </Grid>
           <Grid item lg={6} md={6} xs={6}>
             <FormControl fullWidth size="small">
-              <InputLabel id="select-small-type">ผู้บันทึก</InputLabel>
+              <InputLabel id="select-small-type">ผู้บันทึกข้อความ</InputLabel>
               <Field
-                name="type"
-                id="type"
-                label="ผู้บันทึก"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>นางสาวนันทนิจ มีสวัสดิ์</MenuItem>
-              </Field>
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                label="ผู้บันทึกข้อความ"
+                size="small"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="กรอก ผู้บันทึกข้อความ"
+              />
             </FormControl>
           </Grid>
           <Grid item lg={6} md={6} xs={6}>
             <FormControl fullWidth size="small">
               <InputLabel id="select-small-type">ผู้รับสินค้า</InputLabel>
               <Field
-                name="type"
-                id="type"
-                label="ผู้รับสินค้า"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>นายมนต์ชัย ศรีทอง</MenuItem>
-              </Field>
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                label="ผู้บันทึก"
+                size="small"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="กรอก ผู้รับสินค้า"
+              />
             </FormControl>
           </Grid>
 
@@ -428,7 +431,7 @@ export default function EquipmentAdd() {
                 adapterLocale={localeMap["th"]}
               >
                 <DatePicker
-                  label="วันที่บันทึก"
+                  label="วันที่บันทึกข้อความ"
                   inputFormat="dd/MM/yyyy"
                   value={values.start}
                   onChange={(newValue: Date | null) => {
@@ -563,19 +566,230 @@ export default function EquipmentAdd() {
     );
   };
 
+  const showFormProductCreate = ({
+    handleSubmit,
+    handleChange,
+    isSubmitting,
+    setFieldValue,
+    resetForm,
+    values,
+  }: any) => {
+    return (
+      <Form noValidate>
+        <Grid
+          container
+          spacing={2}
+          alignItems="center"
+          sx={{
+            pt: "16px",
+            px: "16px",
+          }}
+        >
+          <Grid item xs={12}>
+            <FormControl fullWidth size="small">
+              <InputLabel htmlFor="billnumber">ชื่อรายการ</InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                label="ชื่อรายการ"
+                size="small"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="กรอก ชื่อรายการ"
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="select-small-type">หมวดหมู่</InputLabel>
+              <Field
+                name="type"
+                id="type"
+                label="หมวดหมู่"
+                component={CustomizedSelectForFormik}
+              >
+                <MenuItem value={0}>อื่นๆ</MenuItem>
+              </Field>
+            </FormControl>
+          </Grid>
+          <Grid item lg={12} md={12} xs={12}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="select-small-type">
+                ชนิดวัสดุ/ครุภัณฑ์{" "}
+              </InputLabel>
+              <Field
+                name="type"
+                id="type"
+                label="ชนิดวัสดุ/ครุภัณฑ์ "
+                component={CustomizedSelectForFormik}
+              >
+                <MenuItem value={0}>พัสดุ มีเลขครุภัณฑ์</MenuItem>
+                <MenuItem value={1}>วัสดุ ไม่มีเลขครุภัณฑ์</MenuItem>
+              </Field>
+            </FormControl>
+          </Grid>
+          <Grid item lg={6} md={6} xs={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel htmlFor="outlined-adornment-keyword">
+                จำนวน
+              </InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                type="number"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                label="จำนวน"
+                size="small"
+                placeholder="กรอก จำนวน"
+              />
+            </FormControl>
+          </Grid>
+          <Grid item lg={6} md={6} xs={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="select-small-type">ราคาต่อหน่วย</InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                label="ราคาต่อหน่วย"
+                size="small"
+                type="number"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="กรอก ราคาต่อหน่วย"
+              />
+            </FormControl>
+          </Grid>
+
+          <Grid item lg={12} md={12} xs={12}>
+            <FormControl fullWidth size="small">
+              <InputLabel htmlFor="outlined-adornment-keyword">
+                รายละเอียด
+              </InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                size="small"
+                label="รายละเอียด"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="รายละเอียดเพิ่มเติม"
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+      </Form>
+    );
+  };
+
+  // ฟังก์ชั่น ยืนยันการลบข้อมูล
+  const handleDeleteConfirm = () => {
+    // ปิด ป๊อปอัพ
+    setOpenDialog(false);
+  };
+
+  const showDialog = () => {
+    return (
+      <Dialog
+        open={openDialog}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          {/* <img
+            src={`${imageUrl}/images/${
+              selectedProduct.image
+            }?dummy=${Math.random()}`}
+            style={{ width: 100, borderRadius: "5%" }}
+          /> */}
+          <br />
+          ยืนยันการลบ รายการอุปกรณ์ : จอ 42 นิ้ว
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            คุณไม่สามารถกู้คืนอุปกรณ์ที่ถูกลบได้.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} color="info">
+            ยกเลิก
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="primary">
+            ตกลง
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  const showDialogCreate = () => {
+    return (
+      <BootstrapDialog
+        open={openDialogCreate}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <BootstrapDialogTitle
+          id="alert-dialog-slide-title"
+          onClose={() => setOpenDialogCreate(false)}
+        >
+          <Typography variant="subtitle1" component={"b"}>
+            เพิ่มรายการอุปกรณ์
+          </Typography>
+        </BootstrapDialogTitle>
+        <DialogContent dividers>
+          <Formik
+            validate={(values) => {
+              let errors: any = {};
+
+              return errors;
+            }}
+            initialValues={initialValues}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(false);
+            }}
+          >
+            {(props) => showFormProductCreate(props)}
+          </Formik>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            paddingRight: 24,
+          }}
+        >
+          <Button variant="contained" color="success" className="w-[128px] ">
+            <SaveTwoToneIcon /> บันทึก
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
+    );
+  };
+
   return (
     <Box sx={{ mt: "-30px" }}>
       <Paper
         sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: 2 }}
+        square
       >
         <AppBar
           position="static"
           color="default"
           elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+          className="h-[40px]"
         >
-          <Toolbar>
-            <Grid container spacing={2} alignItems="center">
+          <Toolbar className="pl-5 pr-0">
+            <Grid container alignItems="center">
               <Grid item xs>
                 <Typography variant="subtitle2" component="span">
                   วิธีการได้มา
@@ -592,13 +806,10 @@ export default function EquipmentAdd() {
           }}
           initialValues={initialValues}
           onSubmit={(values, { setSubmitting }) => {
-            // moment(valuse.end).format("MM/dd/yyyy");
-            // dispatch(loginUser({ user: values, navigate: navigate }));
-
             setSubmitting(false);
           }}
         >
-          {(props) => showFormAdd(props)}
+          {(props) => showFormCreate(props)}
         </Formik>
       </Paper>
       <Paper
@@ -607,15 +818,17 @@ export default function EquipmentAdd() {
           margin: "auto",
           overflow: "hidden",
         }}
+        square
       >
         <AppBar
           position="static"
           color="default"
           elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+          className="h-[40px]"
         >
-          <Toolbar>
-            <Grid container spacing={2} alignItems="center">
+          <Toolbar className="pl-5 pr-2">
+            <Grid container alignItems="center">
               <Grid item xs>
                 <Typography variant="subtitle2" component="span">
                   รายการอุปกรณ์
@@ -626,8 +839,11 @@ export default function EquipmentAdd() {
                   size="small"
                   variant="contained"
                   sx={{ mr: 1 }}
-                  component={Link}
-                  to="/app3/equipment/add"
+                  color="success"
+                  className="h-[24px] w-[96px]"
+                  onClick={() => {
+                    setOpenDialogCreate(true);
+                  }}
                 >
                   <AddTwoToneIcon /> เพิ่ม
                 </Button>
@@ -637,6 +853,20 @@ export default function EquipmentAdd() {
         </AppBar>
         <BoxDataGrid>
           <DataGrid
+            autoHeight
+            components={{
+              Footer: CustomFooterTotal,
+            }}
+            componentsProps={{
+              footer: { total },
+            }}
+            onStateChange={(state) => {
+              const total = equipmentValue
+                .map((item) => item.priceTotal)
+                .reduce((a, b) => a + b, 0);
+              // console.log(total);
+              setTotal(total);
+            }}
             sx={{
               backgroundColor: "white",
               height: "450px",
@@ -671,6 +901,21 @@ export default function EquipmentAdd() {
           />
         </BoxDataGrid>
       </Paper>
+      <Grid container spacing={2} alignItems="center" className="mt-1">
+        <Grid xs={6} className="text-right" item>
+          <Button variant="contained" color="success" className="w-[128px] ">
+            <SaveTwoToneIcon /> บันทึก
+          </Button>
+        </Grid>
+        <Grid xs={6} item>
+          <Button variant="contained" color="error" className="w-[128px] ">
+            <RestartAltTwoToneIcon /> ยกเลิก
+          </Button>
+        </Grid>
+      </Grid>
+
+      {showDialog()}
+      {showDialogCreate()}
     </Box>
   );
 }
