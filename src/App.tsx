@@ -17,7 +17,8 @@ import Number from "@/pages/Number";
 import Equipment from "@/pages/Equipment";
 import Dashboard from "@/pages/Dashboard";
 import SignInSide from "@/pages/SignInSide";
-import EquipmentAdd from "@/pages/EquipmentAdd";
+import EquipmentCreate from "@/pages/EquipmentCreate";
+import EquipmentView from "@/pages/EquipmentView";
 // @theme
 import theme from "styles/muiTheme";
 
@@ -71,7 +72,11 @@ export default function App() {
             <Route path="/app3" element={<Navigate to="/app3/dashboard" />} />
             <Route path="/app3/dashboard" element={<Dashboard />} />
             <Route path="/app3/equipment" element={<Equipment />} />
-            <Route path="/app3/equipment/add" element={<EquipmentAdd />} />
+            <Route
+              path="/app3/equipment/create"
+              element={<EquipmentCreate />}
+            />
+            <Route path="/app3/equipment/view" element={<EquipmentView />} />
           </Route>
         </Route>
       </Routes>

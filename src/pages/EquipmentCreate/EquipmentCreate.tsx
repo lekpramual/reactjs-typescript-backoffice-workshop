@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 // @form
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
@@ -14,6 +15,7 @@ import {
   FormControl,
   InputLabel,
   OutlinedInput,
+  Breadcrumbs,
 } from "@mui/material";
 
 // @type
@@ -47,7 +49,7 @@ import { styled } from "@mui/material/styles";
 
 import thLocale from "date-fns/locale/th";
 import { BootstrapDialog, BoxDataGrid } from "@/styles/AppStyle";
-import { numberWithCommas } from "@/utils";
+import { numberWithCommas, CustomNoRowsOverlay } from "@/utils";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 const localeMap = {
   th: thLocale,
@@ -108,18 +110,18 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
   );
 };
 
-export default function EquipmentAdd() {
+export default function EquipmentCreate() {
   const [total, setTotal] = React.useState(0);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [openDialogCreate, setOpenDialogCreate] =
     React.useState<boolean>(false);
   // คอลัมข้อมูลการแสดง
-  const equipmentValue = [
+  const dataValue = [
     {
       id: 1,
       name: "จอ 42 นิ้ว",
       groupName: "อื่นๆ",
-      typeName: "พัสดุ มีเลขครุภัณฑ์",
+      typeName: "พัสดุ/มีเลขครุภัณฑ์",
       qty: 28,
       price: 12500,
       priceTotal: 350000,
@@ -128,7 +130,7 @@ export default function EquipmentAdd() {
       id: 2,
       name: "ขาแขวนทีวี",
       groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
+      typeName: "พัสดุ/ไม่มีเลขครุภัณฑ์",
       qty: 28,
       price: 950,
       priceTotal: 26600,
@@ -137,33 +139,42 @@ export default function EquipmentAdd() {
       id: 3,
       name: "สาย VGA",
       groupName: "อื่นๆ",
-      typeName: "พัสดุ ไม่มีเลขครุภัณฑ์",
+      typeName: "พัสดุ/ไม่มีเลขครุภัณฑ์",
       qty: 28,
       price: 100,
       priceTotal: 2800,
     },
+    {
+      id: 4,
+      name: "เครื่องคอมพิวเตอร์ สำหรับสำนักงาน จอขนาด 21.5 นิ้ว",
+      groupName: "คอมพิวเตอร์",
+      typeName: "พัสดุ/มีเลขครุภัณฑ์",
+      qty: 37,
+      price: 14480,
+      priceTotal: 535760,
+    },
   ];
 
-  const hosxpColumns = [
-    {
-      headerName: "#",
-      field: "id",
-      flex: 1,
-      minWidth: 32,
-      headerClassName:
-        "bg-[#36474f] text-[#fff] text-[14px] h-[36px]  fill-[#fff] ",
-      sortable: false,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {value}
-        </Typography>
-      ),
-    },
+  const dataColumns = [
+    // {
+    //   headerName: "#",
+    //   field: "id",
+    //   flex: 1,
+    //   minWidth: 32,
+    //   headerClassName:
+    //     "bg-[#36474f] text-[#fff] text-[14px] h-[36px]  fill-[#fff] ",
+    //   sortable: false,
+    //   renderCell: ({ value }: any) => (
+    //     <Typography variant="body1" className="text-[14px]">
+    //       {value}
+    //     </Typography>
+    //   ),
+    // },
     {
       headerName: "ชื่อรายการ",
       field: "name",
       flex: 1,
-      minWidth: 256,
+      minWidth: 364,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: false,
       renderCell: ({ value }: any) => (
@@ -176,7 +187,7 @@ export default function EquipmentAdd() {
       headerName: "หมวดหมู่",
       field: "groupName",
       flex: 1,
-      minWidth: 200,
+      minWidth: 156,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: false,
       renderCell: ({ value }: any) => (
@@ -189,7 +200,7 @@ export default function EquipmentAdd() {
       headerName: "ชนิดวัสดุ/ครุภัณฑ์",
       field: "typeName",
       flex: 1,
-      minWidth: 200,
+      minWidth: 156,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: false,
       renderCell: ({ value }: any) => (
@@ -776,7 +787,31 @@ export default function EquipmentAdd() {
   };
 
   return (
-    <Box sx={{ mt: "-30px" }}>
+    <Box>
+      <Breadcrumbs aria-label="breadcrumb" className="mb-1">
+        <Typography
+          color="text.primary"
+          variant="subtitle2"
+          component={Link}
+          to="/app3/dashboard"
+        >
+          หน้าแรก
+        </Typography>
+
+        <Typography
+          color="text.primary"
+          variant="subtitle2"
+          component={Link}
+          to="/app3/equipment"
+        >
+          รายการอุปกรณ์
+        </Typography>
+
+        <Typography color="text.primary" variant="subtitle2">
+          เพิ่มรายการอุปกรณ์
+        </Typography>
+      </Breadcrumbs>
+
       <Paper
         sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: 2 }}
         square
@@ -838,9 +873,9 @@ export default function EquipmentAdd() {
                 <Button
                   size="small"
                   variant="contained"
-                  sx={{ mr: 1 }}
+                  sx={{ mr: 1, mb: 1 }}
                   color="success"
-                  className="h-[24px] w-[96px]"
+                  className="w-[96px]"
                   onClick={() => {
                     setOpenDialogCreate(true);
                   }}
@@ -856,12 +891,13 @@ export default function EquipmentAdd() {
             autoHeight
             components={{
               Footer: CustomFooterTotal,
+              NoRowsOverlay: CustomNoRowsOverlay,
             }}
             componentsProps={{
               footer: { total },
             }}
             onStateChange={(state) => {
-              const total = equipmentValue
+              const total = dataValue
                 .map((item) => item.priceTotal)
                 .reduce((a, b) => a + b, 0);
               // console.log(total);
@@ -869,7 +905,7 @@ export default function EquipmentAdd() {
             }}
             sx={{
               backgroundColor: "white",
-              height: "450px",
+              height: 250,
               width: "100%",
               margin: "auto",
               overflow: "hidden",
@@ -879,8 +915,9 @@ export default function EquipmentAdd() {
                   opacity: 0.5,
                 },
             }}
-            rows={equipmentValue ? equipmentValue : []}
-            columns={hosxpColumns}
+            rows={dataValue ? dataValue : []}
+            // rows={[]}
+            columns={dataColumns}
             pageSize={10}
             rowHeight={36}
             headerHeight={36}

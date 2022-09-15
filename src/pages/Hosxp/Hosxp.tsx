@@ -1,16 +1,13 @@
 import React, { useEffect } from "react";
 // @router
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
-
 // @day
 import moment from "moment";
 
 import { useDebounce } from "@react-hook/debounce";
 
 import { Clear, Search } from "@mui/icons-material";
-
-import DeleteIcon from "@mui/icons-material/Delete";
-
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 // @redux
 import { useSelector, useDispatch } from "react-redux";
 // @seletor
@@ -25,7 +22,6 @@ import {
 import { numberWithCommas } from "@/utils";
 // @type
 import { HosxpDelete } from "@/types";
-
 import {
   Typography,
   Stack,
@@ -38,6 +34,7 @@ import {
 
 import { Box, Button, FormControl } from "@mui/material";
 import { BoxDataGrid } from "@/styles/AppStyle";
+import { CustomNoRowsOverlay } from "@/utils";
 
 interface QuickSearchToolbarProps {
   clearSearch: () => void;
@@ -161,13 +158,13 @@ export default function Hosxp() {
           </IconButton> */}
           <IconButton
             aria-label="delete"
-            size="large"
+            size="small"
             onClick={() => {
               setSelectedProduct(row);
               setOpenDialog(true);
             }}
           >
-            <DeleteIcon fontSize="inherit" />
+            <DeleteTwoToneIcon fontSize="inherit" />
           </IconButton>
         </Stack>
       ),
@@ -242,7 +239,10 @@ export default function Hosxp() {
 
       <BoxDataGrid>
         <DataGrid
-          components={{ Toolbar: QuickSearchToolbar }}
+          components={{
+            Toolbar: QuickSearchToolbar,
+            NoRowsOverlay: CustomNoRowsOverlay,
+          }}
           componentsProps={{
             toolbar: {
               value: keywordSearchNoDelay,

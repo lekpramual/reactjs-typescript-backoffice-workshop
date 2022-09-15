@@ -16,7 +16,7 @@ import {
 } from "@/store/slices/numberSlice";
 
 // @component
-import { numberWithCommas } from "@/utils";
+import { CustomNoRowsOverlay, numberWithCommas } from "@/utils";
 
 import { Typography, IconButton, TextField } from "@mui/material";
 
@@ -128,7 +128,10 @@ export default function Number() {
       {/* 936  width: "100%"*/}
       <BoxDataGrid>
         <DataGrid
-          components={{ Toolbar: QuickSearchToolbar }}
+          components={{
+            Toolbar: QuickSearchToolbar,
+            NoRowsOverlay: CustomNoRowsOverlay,
+          }}
           componentsProps={{
             toolbar: {
               value: keywordSearchNoDelay,

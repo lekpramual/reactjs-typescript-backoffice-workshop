@@ -17,7 +17,7 @@ import {
   phoneSearch,
 } from "@/store/slices/phoneSlice";
 // @component
-import { numberWithCommas } from "@/utils";
+import { CustomNoRowsOverlay, numberWithCommas } from "@/utils";
 // @type
 import { PhoneSearch } from "@/types";
 // @form
@@ -469,6 +469,7 @@ export default function Phone() {
         <DataGrid
           components={{
             Toolbar: CustomToolbar,
+            NoRowsOverlay: CustomNoRowsOverlay,
           }}
           sx={{
             // border-top-left-radius

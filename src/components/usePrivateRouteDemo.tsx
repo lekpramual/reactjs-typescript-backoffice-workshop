@@ -217,7 +217,7 @@ export function usePrivateRouteDemo() {
               />
             </Box>
           ),
-          path: "/app3/equipment/add",
+          path: "/app3/equipment/create",
           show: false,
         },
         {

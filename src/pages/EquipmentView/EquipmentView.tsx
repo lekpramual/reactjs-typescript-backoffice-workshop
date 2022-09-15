@@ -1,6 +1,5 @@
 import * as React from "react";
-// @router
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 // @form
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
@@ -8,9 +7,15 @@ import { TextField } from "formik-material-ui";
 import {
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControl,
   InputLabel,
   OutlinedInput,
+  Breadcrumbs,
 } from "@mui/material";
 
 // @type
@@ -29,11 +34,13 @@ import Stack from "@mui/material/Stack";
 // import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-
-import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
 import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
+import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -41,8 +48,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { styled } from "@mui/material/styles";
 
 import thLocale from "date-fns/locale/th";
-import { BoxDataGrid } from "@/styles/AppStyle";
-import { numberWithCommas } from "@/utils";
+import { BootstrapDialog, BoxDataGrid } from "@/styles/AppStyle";
+import { numberWithCommas, CustomNoRowsOverlay } from "@/utils";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 const localeMap = {
   th: thLocale,
@@ -52,35 +59,132 @@ const Input = styled("input")({
   display: "none",
 });
 
-export default function EquipmentAdd() {
+interface CustomFooterTotalProps {
+  total: number;
+}
+
+export interface DialogTitleProps {
+  id: string;
+  children?: React.ReactNode;
+  onClose: () => void;
+}
+
+function CustomFooterTotal(props: CustomFooterTotalProps) {
+  return (
+    <Box
+      sx={{
+        padding: "10px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "right",
+      }}
+    >
+      <Typography variant="subtitle2" component={"b"}>
+        รวม : {numberWithCommas(props.total)}
+      </Typography>
+    </Box>
+  );
+}
+
+const BootstrapDialogTitle = (props: DialogTitleProps) => {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2, height: 48 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+};
+
+function useQuery() {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
+export default function EquipmentView() {
+  let query = useQuery();
+
+  const [total, setTotal] = React.useState(0);
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+  const [openDialogCreate, setOpenDialogCreate] =
+    React.useState<boolean>(false);
   // คอลัมข้อมูลการแสดง
-  const equipmentValue = [
+  const dataValue = [
     {
       id: 1,
       name: "จอ 42 นิ้ว",
       groupName: "อื่นๆ",
+      typeName: "พัสดุ/มีเลขครุภัณฑ์",
+      qty: 28,
+      price: 12500,
+      priceTotal: 350000,
+    },
+    {
+      id: 2,
+      name: "ขาแขวนทีวี",
+      groupName: "อื่นๆ",
+      typeName: "พัสดุ/ไม่มีเลขครุภัณฑ์",
+      qty: 28,
+      price: 950,
+      priceTotal: 26600,
+    },
+    {
+      id: 3,
+      name: "สาย VGA",
+      groupName: "อื่นๆ",
+      typeName: "พัสดุ/ไม่มีเลขครุภัณฑ์",
+      qty: 28,
+      price: 100,
+      priceTotal: 2800,
+    },
+    {
+      id: 4,
+      name: "เครื่องคอมพิวเตอร์ สำหรับสำนักงาน จอขนาด 21.5 นิ้ว",
+      groupName: "คอมพิวเตอร์",
+      typeName: "พัสดุ/มีเลขครุภัณฑ์",
+      qty: 37,
+      price: 14480,
+      priceTotal: 535760,
     },
   ];
-  const hosxpColumns = [
-    {
-      headerName: "ลำดับ",
-      field: "id",
-      flex: 1,
-      headerClassName:
-        "bg-[#36474f] text-[#fff] text-[14px] h-[36px]  fill-[#fff] ",
-      sortable: true,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {value}
-        </Typography>
-      ),
-    },
+
+  const dataColumns = [
+    // {
+    //   headerName: "#",
+    //   field: "id",
+    //   flex: 1,
+    //   minWidth: 32,
+    //   headerClassName:
+    //     "bg-[#36474f] text-[#fff] text-[14px] h-[36px]  fill-[#fff] ",
+    //   sortable: false,
+    //   renderCell: ({ value }: any) => (
+    //     <Typography variant="body1" className="text-[14px]">
+    //       {value}
+    //     </Typography>
+    //   ),
+    // },
     {
       headerName: "ชื่อรายการ",
       field: "name",
       flex: 1,
+      minWidth: 364,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      sortable: true,
+      sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
           {value}
@@ -91,8 +195,9 @@ export default function EquipmentAdd() {
       headerName: "หมวดหมู่",
       field: "groupName",
       flex: 1,
+      minWidth: 156,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      sortable: true,
+      sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
           {value}
@@ -100,32 +205,58 @@ export default function EquipmentAdd() {
       ),
     },
     {
-      headerName: "ACTION",
-      field: ".",
-      width: 120,
-      sortable: false,
+      headerName: "ชนิดวัสดุ/ครุภัณฑ์",
+      field: "typeName",
+      flex: 1,
+      minWidth: 156,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      renderCell: ({ row }: GridRenderCellParams<string>) => (
-        <Stack direction="row">
-          {/* <IconButton
-            aria-label="edit"
-            size="large"
-            onClick={() => {
-              navigate("/stock/edit/" + row.id);
-            }}
-          >
-            <EditIcon fontSize="inherit" />
-          </IconButton> */}
-          <IconButton
-            aria-label="delete"
-            size="large"
-            onClick={() => {
-              console.log(row);
-            }}
-          >
-            <DeleteIcon fontSize="inherit" />
-          </IconButton>
-        </Stack>
+      sortable: false,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]">
+          {value}
+        </Typography>
+      ),
+    },
+    {
+      headerName: "จำนวน",
+      field: "qty",
+      type: "number",
+      flex: 1,
+      minWidth: 64,
+      align: "center" as "center",
+      headerAlign: "center" as "center",
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      sortable: false,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]">
+          {numberWithCommas(value)}
+        </Typography>
+      ),
+    },
+    {
+      headerName: "ราคา/หน่วย",
+      field: "price",
+      flex: 1,
+      minWidth: 96,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      sortable: false,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]">
+          {numberWithCommas(value)}
+        </Typography>
+      ),
+    },
+    {
+      headerName: "ราคารวม",
+      field: "priceTotal",
+      flex: 1,
+      minWidth: 96,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      sortable: false,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]">
+          {numberWithCommas(value)}
+        </Typography>
       ),
     },
   ];
@@ -156,7 +287,7 @@ export default function EquipmentAdd() {
     );
   };
 
-  const showFormAdd = ({
+  const showFormCreate = ({
     handleSubmit,
     handleChange,
     isSubmitting,
@@ -245,28 +376,34 @@ export default function EquipmentAdd() {
           </Grid>
           <Grid item lg={6} md={6} xs={6}>
             <FormControl fullWidth size="small">
-              <InputLabel id="select-small-type">ผู้บันทึก</InputLabel>
+              <InputLabel id="select-small-type">ผู้บันทึกข้อความ</InputLabel>
               <Field
-                name="type"
-                id="type"
-                label="ผู้บันทึก"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>นางสาวนันทนิจ มีสวัสดิ์</MenuItem>
-              </Field>
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                label="ผู้บันทึกข้อความ"
+                size="small"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="กรอก ผู้บันทึกข้อความ"
+              />
             </FormControl>
           </Grid>
           <Grid item lg={6} md={6} xs={6}>
             <FormControl fullWidth size="small">
               <InputLabel id="select-small-type">ผู้รับสินค้า</InputLabel>
               <Field
-                name="type"
-                id="type"
-                label="ผู้รับสินค้า"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>นายมนต์ชัย ศรีทอง</MenuItem>
-              </Field>
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                label="ผู้บันทึก"
+                size="small"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="กรอก ผู้รับสินค้า"
+              />
             </FormControl>
           </Grid>
 
@@ -277,7 +414,7 @@ export default function EquipmentAdd() {
                 adapterLocale={localeMap["th"]}
               >
                 <DatePicker
-                  label="วันที่บันทึก"
+                  label="วันที่บันทึกข้อความ"
                   inputFormat="dd/MM/yyyy"
                   value={values.start}
                   onChange={(newValue: Date | null) => {
@@ -413,18 +550,44 @@ export default function EquipmentAdd() {
   };
 
   return (
-    <>
+    <Box>
+      <Breadcrumbs aria-label="breadcrumb" className="mb-1">
+        <Typography
+          color="text.primary"
+          variant="subtitle2"
+          component={Link}
+          to="/app3/dashboard"
+        >
+          หน้าแรก
+        </Typography>
+
+        <Typography
+          color="text.primary"
+          variant="subtitle2"
+          component={Link}
+          to="/app3/equipment"
+        >
+          รายการอุปกรณ์
+        </Typography>
+
+        <Typography color="text.primary" variant="subtitle2">
+          ดูรายการอุปกรณ์ : {query.get("id")}
+        </Typography>
+      </Breadcrumbs>
+
       <Paper
         sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: 2 }}
+        square
       >
         <AppBar
           position="static"
           color="default"
           elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+          className="h-[40px]"
         >
-          <Toolbar>
-            <Grid container spacing={2} alignItems="center">
+          <Toolbar className="pl-5 pr-0">
+            <Grid container alignItems="center">
               <Grid item xs>
                 <Typography variant="subtitle2" component="span">
                   วิธีการได้มา
@@ -441,13 +604,10 @@ export default function EquipmentAdd() {
           }}
           initialValues={initialValues}
           onSubmit={(values, { setSubmitting }) => {
-            // moment(valuse.end).format("MM/dd/yyyy");
-            // dispatch(loginUser({ user: values, navigate: navigate }));
-
             setSubmitting(false);
           }}
         >
-          {(props) => showFormAdd(props)}
+          {(props) => showFormCreate(props)}
         </Formik>
       </Paper>
       <Paper
@@ -456,40 +616,46 @@ export default function EquipmentAdd() {
           margin: "auto",
           overflow: "hidden",
         }}
+        square
       >
         <AppBar
           position="static"
           color="default"
           elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+          className="h-[40px]"
         >
-          <Toolbar>
-            <Grid container spacing={2} alignItems="center">
+          <Toolbar className="pl-5 pr-2">
+            <Grid container alignItems="center">
               <Grid item xs>
                 <Typography variant="subtitle2" component="span">
                   รายการอุปกรณ์
                 </Typography>
-              </Grid>
-              <Grid item>
-                <Button
-                  size="small"
-                  variant="contained"
-                  sx={{ mr: 1 }}
-                  component={Link}
-                  to="/app3/equipment/add"
-                >
-                  <AddTwoToneIcon /> เพิ่ม
-                </Button>
               </Grid>
             </Grid>
           </Toolbar>
         </AppBar>
         <BoxDataGrid>
           <DataGrid
+            autoHeight
+            components={{
+              Footer: CustomFooterTotal,
+              NoRowsOverlay: CustomNoRowsOverlay,
+            }}
+            componentsProps={{
+              footer: { total },
+            }}
+            onStateChange={(state) => {
+              const total = dataValue
+                .map((item) => item.priceTotal)
+                .reduce((a, b) => a + b, 0);
+              // console.log(total);
+              setTotal(total);
+            }}
             sx={{
-              // border-top-left-radius
               backgroundColor: "white",
-              height: "450px",
+              height: 250,
+              width: "100%",
               margin: "auto",
               overflow: "hidden",
               "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
@@ -498,8 +664,9 @@ export default function EquipmentAdd() {
                   opacity: 0.5,
                 },
             }}
-            rows={equipmentValue ? equipmentValue : []}
-            columns={hosxpColumns}
+            rows={dataValue ? dataValue : []}
+            // rows={[]}
+            columns={dataColumns}
             pageSize={10}
             rowHeight={36}
             headerHeight={36}
@@ -520,6 +687,6 @@ export default function EquipmentAdd() {
           />
         </BoxDataGrid>
       </Paper>
-    </>
+    </Box>
   );
 }
