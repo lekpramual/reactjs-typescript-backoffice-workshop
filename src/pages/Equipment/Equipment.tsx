@@ -83,23 +83,7 @@ export default function Equipment() {
   const dataValue = [
     {
       id: 1,
-      name: "ขออนุมัติซื้ออุปกรณ์ระบบคิวรับบริการผู้ป่วยนอก",
-      depName: "ศูนย์คอมพิวเตอร์",
-      numberNo: "รอ. 0032.102/92",
-      dateCreated: "28/09/2022",
-      dateUpdated: "13/10/2022",
-      userCreated: "นางสาวนันทนิจ มีสวัสดิ์",
-      userUpdated: "นายมนต์ชัย ศรีทอง",
-      type: 1,
-      typeName: "ซื้อตามแผน",
-      company: 1,
-      companyName: "บริษัท กรุงทองคอมพิวเตอร์ จำกัด",
-      comment: "คอมเมนต์",
-      fileName: "ไฟล์",
-    },
-    {
-      id: 2,
-      name: "ขออนุมัติซื้ออุปกรณ์ปริ้นเตอร์",
+      name: "ขออนุมัติซื้อเครื่องคอมพิวเตอร์",
       depName: "ศูนย์คอมพิวเตอร์",
       numberNo: "รอ. 0032.102/92",
       dateCreated: "27/09/2022",
@@ -619,7 +603,7 @@ export default function Equipment() {
         </Typography>
 
         <Typography color="text.primary" variant="subtitle2">
-          รายการอุปกรณ์
+          รายการรับอุปกรณ์
         </Typography>
       </Breadcrumbs>
 

@@ -9,6 +9,7 @@ import DirectionsCarTwoToneIcon from "@mui/icons-material/DirectionsCarTwoTone";
 import NoteAltTwoToneIcon from "@mui/icons-material/NoteAltTwoTone";
 import DisabledByDefaultTwoToneIcon from "@mui/icons-material/DisabledByDefaultTwoTone";
 import MoveDownTwoToneIcon from "@mui/icons-material/MoveDownTwoTone";
+import InventoryTwoToneIcon from "@mui/icons-material/InventoryTwoTone";
 
 export function usePrivateRouteDemo() {
   const iconCategory = {
@@ -185,7 +186,7 @@ export function usePrivateRouteDemo() {
       id: "อุปกรณ์",
       children: [
         {
-          id: "รายการอุปกรณ์",
+          id: "รายการรับอุปกรณ์",
           icon: (
             <Box
               sx={{
@@ -200,6 +201,24 @@ export function usePrivateRouteDemo() {
             </Box>
           ),
           path: "/app3/equipment",
+          show: true,
+        },
+        {
+          id: "รายการอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <InventoryTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/product",
           show: true,
         },
         {
@@ -218,6 +237,42 @@ export function usePrivateRouteDemo() {
             </Box>
           ),
           path: "/app3/equipment/create",
+          show: false,
+        },
+        {
+          id: "แก้รายการอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <NoteAltTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/equipment/edit",
+          show: false,
+        },
+        {
+          id: "ดูรายการอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <NoteAltTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/equipment/view",
           show: false,
         },
         {

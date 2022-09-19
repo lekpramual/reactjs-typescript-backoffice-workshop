@@ -18,9 +18,11 @@ import Equipment from "@/pages/Equipment";
 import Dashboard from "@/pages/Dashboard";
 import SignInSide from "@/pages/SignInSide";
 import EquipmentCreate from "@/pages/EquipmentCreate";
+import EquipmentEdit from "@/pages/EquipmentEdit";
 import EquipmentView from "@/pages/EquipmentView";
 // @theme
 import theme from "styles/muiTheme";
+import Product from "./pages/Product";
 
 export default function App() {
   useEffect(() => {
@@ -76,7 +78,9 @@ export default function App() {
               path="/app3/equipment/create"
               element={<EquipmentCreate />}
             />
+            <Route path="/app3/equipment/edit" element={<EquipmentEdit />} />
             <Route path="/app3/equipment/view" element={<EquipmentView />} />
+            <Route path="/app3/product" element={<Product />} />
           </Route>
         </Route>
       </Routes>

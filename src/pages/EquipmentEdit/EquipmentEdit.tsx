@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // @form
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
@@ -35,11 +35,10 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
-import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
+import SaveAsTwoToneIcon from "@mui/icons-material/SaveAsTwoTone";
 import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -50,7 +49,7 @@ import { styled } from "@mui/material/styles";
 
 import thLocale from "date-fns/locale/th";
 import { BootstrapDialog, BoxDataGrid } from "@/styles/AppStyle";
-import { numberWithCommas, CustomNoRowsOverlay } from "@/utils";
+import { numberWithCommas, CustomNoRowsOverlay, numberWithPad } from "@/utils";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 const localeMap = {
   th: thLocale,
@@ -111,7 +110,14 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
   );
 };
 
-export default function EquipmentCreate() {
+function useQuery() {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
+export default function EquipmentEdit() {
+  let query = useQuery();
   const navigate = useNavigate();
   const [total, setTotal] = React.useState(0);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
@@ -730,7 +736,7 @@ export default function EquipmentCreate() {
           onClose={() => setOpenDialogCreate(false)}
         >
           <Typography variant="subtitle1" component={"b"}>
-            เพิ่มรายการอุปกรณ์
+            แก้ไขรายการอุปกรณ์
           </Typography>
         </BootstrapDialogTitle>
         <DialogContent dividers>
@@ -754,7 +760,7 @@ export default function EquipmentCreate() {
           }}
         >
           <Button variant="contained" color="success" className="w-[128px] ">
-            <SaveTwoToneIcon /> บันทึก
+            <SaveAsTwoToneIcon /> ปรับปรุง
           </Button>
         </DialogActions>
       </BootstrapDialog>
@@ -783,7 +789,7 @@ export default function EquipmentCreate() {
         </Typography>
 
         <Typography color="text.primary" variant="subtitle2">
-          เพิ่มรายการอุปกรณ์
+          แก้รายการอุปกรณ์ : {numberWithPad(query.get("id"), 4)}
         </Typography>
       </Breadcrumbs>
 
@@ -858,20 +864,6 @@ export default function EquipmentCreate() {
                   รายการอุปกรณ์
                 </Typography>
               </Grid>
-              <Grid item>
-                <Button
-                  size="small"
-                  variant="contained"
-                  sx={{ mr: 1, mb: 1 }}
-                  color="success"
-                  className="w-[96px]"
-                  onClick={() => {
-                    setOpenDialogCreate(true);
-                  }}
-                >
-                  <AddTwoToneIcon /> เพิ่ม
-                </Button>
-              </Grid>
             </Grid>
           </Toolbar>
         </AppBar>
@@ -930,7 +922,7 @@ export default function EquipmentCreate() {
       <Grid container spacing={2} alignItems="center" className="mt-1">
         <Grid xs={6} className="text-right" item>
           <Button variant="contained" color="success" className="w-[128px] ">
-            <SaveTwoToneIcon /> บันทึก
+            <SaveAsTwoToneIcon /> ปรับปรุง
           </Button>
         </Grid>
         <Grid xs={6} item>
