@@ -836,6 +836,7 @@ export default function EquipmentCreate() {
           {(props) => showFormCreate(props)}
         </Formik>
       </Paper>
+
       <Paper
         sx={{
           maxWidth: "100%",

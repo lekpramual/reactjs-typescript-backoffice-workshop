@@ -23,6 +23,7 @@ import EquipmentView from "@/pages/EquipmentView";
 // @theme
 import theme from "styles/muiTheme";
 import Product from "./pages/Product";
+import ProductView from "./pages/ProductView";
 
 export default function App() {
   useEffect(() => {
@@ -81,6 +82,7 @@ export default function App() {
             <Route path="/app3/equipment/edit" element={<EquipmentEdit />} />
             <Route path="/app3/equipment/view" element={<EquipmentView />} />
             <Route path="/app3/product" element={<Product />} />
+            <Route path="/app3/product/view" element={<ProductView />} />
           </Route>
         </Route>
       </Routes>

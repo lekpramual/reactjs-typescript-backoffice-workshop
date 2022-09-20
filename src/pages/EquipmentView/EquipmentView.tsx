@@ -200,137 +200,137 @@ export default function EquipmentView() {
       >
         <Grid container spacing={2} sx={{ p: 2 }}>
           <Grid item xs={6}>
-            <Typography component={"div"} variant={"subtitle1"}>
+            <Typography component={"div"} variant={"body1"}>
               เรื่องที่บันทึก
             </Typography>
             <Typography
               component={"div"}
-              variant={"subtitle2"}
-              className="mt-[-6px]"
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               ขออนุมัติซื้ออุปกรณ์ระบบคิวบริการผู้ป่วยนอก
             </Typography>
           </Grid>
 
           <Grid item xs={6} className="text-right">
-            <Typography component={"div"} variant={"subtitle1"}>
+            <Typography component={"div"} variant={"body1"}>
               เลขที่บันทึก
             </Typography>
             <Typography
               component={"div"}
-              variant={"subtitle2"}
-              className="mt-[-6px]"
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               รอ 0032.102/97
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography component={"div"} variant={"subtitle1"}>
+            <Typography component={"div"} variant={"body1"}>
               ประเภทการซื้อ
             </Typography>
             <Typography
               component={"div"}
-              variant={"subtitle2"}
-              className="mt-[-6px]"
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               ซื้อตามแผน
             </Typography>
           </Grid>
           <Grid item xs={6} className="text-right">
-            <Typography component={"div"} variant={"subtitle1"}>
+            <Typography component={"div"} variant={"body1"}>
               หน่วยงานที่ซื้อ
             </Typography>
             <Typography
               component={"div"}
-              variant={"subtitle2"}
-              className="mt-[-6px]"
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               ศูนย์คอมพิวเตอร์
             </Typography>
           </Grid>
 
           <Grid item xs={6}>
-            <Typography component={"div"} variant={"subtitle1"}>
+            <Typography component={"div"} variant={"body1"}>
               ผู้บันทึกข้อความ
             </Typography>
             <Typography
               component={"div"}
-              variant={"subtitle2"}
-              className="mt-[-6px]"
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               นางสาวนันทนิจ มีสวัสดิ์
             </Typography>
           </Grid>
           <Grid item xs={6} className="text-right">
-            <Typography component={"div"} variant={"subtitle1"}>
+            <Typography component={"div"} variant={"body1"}>
               ผู้รับสินค้า
             </Typography>
             <Typography
               component={"div"}
-              variant={"subtitle2"}
-              className="mt-[-6px]"
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               นายมนต์ชัย ศรีทอง
             </Typography>
           </Grid>
 
           <Grid item xs={6}>
-            <Typography component={"div"} variant={"subtitle1"}>
+            <Typography component={"div"} variant={"body1"}>
               วันที่บันทึกข้อความ
             </Typography>
             <Typography
               component={"div"}
-              variant={"subtitle2"}
-              className="mt-[-6px]"
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               19/09/2022
             </Typography>
           </Grid>
           <Grid item xs={6} className="text-right">
-            <Typography component={"div"} variant={"subtitle1"}>
+            <Typography component={"div"} variant={"body1"}>
               วันที่รับสินค้า
             </Typography>
             <Typography
               component={"div"}
-              variant={"subtitle2"}
-              className="mt-[-6px]"
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               13/10/2022
             </Typography>
           </Grid>
 
           <Grid item xs={12}>
-            <Typography component={"div"} variant={"subtitle1"}>
+            <Typography component={"div"} variant={"body1"}>
               ซื้อจาก
             </Typography>
             <Typography
               component={"div"}
-              variant={"subtitle2"}
-              className="mt-[-6px]"
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               บริษัท กรุงทองคอมพิวเตอร์ จำกัด
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography component={"div"} variant={"subtitle1"}>
+            <Typography component={"div"} variant={"body1"}>
               ไฟล์แนบ
             </Typography>
             <Typography
               component={"div"}
-              variant={"subtitle2"}
-              className="mt-[-6px]"
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               -
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography component={"div"} variant={"subtitle1"}>
+            <Typography component={"div"} variant={"body1"}>
               รายละเอียด
             </Typography>
             <Typography
               component={"div"}
-              variant={"subtitle2"}
-              className="mt-[-6px]"
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               -
             </Typography>

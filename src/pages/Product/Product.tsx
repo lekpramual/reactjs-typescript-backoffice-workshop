@@ -48,7 +48,8 @@ export default function Product() {
   const dataValue = [
     {
       id: 1,
-      name: "INV-0001",
+      name: "INV65090001",
+      name1: "รอ 0032.102/97",
       depName: "C65080001",
       numberNo: "7440-001-0001/1308",
       dateCreated: "ศูนย์คอมพิวเตอร์/-",
@@ -57,7 +58,8 @@ export default function Product() {
     },
     {
       id: 2,
-      name: "INV-0001",
+      name: "INV65090001",
+      name1: "รอ 0032.102/97",
       depName: "C65080002",
       numberNo: "-",
       dateCreated: "ศูนย์คอมพิวเตอร์/-",
@@ -83,6 +85,7 @@ export default function Product() {
         </Link>
       ),
     },
+
     {
       headerName: "เลขทะเบียนครุภัณฑ์",
       field: "depName",
@@ -97,6 +100,19 @@ export default function Product() {
         >
           {value}
         </Link>
+      ),
+    },
+    {
+      headerName: "เลขที่บันทึก",
+      field: "name1",
+      flex: 1,
+      minWidth: 128,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      sortable: true,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]">
+          {value}
+        </Typography>
       ),
     },
     {
@@ -151,7 +167,6 @@ export default function Product() {
         </Typography>
       ),
     },
-
     {
       headerName: "จัดการ",
       field: ".",
@@ -169,7 +184,7 @@ export default function Product() {
               aria-label="view"
               size="small"
               onClick={() => {
-                navigate("/app3/product/view?id=" + row.id);
+                navigate("/app3/product/view?id=" + row.depName);
               }}
             >
               <VisibilityTwoToneIcon fontSize="inherit" />
@@ -183,7 +198,7 @@ export default function Product() {
               onClick={() => {
                 console.log(row.id);
                 // navigate("/stock/edit/" + row.id);
-                navigate("/app3/product/edit?id=" + row.id);
+                navigate("/app3/product/edit?id=" + row.depName);
               }}
             >
               <EditTwoToneIcon fontSize="inherit" />
