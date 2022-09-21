@@ -5,7 +5,8 @@ import { Box, Button, Breadcrumbs } from "@mui/material";
 
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+// import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Unstable_Grid2";
 
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
@@ -153,7 +154,7 @@ export default function EquipmentView() {
   return (
     <Box>
       <Grid container>
-        <Grid xs={8} item>
+        <Grid xs={8}>
           <Breadcrumbs aria-label="breadcrumb" className="mb-1">
             <Typography
               color="text.primary"
@@ -178,7 +179,7 @@ export default function EquipmentView() {
             </Typography>
           </Breadcrumbs>
         </Grid>
-        <Grid xs={4} item className="text-right">
+        <Grid xs={4} className="text-right">
           <Button
             size="small"
             variant="contained"
@@ -199,7 +200,7 @@ export default function EquipmentView() {
         square
       >
         <Grid container spacing={2} sx={{ p: 2 }}>
-          <Grid item xs={6}>
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               เรื่องที่บันทึก
             </Typography>
@@ -211,8 +212,7 @@ export default function EquipmentView() {
               ขออนุมัติซื้ออุปกรณ์ระบบคิวบริการผู้ป่วยนอก
             </Typography>
           </Grid>
-
-          <Grid item xs={6} className="text-right">
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               เลขที่บันทึก
             </Typography>
@@ -224,7 +224,8 @@ export default function EquipmentView() {
               รอ 0032.102/97
             </Typography>
           </Grid>
-          <Grid item xs={6}>
+
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               ประเภทการซื้อ
             </Typography>
@@ -236,7 +237,7 @@ export default function EquipmentView() {
               ซื้อตามแผน
             </Typography>
           </Grid>
-          <Grid item xs={6} className="text-right">
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               หน่วยงานที่ซื้อ
             </Typography>
@@ -249,7 +250,7 @@ export default function EquipmentView() {
             </Typography>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               ผู้บันทึกข้อความ
             </Typography>
@@ -261,7 +262,7 @@ export default function EquipmentView() {
               นางสาวนันทนิจ มีสวัสดิ์
             </Typography>
           </Grid>
-          <Grid item xs={6} className="text-right">
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               ผู้รับสินค้า
             </Typography>
@@ -274,7 +275,7 @@ export default function EquipmentView() {
             </Typography>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               วันที่บันทึกข้อความ
             </Typography>
@@ -286,7 +287,7 @@ export default function EquipmentView() {
               19/09/2022
             </Typography>
           </Grid>
-          <Grid item xs={6} className="text-right">
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               วันที่รับสินค้า
             </Typography>
@@ -299,7 +300,7 @@ export default function EquipmentView() {
             </Typography>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               ซื้อจาก
             </Typography>
@@ -311,7 +312,7 @@ export default function EquipmentView() {
               บริษัท กรุงทองคอมพิวเตอร์ จำกัด
             </Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               ไฟล์แนบ
             </Typography>
@@ -323,7 +324,7 @@ export default function EquipmentView() {
               -
             </Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               รายละเอียด
             </Typography>
@@ -336,7 +337,7 @@ export default function EquipmentView() {
             </Typography>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <BoxDataGrid>
               <DataGrid
                 autoHeight
@@ -392,7 +393,7 @@ export default function EquipmentView() {
         </Grid>
       </Paper>
       <Grid container spacing={2} alignItems="center" className="mt-1">
-        <Grid xs={12} className="text-center" item>
+        <Grid xs={12} className="text-center">
           <Button
             variant="contained"
             className="w-[256px] bg-blue-500 hover:bg-blue-600"

@@ -1,13 +1,15 @@
+// @router
 import { useLocation } from "react-router-dom";
-
+// @mui components
 import Box from "@mui/material/Box";
+
+// @mui icons
 import FaxTwoToneIcon from "@mui/icons-material/FaxTwoTone";
 import DashboardTwoToneIcon from "@mui/icons-material/DashboardTwoTone";
 import LockOpenTwoToneIcon from "@mui/icons-material/LockOpenTwoTone";
 import ContactPhoneTwoToneIcon from "@mui/icons-material/ContactPhoneTwoTone";
 import DirectionsCarTwoToneIcon from "@mui/icons-material/DirectionsCarTwoTone";
 import NoteAltTwoToneIcon from "@mui/icons-material/NoteAltTwoTone";
-import DisabledByDefaultTwoToneIcon from "@mui/icons-material/DisabledByDefaultTwoTone";
 import MoveDownTwoToneIcon from "@mui/icons-material/MoveDownTwoTone";
 import InventoryTwoToneIcon from "@mui/icons-material/InventoryTwoTone";
 
@@ -24,6 +26,7 @@ export function usePrivateRouteDemo() {
     ml: "-5px",
   };
 
+  // @App 1 URL
   const app1 = [
     {
       id: "",
@@ -73,6 +76,7 @@ export function usePrivateRouteDemo() {
     },
   ];
 
+  // @App 2 URL
   const app2 = [
     {
       id: "",
@@ -158,6 +162,7 @@ export function usePrivateRouteDemo() {
     },
   ];
 
+  // @App 3 URL
   const app3 = [
     {
       id: "",
@@ -275,24 +280,7 @@ export function usePrivateRouteDemo() {
           path: "/app3/equipment/view",
           show: false,
         },
-        {
-          id: "ตัดจำหน่ายอุปกรณ์",
-          icon: (
-            <Box
-              sx={{
-                ...iconCategory,
-              }}
-            >
-              <DisabledByDefaultTwoToneIcon
-                sx={{
-                  fontSize: 28,
-                }}
-              />
-            </Box>
-          ),
-          path: "/app3/remove",
-          show: true,
-        },
+
         {
           id: "โอนย้ายอุปกรณ์",
           icon: (

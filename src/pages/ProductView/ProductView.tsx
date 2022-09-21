@@ -18,11 +18,12 @@ import {
 
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+// import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Unstable_Grid2";
 
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
-import DownloadTwoToneIcon from "@mui/icons-material/DownloadTwoTone";
+import LocalPrintshopTwoToneIcon from "@mui/icons-material/LocalPrintshopTwoTone";
 import AddPhotoAlternateTwoToneIcon from "@mui/icons-material/AddPhotoAlternateTwoTone";
 
 import Barcode from "react-barcode";
@@ -73,7 +74,7 @@ function useQuery() {
 }
 
 function useBarcode(txtBarcode) {
-  return <Barcode value={txtBarcode && txtBarcode} />;
+  return <Barcode value={txtBarcode && txtBarcode} height={64} />;
 }
 
 export default function ProductView() {
@@ -89,7 +90,7 @@ export default function ProductView() {
   return (
     <Box>
       <Grid container>
-        <Grid xs={8} item>
+        <Grid xs={8}>
           <Breadcrumbs aria-label="breadcrumb" className="mb-1">
             <Typography
               color="text.primary"
@@ -114,7 +115,7 @@ export default function ProductView() {
             </Typography>
           </Breadcrumbs>
         </Grid>
-        <Grid xs={4} item className="text-right">
+        <Grid xs={4} className="text-right">
           <Button
             size="small"
             variant="contained"
@@ -146,13 +147,18 @@ export default function ProductView() {
           className="h-[40px]"
         >
           <Toolbar className="pl-5 pr-2">
-            <Grid container alignItems="center">
-              <Grid item xs>
+            <Grid
+              container
+              sx={{
+                width: "100%",
+              }}
+            >
+              <Grid xs={6}>
                 <Typography variant="subtitle2" component="span">
                   รายการอุปกรณ์
                 </Typography>
               </Grid>
-              <Grid item>
+              <Grid xs={6} className="text-right">
                 <Typography variant="subtitle2" component="span">
                   เลขทะเบียนครุภัณฑ์ : {query.get("id")}
                 </Typography>
@@ -161,7 +167,7 @@ export default function ProductView() {
           </Toolbar>
         </AppBar>
         <Grid container spacing={2} sx={{ p: 2 }}>
-          <Grid item xs={12}>
+          <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               ชื่ออุปกรณ์
             </Typography>
@@ -174,7 +180,7 @@ export default function ProductView() {
             </Typography>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               ประเภทพัสดุ
             </Typography>
@@ -186,7 +192,7 @@ export default function ProductView() {
               คอมพิวเตอร์
             </Typography>
           </Grid>
-          <Grid item xs={6} className="text-right">
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               หน่วยงานที่รับผิดชอบ
             </Typography>
@@ -218,7 +224,7 @@ export default function ProductView() {
             <Tab
               label={
                 <Typography variant="subtitle1" component="span">
-                  BAR CODE และ ภาพประกอบ
+                  BAR CODE และ ภาพ
                 </Typography>
               }
               {...a11yProps(1)}
@@ -246,13 +252,18 @@ export default function ProductView() {
             className="h-[40px]"
           >
             <Toolbar className="pl-5 pr-2">
-              <Grid container alignItems="center">
-                <Grid item xs>
+              <Grid
+                container
+                sx={{
+                  width: "100%",
+                }}
+              >
+                <Grid xs={6}>
                   <Typography variant="subtitle2" component="span">
                     วิธีการได้มา
                   </Typography>
                 </Grid>
-                <Grid item>
+                <Grid xs={6} className="text-right">
                   <Typography variant="subtitle2" component="span">
                     เลขที่ใบรับ : INV-0001
                   </Typography>
@@ -261,7 +272,7 @@ export default function ProductView() {
             </Toolbar>
           </AppBar>
           <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid item xs={6}>
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 เรื่องที่บันทึก
               </Typography>
@@ -274,7 +285,7 @@ export default function ProductView() {
               </Typography>
             </Grid>
 
-            <Grid item xs={6} className="text-right">
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 เลขที่บันทึก
               </Typography>
@@ -286,7 +297,7 @@ export default function ProductView() {
                 รอ 0032.102/97
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 ประเภทการซื้อ
               </Typography>
@@ -298,7 +309,7 @@ export default function ProductView() {
                 ซื้อตามแผน
               </Typography>
             </Grid>
-            <Grid item xs={6} className="text-right">
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 หน่วยงานที่ซื้อ
               </Typography>
@@ -311,7 +322,7 @@ export default function ProductView() {
               </Typography>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 ผู้บันทึกข้อความ
               </Typography>
@@ -323,7 +334,7 @@ export default function ProductView() {
                 นางสาวนันทนิจ มีสวัสดิ์
               </Typography>
             </Grid>
-            <Grid item xs={6} className="text-right">
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 ผู้รับสินค้า
               </Typography>
@@ -336,7 +347,7 @@ export default function ProductView() {
               </Typography>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 วันที่บันทึกข้อความ
               </Typography>
@@ -348,7 +359,7 @@ export default function ProductView() {
                 19/09/2022
               </Typography>
             </Grid>
-            <Grid item xs={6} className="text-right">
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 วันที่รับสินค้า
               </Typography>
@@ -361,7 +372,7 @@ export default function ProductView() {
               </Typography>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 ซื้อจาก
               </Typography>
@@ -373,7 +384,7 @@ export default function ProductView() {
                 บริษัท กรุงทองคอมพิวเตอร์ จำกัด
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 ไฟล์แนบ
               </Typography>
@@ -385,7 +396,7 @@ export default function ProductView() {
                 -
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 รายละเอียด
               </Typography>
@@ -416,13 +427,18 @@ export default function ProductView() {
             className="h-[40px]"
           >
             <Toolbar className="pl-5 pr-2">
-              <Grid container alignItems="center">
-                <Grid item xs>
+              <Grid
+                container
+                sx={{
+                  width: "100%",
+                }}
+              >
+                <Grid xs={6}>
                   <Typography variant="subtitle2" component="span">
                     รายละเอียดอุปกรณ์
                   </Typography>
                 </Grid>
-                <Grid item>
+                <Grid xs={6} className="text-right">
                   <Typography variant="subtitle2" component="span">
                     เลขครุภัณฑ์พัสดุ: 7440-001-0001/1308
                   </Typography>
@@ -431,7 +447,7 @@ export default function ProductView() {
             </Toolbar>
           </AppBar>
           <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid item xs={6}>
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 รายการ
               </Typography>
@@ -444,7 +460,7 @@ export default function ProductView() {
               </Typography>
             </Grid>
 
-            <Grid item xs={6} className="text-right">
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 ยี่ห้อ
               </Typography>
@@ -456,7 +472,7 @@ export default function ProductView() {
                 Lenovo / Intel Core i5-10500
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 แรม
               </Typography>
@@ -468,7 +484,7 @@ export default function ProductView() {
                 DDR4 / 8GB
               </Typography>
             </Grid>
-            <Grid item xs={6} className="text-right">
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 ฮาร์ดดิสก์
               </Typography>
@@ -480,7 +496,7 @@ export default function ProductView() {
                 SSD / 256B
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 รายละเอียดเพิ่มเติม
               </Typography>
@@ -496,7 +512,7 @@ export default function ProductView() {
         </Paper>
 
         <Grid container spacing={2} alignItems="center" className="mt-1">
-          <Grid xs={12} className="text-center" item>
+          <Grid xs={10} xsOffset={2} className="text-center">
             <Button
               variant="contained"
               className="w-[256px] bg-blue-500 hover:bg-blue-600"
@@ -525,13 +541,18 @@ export default function ProductView() {
             className="h-[40px]"
           >
             <Toolbar className="pl-5 pr-2">
-              <Grid container alignItems="center">
-                <Grid item xs>
+              <Grid
+                container
+                sx={{
+                  width: "100%",
+                }}
+              >
+                <Grid xs={6}>
                   <Typography variant="subtitle2" component="span">
                     Barcode
                   </Typography>
                 </Grid>
-                <Grid item>
+                <Grid xs={6} className="text-right">
                   <Button
                     size="small"
                     variant="contained"
@@ -542,14 +563,14 @@ export default function ProductView() {
                       console.log("Download..");
                     }}
                   >
-                    <DownloadTwoToneIcon /> ดาวน์โหลด
+                    <LocalPrintshopTwoToneIcon /> ปริ้น
                   </Button>
                 </Grid>
               </Grid>
             </Toolbar>
           </AppBar>
           <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid item xs={12} className="text-center">
+            <Grid xs={12} className="text-center">
               {useBarcode(query.get("id"))}
             </Grid>
           </Grid>
@@ -571,13 +592,18 @@ export default function ProductView() {
             className="h-[40px]"
           >
             <Toolbar className="pl-5 pr-2">
-              <Grid container alignItems="center">
-                <Grid item xs>
+              <Grid
+                container
+                sx={{
+                  width: "100%",
+                }}
+              >
+                <Grid xs={6}>
                   <Typography variant="subtitle2" component="span">
                     รูปภาพประกอบ
                   </Typography>
                 </Grid>
-                <Grid item>
+                <Grid xs={6} className="text-right">
                   <Button
                     size="small"
                     variant="contained"
@@ -595,7 +621,7 @@ export default function ProductView() {
             </Toolbar>
           </AppBar>
           <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid item xs={4}>
+            <Grid xs={4}>
               <Card sx={{ maxWidth: 345 }}>
                 <CardActionArea>
                   <CardMedia
@@ -620,7 +646,7 @@ export default function ProductView() {
                 </CardActions>
               </Card>
             </Grid>
-            <Grid item xs={4}>
+            <Grid xs={4}>
               <Card sx={{ maxWidth: 345 }}>
                 <CardActionArea>
                   <CardMedia
@@ -645,7 +671,7 @@ export default function ProductView() {
                 </CardActions>
               </Card>
             </Grid>
-            <Grid item xs={4}>
+            <Grid xs={4}>
               <Card sx={{ maxWidth: 345 }}>
                 <CardActionArea>
                   <CardMedia
