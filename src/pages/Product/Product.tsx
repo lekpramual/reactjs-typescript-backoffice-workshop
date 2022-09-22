@@ -55,6 +55,8 @@ export default function Product() {
       dateCreated: "ศูนย์คอมพิวเตอร์/-",
       typeName: "คอมพิวเตอร์",
       companyName: "เครื่องคอมพิวเตอร์ สำหรับสำนักงาน จอขนาด 21.5 นิ้ว",
+      status: 1,
+      statusName: "ใช้การได้",
     },
     {
       id: 2,
@@ -65,6 +67,8 @@ export default function Product() {
       dateCreated: "ศูนย์คอมพิวเตอร์/-",
       typeName: "คอมพิวเตอร์",
       companyName: "เครื่องคอมพิวเตอร์ สำหรับสำนักงาน จอขนาด 21.5 นิ้ว",
+      status: 2,
+      statusName: "ยกเลิกใช้งาน",
     },
   ];
 
@@ -85,7 +89,6 @@ export default function Product() {
         </Link>
       ),
     },
-
     {
       headerName: "เลขทะเบียนครุภัณฑ์",
       field: "depName",
@@ -155,7 +158,7 @@ export default function Product() {
       ),
     },
     {
-      headerName: "หน่วยงาน/ที่ตั้ง",
+      headerName: "หน่วยงาน",
       field: "dateCreated",
       flex: 1,
       minWidth: 256,
@@ -163,6 +166,26 @@ export default function Product() {
       sortable: true,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
+          {value}
+        </Typography>
+      ),
+    },
+    {
+      headerName: "สถานะ",
+      field: "statusName",
+      flex: 1,
+      minWidth: 156,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      sortable: true,
+      renderCell: ({ value, row }: any) => (
+        <Typography
+          variant="body1"
+          className={
+            row.status === 1
+              ? "text-[14px] text-green-500"
+              : "text-[14px] text-red-500"
+          }
+        >
           {value}
         </Typography>
       ),

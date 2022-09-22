@@ -16,15 +16,12 @@ import {
   CardMedia,
 } from "@mui/material";
 
-import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-// import Grid from "@mui/material/Grid";
 import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
-import LocalPrintshopTwoToneIcon from "@mui/icons-material/LocalPrintshopTwoTone";
-import AddPhotoAlternateTwoToneIcon from "@mui/icons-material/AddPhotoAlternateTwoTone";
+import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 
 import Barcode from "react-barcode";
 
@@ -167,7 +164,7 @@ export default function ProductView() {
           </Toolbar>
         </AppBar>
         <Grid container spacing={2} sx={{ p: 2 }}>
-          <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               ชื่ออุปกรณ์
             </Typography>
@@ -177,6 +174,18 @@ export default function ProductView() {
               className="mt-[-2px] text-slate-500 hover:text-blue-600"
             >
               เครื่องคอมพิวเตอร์ สำหรับสำนักงาน จอขนาด 21.5 นิ้ว
+            </Typography>
+          </Grid>
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+            <Typography component={"div"} variant={"body1"}>
+              สถานะ
+            </Typography>
+            <Typography
+              component={"div"}
+              variant={"body2"}
+              className="mt-[-2px] text-green-500 hover:text-green-600"
+            >
+              ใช้การได้
             </Typography>
           </Grid>
 
@@ -234,7 +243,7 @@ export default function ProductView() {
       </Paper>
 
       <TabPanel value={value} index={0}>
-        <Paper
+        {/* <Paper
           sx={{
             maxWidth: "100%",
             margin: "auto",
@@ -409,13 +418,15 @@ export default function ProductView() {
               </Typography>
             </Grid>
           </Grid>
-        </Paper>
+        </Paper> */}
+
         <Paper
           sx={{
             maxWidth: "100%",
             margin: "auto",
             overflow: "hidden",
             mb: 1,
+            mt: 1,
           }}
           square
         >
@@ -547,24 +558,10 @@ export default function ProductView() {
                   width: "100%",
                 }}
               >
-                <Grid xs={6}>
+                <Grid xs={12}>
                   <Typography variant="subtitle2" component="span">
                     Barcode
                   </Typography>
-                </Grid>
-                <Grid xs={6} className="text-right">
-                  <Button
-                    size="small"
-                    variant="contained"
-                    sx={{ mr: 1, mb: 1 }}
-                    // color="success"
-                    className="w-[96px] bg-cyan-500 hover:bg-cyan-600"
-                    onClick={() => {
-                      console.log("Download..");
-                    }}
-                  >
-                    <LocalPrintshopTwoToneIcon /> ปริ้น
-                  </Button>
                 </Grid>
               </Grid>
             </Toolbar>
@@ -598,24 +595,10 @@ export default function ProductView() {
                   width: "100%",
                 }}
               >
-                <Grid xs={6}>
+                <Grid xs={12}>
                   <Typography variant="subtitle2" component="span">
                     รูปภาพประกอบ
                   </Typography>
-                </Grid>
-                <Grid xs={6} className="text-right">
-                  <Button
-                    size="small"
-                    variant="contained"
-                    sx={{ mr: 1, mb: 1 }}
-                    // color="success"
-                    className="w-[96px] bg-cyan-500 hover:bg-cyan-600"
-                    onClick={() => {
-                      console.log("Update Images..");
-                    }}
-                  >
-                    <AddPhotoAlternateTwoToneIcon /> เพิ่มรูป
-                  </Button>
                 </Grid>
               </Grid>
             </Toolbar>

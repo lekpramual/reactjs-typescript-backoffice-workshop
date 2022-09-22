@@ -227,6 +227,42 @@ export function usePrivateRouteDemo() {
           show: true,
         },
         {
+          id: "ดูรายการอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <InventoryTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/product/view",
+          show: false,
+        },
+        {
+          id: "แก้ไขรายการอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <InventoryTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/product/edit",
+          show: false,
+        },
+        {
           id: "เพิ่มอุปกรณ์",
           icon: (
             <Box
