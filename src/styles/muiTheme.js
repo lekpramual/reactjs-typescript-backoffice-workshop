@@ -202,7 +202,29 @@ theme = {
         //   fontSize: "14px",
         // },
         sizeSmall: {
-          height: "36px",
+          height: "28px",
+          fontSize: "14px",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        outlined: {
+          borderRadius: "0",
+        },
+        sizeSmall: {
+          height: "28px",
+          fontSize: "14px",
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        outlined: {
+          borderRadius: "0",
+        },
+        sizeSmall: {
+          height: "30px",
           fontSize: "14px",
         },
       },

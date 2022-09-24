@@ -468,18 +468,36 @@ export default function Equipment() {
                 </FormControl>
               </Grid>
 
-              <Grid item lg={1} xs={4}>
-                <Button
+              <Grid
+                item
+                xl={1}
+                lg={1}
+                xs={4}
+                sx={{
+                  textAlign: "center",
+                }}
+              >
+                <Tooltip title="ค้นหาข้อมูล">
+                  <IconButton
+                    size="small"
+                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
+                  >
+                    <SearchIcon color="inherit" sx={{ display: "block" }} />
+                  </IconButton>
+                </Tooltip>
+                {/* <Button
+                  size="small"
                   type="submit"
                   variant="contained"
                   fullWidth
                   className="hover:text-[#fce805]"
                 >
                   ค้นหา
-                </Button>
+                </Button> */}
               </Grid>
               <Grid
                 item
+                xl={1}
                 lg={1}
                 xs={2}
                 sx={{
@@ -492,6 +510,7 @@ export default function Equipment() {
                     onClick={() => {
                       resetForm();
                     }}
+                    size="small"
                     className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
                   >
                     <RefreshIcon color="inherit" sx={{ display: "block" }} />
