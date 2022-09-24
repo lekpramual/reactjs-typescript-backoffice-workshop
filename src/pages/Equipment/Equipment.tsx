@@ -104,11 +104,11 @@ export default function Equipment() {
       headerName: "เรื่องที่บันทึก",
       field: "name",
       flex: 1,
-      minWidth: 364,
+      // minWidth: 256,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: true,
       renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
+        <Typography variant="body1" className="text-[14px]" noWrap>
           {value}
         </Typography>
       ),
@@ -117,7 +117,7 @@ export default function Equipment() {
       headerName: "หน่วยงาน",
       field: "depName",
       flex: 1,
-      minWidth: 256,
+      // minWidth: 256,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: true,
       renderCell: ({ value }: any) => (
@@ -129,8 +129,8 @@ export default function Equipment() {
     {
       headerName: "เลขที่บันทึก",
       field: "numberNo",
-      flex: 1,
-      minWidth: 128,
+      // flex: 1,
+      width: 124,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: true,
       renderCell: ({ value }: any) => (
@@ -140,10 +140,10 @@ export default function Equipment() {
       ),
     },
     {
-      headerName: "ประเภทการซื้อ",
+      headerName: "การซื้อ",
       field: "typeName",
-      flex: 1,
-      minWidth: 124,
+      // flex: 1,
+      width: 124,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: true,
       renderCell: ({ value }: any) => (
@@ -156,11 +156,11 @@ export default function Equipment() {
       headerName: "ซื้อจาก",
       field: "companyName",
       flex: 1,
-      minWidth: 256,
+      // minWidth: 128,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: true,
       renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
+        <Typography variant="body1" className="text-[14px]" noWrap>
           {value}
         </Typography>
       ),
@@ -168,8 +168,8 @@ export default function Equipment() {
     {
       headerName: "วันที่บันทึก",
       field: "dateCreated",
-      flex: 1,
-      minWidth: 124,
+      // flex: 1,
+      width: 124,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: true,
       renderCell: ({ value }: any) => (
@@ -178,24 +178,24 @@ export default function Equipment() {
         </Typography>
       ),
     },
-    {
-      headerName: "ผู้บันทึก",
-      field: "userCreated",
-      flex: 1,
-      minWidth: 156,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      sortable: true,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {value}
-        </Typography>
-      ),
-    },
+    // {
+    //   headerName: "ผู้บันทึก",
+    //   field: "userCreated",
+    //   flex: 1,
+    //   minWidth: 156,
+    //   headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+    //   sortable: true,
+    //   renderCell: ({ value }: any) => (
+    //     <Typography variant="body1" className="text-[14px]">
+    //       {value}
+    //     </Typography>
+    //   ),
+    // },
     {
       headerName: "จัดการ",
       field: ".",
-      flex: 1,
-      minWidth: 96,
+      // flex: 1,
+      width: 96,
       sortable: false,
       align: "center" as "center",
       headerAlign: "center" as "center",
@@ -669,6 +669,8 @@ export default function Equipment() {
         </AppBar>
         <BoxDataGrid>
           <DataGrid
+            rowHeight={25}
+            headerHeight={25}
             components={{
               NoRowsOverlay: CustomNoRowsOverlay,
             }}
@@ -687,8 +689,6 @@ export default function Equipment() {
             // rows={[]}
             columns={dataColumns}
             pageSize={20}
-            rowHeight={36}
-            headerHeight={36}
             hideFooterSelectedRowCount
             rowsPerPageOptions={[20]}
             disableColumnMenu={true}

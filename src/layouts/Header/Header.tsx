@@ -34,7 +34,7 @@ export default function Header(props: HeaderProps) {
       <AppBar color="primary" position="sticky" elevation={0}>
         <Toolbar>
           <Grid container spacing={1} alignItems="center">
-            <Grid sx={{ display: { lg: "none", xs: "block" } }} item>
+            <Grid sx={{ display: { xl: "none", xs: "block" } }} item>
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -45,7 +45,7 @@ export default function Header(props: HeaderProps) {
               </IconButton>
             </Grid>
             {/* <Grid item xs /> */}
-            <Grid item sx={{ display: { lg: "none", xs: "block" } }}>
+            <Grid item sx={{ display: { xl: "none", xs: "block" } }}>
               {/* <IconButton
                 color="inherit"
                 className="hover:text-yellow-400 focus:text-yellow-400"

@@ -23,7 +23,7 @@ function PrivateAppLayout() {
     setMobileOpen(!mobileOpen);
   };
 
-  // console.log(isSmUp);
+  console.log(isLgUp);
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -33,12 +33,12 @@ function PrivateAppLayout() {
         sx={{
           width: {
             // sm: drawerWidth,
-            lg: drawerWidth,
+            xl: drawerWidth,
           },
-          flexShrink: { lg: 0 },
+          flexShrink: { xl: 0 },
         }}
       >
-        {isLgUp ? null : (
+        {/* {isLgUp ? null : (
           <Navigator
             PaperProps={{
               style: {
@@ -49,7 +49,7 @@ function PrivateAppLayout() {
             open={mobileOpen}
             onClose={handleDrawerToggle}
           />
-        )}
+        )} */}
 
         <Navigator
           PaperProps={{
@@ -57,7 +57,18 @@ function PrivateAppLayout() {
               width: drawerWidth,
             },
           }}
-          sx={{ display: { lg: "block", xs: "none" } }}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+        />
+
+        <Navigator
+          PaperProps={{
+            style: {
+              width: drawerWidth,
+            },
+          }}
+          sx={{ display: { xl: "block", xs: "none" } }}
         />
       </Box>
       <Box
@@ -69,6 +80,7 @@ function PrivateAppLayout() {
         }}
       >
         <Header onDrawerToggle={handleDrawerToggle} />
+
         <Box component="main" sx={{ flex: 1, py: 6, px: 4 }}>
           <Outlet />
         </Box>

@@ -20,7 +20,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Unstable_Grid2";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
@@ -152,7 +152,7 @@ export default function Product() {
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: true,
       renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
+        <Typography variant="body1" className="text-[14px] ">
           {value}
         </Typography>
       ),
@@ -276,7 +276,7 @@ export default function Product() {
         >
           <Toolbar>
             <Grid container spacing={2} alignItems="center" sx={{ pt: "6px" }}>
-              <Grid item lg={2} xs={6}>
+              <Grid lg={2} xs={6}>
                 <FormControl fullWidth sx={{ m: 1 }}>
                   <InputLabel htmlFor="outlined-adornment-keyword">
                     เลขที่ใบรับ
@@ -294,7 +294,7 @@ export default function Product() {
                   />
                 </FormControl>
               </Grid>
-              <Grid item lg={3} xs={6}>
+              <Grid lg={3} xs={6}>
                 <FormControl fullWidth sx={{ m: 1 }}>
                   <InputLabel htmlFor="outlined-adornment-keyword">
                     เลขทะเบียนครุภัณฑ์
@@ -312,7 +312,7 @@ export default function Product() {
                   />
                 </FormControl>
               </Grid>
-              <Grid item lg={3} xs={6}>
+              <Grid lg={3} xs={6}>
                 <FormControl fullWidth sx={{ m: 1 }} size="small">
                   <InputLabel id="select-small-type">ประเภทพัสดุ</InputLabel>
                   <Field
@@ -330,7 +330,7 @@ export default function Product() {
                   </Field>
                 </FormControl>
               </Grid>
-              <Grid item lg={3} xs={6}>
+              <Grid lg={3} xs={6}>
                 <FormControl fullWidth sx={{ m: 1 }} size="small">
                   <InputLabel id="select-small-type">หน่วยงาน</InputLabel>
                   <Field
@@ -344,10 +344,8 @@ export default function Product() {
                   </Field>
                 </FormControl>
               </Grid>
-
               <Grid
-                item
-                lg={1}
+                lg={2}
                 xs={12}
                 sx={{
                   textAlign: "center",
@@ -447,7 +445,7 @@ export default function Product() {
         >
           <Toolbar className="pl-5 pr-2">
             <Grid container alignItems="center">
-              <Grid item xs>
+              <Grid xs={12}>
                 <Typography variant="subtitle2" component="span">
                   รายการอุปกรณ์
                 </Typography>
