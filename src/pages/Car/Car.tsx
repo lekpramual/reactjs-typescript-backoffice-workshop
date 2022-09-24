@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { carSelector, carAll, carSearch } from "@/store/slices/carSlice";
 
 // @component
-import { numberWithCommas } from "@/utils";
+import { NumberWithCommas } from "@/utils";
 
 import { Typography, IconButton, TextField } from "@mui/material";
 
@@ -167,7 +167,7 @@ export default function Car() {
           localeText={{
             MuiTablePagination: {
               labelDisplayedRows: ({ from, to, count }) =>
-                `${from} ถึง ${to} จาก ${numberWithCommas(count)}`,
+                `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
             },
           }}
         />

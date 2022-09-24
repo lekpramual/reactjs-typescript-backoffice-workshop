@@ -1,4 +1,3 @@
-import React from "react";
 import { isLoggedIn } from "@/store/slices/loginSlice";
 import { Navigate, Outlet } from "react-router-dom";
 

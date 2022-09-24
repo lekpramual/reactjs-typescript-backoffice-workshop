@@ -108,7 +108,7 @@ export default function ProductView() {
             </Typography>
 
             <Typography color="text.primary" variant="subtitle2">
-              ดูรายการอุปกรณ์ : {query.get("id")}
+              {query.get("id")}
             </Typography>
           </Breadcrumbs>
         </Grid>
@@ -150,21 +150,16 @@ export default function ProductView() {
                 width: "100%",
               }}
             >
-              <Grid xs={6}>
+              <Grid xs={12}>
                 <Typography variant="subtitle2" component="span">
                   รายการอุปกรณ์
-                </Typography>
-              </Grid>
-              <Grid xs={6} className="text-right">
-                <Typography variant="subtitle2" component="span">
-                  เลขทะเบียนครุภัณฑ์ : {query.get("id")}
                 </Typography>
               </Grid>
             </Grid>
           </Toolbar>
         </AppBar>
         <Grid container spacing={2} sx={{ p: 2 }}>
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+          <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               ชื่ออุปกรณ์
             </Typography>
@@ -176,6 +171,19 @@ export default function ProductView() {
               เครื่องคอมพิวเตอร์ สำหรับสำนักงาน จอขนาด 21.5 นิ้ว
             </Typography>
           </Grid>
+          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+            <Typography component={"div"} variant={"body1"}>
+              เลขทะเบียนครุภัณฑ์
+            </Typography>
+            <Typography
+              component={"div"}
+              variant={"body2"}
+              className="mt-[-2px] text-slate-500 hover:text-blue-600"
+            >
+              {query.get("id")}
+            </Typography>
+          </Grid>
+
           <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               สถานะ

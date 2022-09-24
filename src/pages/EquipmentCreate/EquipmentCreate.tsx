@@ -50,7 +50,7 @@ import { styled } from "@mui/material/styles";
 
 import thLocale from "date-fns/locale/th";
 import { BootstrapDialog, BoxDataGrid } from "@/styles/AppStyle";
-import { numberWithCommas, CustomNoRowsOverlay } from "@/utils";
+import { NumberWithCommas, CustomNoRowsOverlay } from "@/utils";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 const localeMap = {
   th: thLocale,
@@ -81,7 +81,7 @@ function CustomFooterTotal(props: CustomFooterTotalProps) {
       }}
     >
       <Typography variant="subtitle2" component={"b"}>
-        รวม : {numberWithCommas(props.total)}
+        รวม : {NumberWithCommas(props.total)}
       </Typography>
     </Box>
   );
@@ -196,7 +196,7 @@ export default function EquipmentCreate() {
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
-          {numberWithCommas(value)}
+          {NumberWithCommas(value)}
         </Typography>
       ),
     },
@@ -209,7 +209,7 @@ export default function EquipmentCreate() {
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
-          {numberWithCommas(value)}
+          {NumberWithCommas(value)}
         </Typography>
       ),
     },
@@ -222,7 +222,7 @@ export default function EquipmentCreate() {
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
-          {numberWithCommas(value)}
+          {NumberWithCommas(value)}
         </Typography>
       ),
     },
@@ -922,7 +922,7 @@ export default function EquipmentCreate() {
             localeText={{
               MuiTablePagination: {
                 labelDisplayedRows: ({ from, to, count }) =>
-                  `${from} ถึง ${to} จาก ${numberWithCommas(count)}`,
+                  `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
               },
             }}
           />

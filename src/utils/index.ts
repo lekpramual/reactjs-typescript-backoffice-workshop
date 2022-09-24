@@ -1,4 +1,4 @@
-export * from "@/utils/httpclient";
-export * from "@/utils/numbercommas";
-export * from "@/utils/numberpad";
+export * from "@/utils/HttpClient";
+export * from "@/utils/NumberWithCommas";
+export * from "@/utils/NumberWithPad";
 export * from "@/utils/CustomNoRowsOverlay";

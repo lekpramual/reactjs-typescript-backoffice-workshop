@@ -32,7 +32,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 // @styles
 import { BoxDataGrid } from "@/styles/AppStyle";
 // @utils
-import { CustomNoRowsOverlay, numberWithCommas } from "@/utils";
+import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 
 export interface DialogTitleProps {
@@ -488,7 +488,7 @@ export default function Product() {
             localeText={{
               MuiTablePagination: {
                 labelDisplayedRows: ({ from, to, count }) =>
-                  `${from} ถึง ${to} จาก ${numberWithCommas(count)}`,
+                  `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
               },
             }}
           />

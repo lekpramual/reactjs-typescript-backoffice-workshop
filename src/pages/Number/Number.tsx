@@ -16,7 +16,7 @@ import {
 } from "@/store/slices/numberSlice";
 
 // @component
-import { CustomNoRowsOverlay, numberWithCommas } from "@/utils";
+import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
 
 import { Typography, IconButton, TextField } from "@mui/material";
 
@@ -172,7 +172,7 @@ export default function Number() {
           localeText={{
             MuiTablePagination: {
               labelDisplayedRows: ({ from, to, count }) =>
-                `${from} ถึง ${to} จาก ${numberWithCommas(count)}`,
+                `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
             },
           }}
         />

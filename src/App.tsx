@@ -21,7 +21,7 @@ import EquipmentCreate from "@/pages/EquipmentCreate";
 import EquipmentEdit from "@/pages/EquipmentEdit";
 import EquipmentView from "@/pages/EquipmentView";
 // @theme
-import theme from "styles/muiTheme";
+import theme from "@/styles/MuiTheme";
 import Product from "./pages/Product";
 import ProductView from "./pages/ProductView";
 import ProductEdit from "./pages/ProductEdit";

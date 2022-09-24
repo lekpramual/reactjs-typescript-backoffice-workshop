@@ -13,7 +13,7 @@ import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
 
 // @styles
 import { BoxDataGrid } from "@/styles/AppStyle";
-import { numberWithCommas, CustomNoRowsOverlay, numberWithPad } from "@/utils";
+import { NumberWithCommas, CustomNoRowsOverlay, NumberWithPad } from "@/utils";
 import { DataGrid } from "@mui/x-data-grid";
 
 interface CustomFooterTotalProps {
@@ -37,7 +37,7 @@ function CustomFooterTotal(props: CustomFooterTotalProps) {
       }}
     >
       <Typography variant="subtitle2" component={"b"}>
-        รวม : {numberWithCommas(props.total)}
+        รวม : {NumberWithCommas(props.total)}
       </Typography>
     </Box>
   );
@@ -119,7 +119,7 @@ export default function EquipmentView() {
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
-          {numberWithCommas(value)}
+          {NumberWithCommas(value)}
         </Typography>
       ),
     },
@@ -132,7 +132,7 @@ export default function EquipmentView() {
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
-          {numberWithCommas(value)}
+          {NumberWithCommas(value)}
         </Typography>
       ),
     },
@@ -145,7 +145,7 @@ export default function EquipmentView() {
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
-          {numberWithCommas(value)}
+          {NumberWithCommas(value)}
         </Typography>
       ),
     },
@@ -174,8 +174,15 @@ export default function EquipmentView() {
               รายการอุปกรณ์
             </Typography>
 
-            <Typography color="text.primary" variant="subtitle2">
-              ดูรายการอุปกรณ์ : {numberWithPad(query.get("id"), 4)}
+            <Typography
+              color="text.primary"
+              variant="subtitle2"
+              sx={{
+                textAlign: "center",
+                // display: { xs: "none", md: "block" },
+              }}
+            >
+              {NumberWithPad(query.get("id"), 4)}
             </Typography>
           </Breadcrumbs>
         </Grid>
@@ -384,7 +391,7 @@ export default function EquipmentView() {
                 localeText={{
                   MuiTablePagination: {
                     labelDisplayedRows: ({ from, to, count }) =>
-                      `${from} ถึง ${to} จาก ${numberWithCommas(count)}`,
+                      `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
                   },
                 }}
               />

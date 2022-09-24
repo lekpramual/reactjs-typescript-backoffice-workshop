@@ -17,7 +17,7 @@ import {
   phoneSearch,
 } from "@/store/slices/phoneSlice";
 // @component
-import { CustomNoRowsOverlay, numberWithCommas } from "@/utils";
+import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
 // @type
 import { PhoneSearch } from "@/types";
 // @form
@@ -29,7 +29,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-// import TextField from "@mui/material/TextField";
 import { ButtonProps } from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
@@ -309,14 +308,16 @@ export default function Phone() {
                 </Tooltip>
               </Grid>
               <Grid item lg={2} md={4} xs={12}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  fullWidth
-                  className="hover:text-[#fce805]"
-                >
-                  ค้นหา
-                </Button>
+                <FormControl fullWidth sx={{ m: 1 }} size="small">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    className="hover:text-[#fce805]"
+                  >
+                    ค้นหา
+                  </Button>
+                </FormControl>
               </Grid>
               <Grid
                 item
@@ -471,18 +472,6 @@ export default function Phone() {
             Toolbar: CustomToolbar,
             NoRowsOverlay: CustomNoRowsOverlay,
           }}
-          sx={{
-            // border-top-left-radius
-            backgroundColor: "white",
-            // maxWidth: "100%",
-            margin: "auto",
-            overflow: "hidden",
-            "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-              {
-                color: "#fff",
-                opacity: 0.5,
-              },
-          }}
           rows={phoneReducer.isResult ? phoneReducer.isResult : []}
           columns={phoneColumns}
           pageSize={20}
@@ -496,7 +485,7 @@ export default function Phone() {
           localeText={{
             MuiTablePagination: {
               labelDisplayedRows: ({ from, to, count }) =>
-                `${from} ถึง ${to} จาก ${numberWithCommas(count)}`,
+                `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
             },
             toolbarExport: "ส่งออก",
             toolbarExportCSV: "ดาวน์โหลด Excel",

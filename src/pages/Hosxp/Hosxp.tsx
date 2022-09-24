@@ -19,7 +19,7 @@ import {
 } from "@/store/slices/hosxpSlice";
 
 // @component
-import { numberWithCommas } from "@/utils";
+import { NumberWithCommas } from "@/utils";
 // @type
 import { HosxpDelete } from "@/types";
 import {
@@ -285,7 +285,7 @@ export default function Hosxp() {
           localeText={{
             MuiTablePagination: {
               labelDisplayedRows: ({ from, to, count }) =>
-                `${from} ถึง ${to} จาก ${numberWithCommas(count)}`,
+                `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
             },
           }}
         />
