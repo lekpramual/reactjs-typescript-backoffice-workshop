@@ -34,7 +34,7 @@ function PrivateDefaultLayout() {
         <Container
           maxWidth="xl"
           component="main"
-          sx={{ flex: 1, py: 6, px: 4 }}
+          sx={{ flex: 1, py: 4, px: 4 }}
         >
           <Outlet />
         </Container>

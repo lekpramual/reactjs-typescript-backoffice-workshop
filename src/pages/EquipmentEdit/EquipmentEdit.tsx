@@ -143,7 +143,7 @@ export default function EquipmentEdit() {
     //   flex: 1,
     //   minWidth: 32,
     //   headerClassName:
-    //     "bg-[#36474f] text-[#fff] text-[14px] h-[36px]  fill-[#fff] ",
+    //     "bg-[#36474f] text-[#fff] text-[14px]   fill-[#fff] ",
     //   sortable: false,
     //   renderCell: ({ value }: any) => (
     //     <Typography variant="body1" className="text-[14px]">
@@ -156,7 +156,7 @@ export default function EquipmentEdit() {
       field: "name",
       flex: 1,
       minWidth: 364,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
@@ -169,7 +169,7 @@ export default function EquipmentEdit() {
       field: "groupName",
       flex: 1,
       minWidth: 156,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
@@ -182,7 +182,7 @@ export default function EquipmentEdit() {
       field: "typeName",
       flex: 1,
       minWidth: 156,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
@@ -198,7 +198,7 @@ export default function EquipmentEdit() {
       minWidth: 64,
       align: "center" as "center",
       headerAlign: "center" as "center",
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
@@ -211,7 +211,7 @@ export default function EquipmentEdit() {
       field: "price",
       flex: 1,
       minWidth: 96,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
@@ -224,7 +224,7 @@ export default function EquipmentEdit() {
       field: "priceTotal",
       flex: 1,
       minWidth: 96,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: false,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
@@ -240,8 +240,7 @@ export default function EquipmentEdit() {
       sortable: false,
       align: "center" as "center",
       headerAlign: "center" as "center",
-      headerClassName:
-        "text-center bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      headerClassName: "text-center bg-[#36474f] text-[#fff] text-[14px] ",
       renderCell: ({ row }: GridRenderCellParams<string>) => (
         <Stack direction="row" className="text-center">
           <IconButton
@@ -869,6 +868,8 @@ export default function EquipmentEdit() {
         </AppBar>
         <BoxDataGrid>
           <DataGrid
+            rowHeight={26}
+            headerHeight={26}
             autoHeight
             components={{
               Footer: CustomFooterTotal,
@@ -900,8 +901,6 @@ export default function EquipmentEdit() {
             // rows={[]}
             columns={dataColumns}
             pageSize={10}
-            rowHeight={36}
-            headerHeight={36}
             hideFooterSelectedRowCount
             rowsPerPageOptions={[10]}
             disableColumnMenu={true}

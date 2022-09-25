@@ -17,15 +17,25 @@ let theme = createTheme({
     subtitle1: {
       fontFamily: "Mitr-R",
       letterSpacing: 0.5,
+      fontSize: "16px",
     },
     subtitle2: {
       fontFamily: "Mitr-R",
       letterSpacing: 0.5,
+      fontSize: "14px",
+    },
+    body1: {
+      fontFamily: "Thonburi-R",
+      letterSpacing: 0.5,
+      fontSize: "14px",
+    },
+    body2: {
+      fontFamily: "Thonburi-R",
+      letterSpacing: 0.5,
+      fontSize: "14px",
     },
     h5: {
       fontFamily: "Mitr-R",
-      // fontWeight: 500,
-      // fontSize: 24,
       letterSpacing: 0.5,
     },
     h6: {
@@ -64,19 +74,7 @@ theme = {
         },
       },
     },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          textTransform: "none",
-        },
-        contained: {
-          boxShadow: "none",
-          "&:active": {
-            boxShadow: "none",
-          },
-        },
-      },
-    },
+
     MuiTab: {
       styleOverrides: {
         root: {
@@ -104,13 +102,7 @@ theme = {
         },
       },
     },
-    MuiIconButton: {
-      styleOverrides: {
-        root: {
-          padding: theme.spacing(1),
-        },
-      },
-    },
+
     MuiTooltip: {
       styleOverrides: {
         tooltip: {
@@ -207,10 +199,18 @@ theme = {
         },
       },
     },
+
     MuiButton: {
       styleOverrides: {
         outlined: {
           borderRadius: "0",
+          textTransform: "none",
+        },
+        contained: {
+          boxShadow: "none",
+          "&:active": {
+            boxShadow: "none",
+          },
         },
         sizeSmall: {
           height: "28px",

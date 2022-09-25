@@ -104,8 +104,8 @@ export default function Equipment() {
       headerName: "เรื่องที่บันทึก",
       field: "name",
       flex: 1,
-      // minWidth: 256,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      minWidth: 256,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]" noWrap>
@@ -117,11 +117,11 @@ export default function Equipment() {
       headerName: "หน่วยงาน",
       field: "depName",
       flex: 1,
-      // minWidth: 256,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      minWidth: 256,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
+        <Typography variant="body1" className="text-[14px]" noWrap>
           {value}
         </Typography>
       ),
@@ -129,9 +129,9 @@ export default function Equipment() {
     {
       headerName: "เลขที่บันทึก",
       field: "numberNo",
-      // flex: 1,
-      width: 124,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      flex: 1,
+      minWidth: 124,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
@@ -142,9 +142,9 @@ export default function Equipment() {
     {
       headerName: "การซื้อ",
       field: "typeName",
-      // flex: 1,
-      width: 124,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      flex: 1,
+      minWidth: 124,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
@@ -156,8 +156,8 @@ export default function Equipment() {
       headerName: "ซื้อจาก",
       field: "companyName",
       flex: 1,
-      // minWidth: 128,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      minWidth: 256,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px]",
       sortable: true,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]" noWrap>
@@ -168,9 +168,9 @@ export default function Equipment() {
     {
       headerName: "วันที่บันทึก",
       field: "dateCreated",
-      // flex: 1,
-      width: 124,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      flex: 1,
+      minWidth: 124,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value }: any) => (
         <Typography variant="body1" className="text-[14px]">
@@ -194,8 +194,8 @@ export default function Equipment() {
     {
       headerName: "จัดการ",
       field: ".",
-      // flex: 1,
-      width: 96,
+      flex: 1,
+      minWidth: 96,
       sortable: false,
       align: "center" as "center",
       headerAlign: "center" as "center",
@@ -417,7 +417,7 @@ export default function Equipment() {
         >
           <Toolbar>
             <Grid container spacing={2} alignItems="center" sx={{ pt: "6px" }}>
-              <Grid item lg={2} xs={4}>
+              <Grid item lg={3} md={6} xs={12}>
                 <FormControl fullWidth sx={{ m: 1 }}>
                   <InputLabel htmlFor="outlined-adornment-keyword">
                     เลขที่บันทึก
@@ -435,7 +435,7 @@ export default function Equipment() {
                   />
                 </FormControl>
               </Grid>
-              <Grid item lg={4} xs={8}>
+              <Grid item lg={4} md={6} xs={12}>
                 <FormControl fullWidth sx={{ m: 1 }}>
                   <InputLabel htmlFor="outlined-adornment-keyword">
                     เรื่องที่บันทึก
@@ -453,7 +453,7 @@ export default function Equipment() {
                   />
                 </FormControl>
               </Grid>
-              <Grid item lg={4} xs={6}>
+              <Grid item lg={4} md={6} xs={12}>
                 <FormControl fullWidth sx={{ m: 1 }} size="small">
                   <InputLabel id="select-small-type">หน่วยงาน</InputLabel>
                   <Field
@@ -467,55 +467,30 @@ export default function Equipment() {
                   </Field>
                 </FormControl>
               </Grid>
+              <Grid item lg={1} md={6} xs={12}>
+                <Stack direction="row" className="text-center">
+                  <Button
+                    size="small"
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805] mr-1"
+                  >
+                    ค้นหา
+                  </Button>
 
-              <Grid
-                item
-                xl={1}
-                lg={1}
-                xs={4}
-                sx={{
-                  textAlign: "center",
-                }}
-              >
-                <Tooltip title="ค้นหาข้อมูล">
-                  <IconButton
-                    size="small"
-                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
-                  >
-                    <SearchIcon color="inherit" sx={{ display: "block" }} />
-                  </IconButton>
-                </Tooltip>
-                {/* <Button
-                  size="small"
-                  type="submit"
-                  variant="contained"
-                  fullWidth
-                  className="hover:text-[#fce805]"
-                >
-                  ค้นหา
-                </Button> */}
-              </Grid>
-              <Grid
-                item
-                xl={1}
-                lg={1}
-                xs={2}
-                sx={{
-                  textAlign: "center",
-                  display: { xs: "none", md: "block" },
-                }}
-              >
-                <Tooltip title="โหลดข้อมูล">
-                  <IconButton
-                    onClick={() => {
-                      resetForm();
-                    }}
-                    size="small"
-                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
-                  >
-                    <RefreshIcon color="inherit" sx={{ display: "block" }} />
-                  </IconButton>
-                </Tooltip>
+                  <Tooltip title="โหลดข้อมูล">
+                    <IconButton
+                      onClick={() => {
+                        resetForm();
+                      }}
+                      size="small"
+                      className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
+                    >
+                      <RefreshIcon color="inherit" />
+                    </IconButton>
+                  </Tooltip>
+                </Stack>
               </Grid>
             </Grid>
           </Toolbar>
@@ -688,8 +663,8 @@ export default function Equipment() {
         </AppBar>
         <BoxDataGrid>
           <DataGrid
-            rowHeight={25}
-            headerHeight={25}
+            rowHeight={26}
+            headerHeight={26}
             components={{
               NoRowsOverlay: CustomNoRowsOverlay,
             }}

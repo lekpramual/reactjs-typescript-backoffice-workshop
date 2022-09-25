@@ -81,7 +81,7 @@ function PrivateAppLayout() {
       >
         <Header onDrawerToggle={handleDrawerToggle} />
 
-        <Box component="main" sx={{ flex: 1, py: 6, px: 4 }}>
+        <Box component="main" sx={{ flex: 1, py: 4, px: 4 }}>
           <Outlet />
         </Box>
         <Box component="footer" sx={{ mt: 3, p: 2 }}>
