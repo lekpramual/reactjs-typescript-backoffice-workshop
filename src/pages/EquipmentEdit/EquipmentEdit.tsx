@@ -794,7 +794,7 @@ export default function EquipmentEdit() {
 
       <Paper
         sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: 2 }}
-        square
+        
       >
         <AppBar
           position="static"
@@ -847,7 +847,7 @@ export default function EquipmentEdit() {
           margin: "auto",
           overflow: "hidden",
         }}
-        square
+        
       >
         <AppBar
           position="static"

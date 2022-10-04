@@ -111,10 +111,38 @@ theme = {
         },
       },
     },
+
     MuiDivider: {
       styleOverrides: {
         root: {
           backgroundColor: "rgb(255,255,255,0.15)",
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+        },
+      },
+    },
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#36474f",
+          color: "#fff",
+          textAlign: "center",
+          padding: "5px",
+          height: "40px",
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#36474f",
+          color: "#fff",
+          height: "40px",
         },
       },
     },
@@ -194,29 +222,29 @@ theme = {
         //   height: "36px",
         //   fontSize: "14px",
         // },
-        sizeSmall: {
-          height: "28px",
-          fontSize: "14px",
-        },
+        // sizeSmall: {
+        //   height: "28px",
+        //   fontSize: "14px",
+        // },
       },
     },
 
     MuiButton: {
       styleOverrides: {
-        outlined: {
-          borderRadius: "0",
-          textTransform: "none",
-        },
+        // outlined: {
+        //   borderRadius: "0",
+        //   textTransform: "none",
+        // },
         contained: {
           boxShadow: "none",
           "&:active": {
             boxShadow: "none",
           },
         },
-        sizeSmall: {
-          height: "28px",
-          fontSize: "14px",
-        },
+        // sizeSmall: {
+        //   height: "28px",
+        //   fontSize: "14px",
+        // },
       },
     },
     MuiIconButton: {
@@ -224,10 +252,10 @@ theme = {
         outlined: {
           borderRadius: "0",
         },
-        sizeSmall: {
-          height: "30px",
-          fontSize: "14px",
-        },
+        // sizeSmall: {
+        //   height: "30px",
+        //   fontSize: "14px",
+        // },
       },
     },
   },

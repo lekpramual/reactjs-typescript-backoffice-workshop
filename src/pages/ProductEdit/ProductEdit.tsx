@@ -433,7 +433,7 @@ export default function ProductEdit() {
           margin: "auto",
           overflow: "hidden",
         }}
-        square
+       
       >
         <AppBar
           position="static"
@@ -513,7 +513,6 @@ export default function ProductEdit() {
             mb: 1,
             mt: 1,
           }}
-          square
         >
           <AppBar
             position="static"
@@ -574,7 +573,7 @@ export default function ProductEdit() {
             mb: 1,
             mt: 1,
           }}
-          square
+         
         >
           <AppBar
             position="static"
@@ -625,7 +624,6 @@ export default function ProductEdit() {
             overflow: "hidden",
             mb: 1,
           }}
-          square
         >
           <AppBar
             position="static"

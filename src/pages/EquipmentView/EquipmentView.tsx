@@ -204,7 +204,6 @@ export default function EquipmentView() {
 
       <Paper
         sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: 2 }}
-        square
       >
         <Grid container spacing={2} sx={{ p: 2 }}>
           <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>

@@ -34,7 +34,6 @@ import Stack from "@mui/material/Stack";
 // import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
@@ -93,20 +92,6 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
   return (
     <DialogTitle sx={{ m: 0, p: 2, height: 48 }} {...other}>
       {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
     </DialogTitle>
   );
 };
@@ -788,14 +773,12 @@ export default function EquipmentCreate() {
 
       <Paper
         sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: 2 }}
-        square
       >
         <AppBar
           position="static"
           color="default"
           elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
-          className="h-[40px]"
         >
           <Toolbar className="pl-5 pr-0">
             <Grid container alignItems="center">
@@ -842,14 +825,12 @@ export default function EquipmentCreate() {
           margin: "auto",
           overflow: "hidden",
         }}
-        square
       >
         <AppBar
           position="static"
           color="default"
           elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
-          className="h-[40px]"
         >
           <Toolbar className="pl-5 pr-2">
             <Grid container alignItems="center">
@@ -929,13 +910,13 @@ export default function EquipmentCreate() {
       </Paper>
       <Grid container spacing={2} alignItems="center" className="mt-1">
         <Grid xs={6} className="text-right" item>
-          <Button variant="contained" color="success" className="w-[128px] ">
-            <SaveTwoToneIcon /> บันทึก
+          <Button variant="contained" color="error" className="w-[128px] ">
+            <RestartAltTwoToneIcon /> ยกเลิก
           </Button>
         </Grid>
         <Grid xs={6} item>
-          <Button variant="contained" color="error" className="w-[128px] ">
-            <RestartAltTwoToneIcon /> ยกเลิก
+          <Button variant="contained" color="success" className="w-[128px] ">
+            <SaveTwoToneIcon /> บันทึก
           </Button>
         </Grid>
       </Grid>

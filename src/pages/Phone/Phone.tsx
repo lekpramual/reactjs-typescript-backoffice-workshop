@@ -24,8 +24,6 @@ import { PhoneSearch } from "@/types";
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
 
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -235,122 +233,122 @@ export default function Phone() {
   }: any) => {
     return (
       <Form noValidate>
-        <AppBar
-          position="static"
-          color="default"
-          elevation={0}
-          sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+        <Grid
+          container
+          spacing={2}
+          alignItems="center"
+          sx={{ pt: "6px", width: "100%" }}
         >
-          <Toolbar>
-            <Grid container spacing={2} alignItems="center" sx={{ pt: "6px" }}>
-              <Grid item lg={4} md={6} xs={6}>
-                <FormControl fullWidth sx={{ m: 1 }}>
-                  <InputLabel htmlFor="outlined-adornment-keyword">
-                    ค้นหา
-                  </InputLabel>
-                  <Field
-                    as={OutlinedInput}
-                    id="keyword"
-                    name="keyword"
-                    startAdornment={
-                      <SearchIcon color="inherit" sx={{ display: "block" }} />
-                    }
-                    label="ค้นหา"
-                    size="small"
-                    placeholder="เบอร์โทรศัพท์,หน่วยงาน"
+          <Grid item lg={4} md={6} xs={6}>
+            <FormControl fullWidth sx={{ m: 1 }}>
+              <InputLabel htmlFor="outlined-adornment-keyword">
+                ค้นหา
+              </InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                startAdornment={
+                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                }
+                label="ค้นหา"
+                size="small"
+                placeholder="เบอร์โทรศัพท์,หน่วยงาน"
+              />
+            </FormControl>
+          </Grid>
+          <Grid item lg={4} md={6} xs={6}>
+            <FormControl fullWidth sx={{ m: 1 }} size="small">
+              <InputLabel id="select-small-type">ประเภท</InputLabel>
+              <Field
+                name="type"
+                id="type"
+                label="ประเภท"
+                component={CustomizedSelectForFormik}
+              >
+                <MenuItem value={0}>ทั้งหมด</MenuItem>
+                <MenuItem value={1}>เบอร์ - ต้นทาง</MenuItem>
+                <MenuItem value={2}>เบอร์ - ปลายทาง</MenuItem>
+                <MenuItem value={3}>หน่วยงาน - ต้นทาง</MenuItem>
+                <MenuItem value={4}>หน่วยงาน - ปลายทาง</MenuItem>
+              </Field>
+            </FormControl>
+          </Grid>
+          <Grid
+            item
+            lg={1}
+            md={4}
+            xs={4}
+            sx={{
+              textAlign: "center",
+              display: { xs: "none", md: "block" },
+            }}
+          >
+            <Tooltip title="ค้นหาขั้นสูง" sx={{ m: 1 }}>
+              <IconButton
+                size="small"
+                onClick={() => (open ? handleClose() : handleOpen())}
+                className="bg-[#36474f] text-[#fff] hover:text-[#fce805] "
+              >
+                {open ? (
+                  <KeyboardDoubleArrowUpTwoToneIcon
+                    color="inherit"
+                    sx={{ display: "block" }}
                   />
-                </FormControl>
-              </Grid>
-              <Grid item lg={4} md={6} xs={6}>
-                <FormControl fullWidth sx={{ m: 1 }} size="small">
-                  <InputLabel id="select-small-type">ประเภท</InputLabel>
-                  <Field
-                    name="type"
-                    id="type"
-                    label="ประเภท"
-                    component={CustomizedSelectForFormik}
-                  >
-                    <MenuItem value={0}>ทั้งหมด</MenuItem>
-                    <MenuItem value={1}>เบอร์ - ต้นทาง</MenuItem>
-                    <MenuItem value={2}>เบอร์ - ปลายทาง</MenuItem>
-                    <MenuItem value={3}>หน่วยงาน - ต้นทาง</MenuItem>
-                    <MenuItem value={4}>หน่วยงาน - ปลายทาง</MenuItem>
-                  </Field>
-                </FormControl>
-              </Grid>
-              <Grid
-                item
-                lg={1}
-                md={4}
-                xs={4}
-                sx={{
-                  textAlign: "center",
-                  display: { xs: "none", md: "block" },
-                }}
+                ) : (
+                  <KeyboardDoubleArrowDownTwoToneIcon
+                    color="inherit"
+                    sx={{ display: "block" }}
+                  />
+                )}
+              </IconButton>
+            </Tooltip>
+          </Grid>
+          <Grid item lg={2} md={4} xs={12}>
+            <FormControl fullWidth sx={{ m: 1 }} size="small">
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                className="hover:text-[#fce805]"
+                size="small"
               >
-                <Tooltip title="ค้นหาขั้นสูง" sx={{ m: 1 }}>
-                  <IconButton
-                    onClick={() => (open ? handleClose() : handleOpen())}
-                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805] "
-                  >
-                    {open ? (
-                      <KeyboardDoubleArrowUpTwoToneIcon
-                        color="inherit"
-                        sx={{ display: "block" }}
-                      />
-                    ) : (
-                      <KeyboardDoubleArrowDownTwoToneIcon
-                        color="inherit"
-                        sx={{ display: "block" }}
-                      />
-                    )}
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-              <Grid item lg={2} md={4} xs={12}>
-                <FormControl fullWidth sx={{ m: 1 }} size="small">
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    fullWidth
-                    className="hover:text-[#fce805]"
-                  >
-                    ค้นหา
-                  </Button>
-                </FormControl>
-              </Grid>
-              <Grid
-                item
-                lg={1}
-                md={4}
-                xs={4}
-                sx={{
-                  textAlign: "center",
-                  display: { xs: "none", md: "block" },
+                ค้นหา
+              </Button>
+            </FormControl>
+          </Grid>
+          <Grid
+            item
+            lg={1}
+            md={4}
+            xs={4}
+            sx={{
+              textAlign: "center",
+              display: { xs: "none", md: "block" },
+            }}
+          >
+            <Tooltip title="โหลดข้อมูล">
+              <IconButton
+                onClick={() => {
+                  dispatch(phoneAll());
+                  resetForm();
+                  setOpen(false);
                 }}
+                size="small"
+                className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
               >
-                <Tooltip title="โหลดข้อมูล">
-                  <IconButton
-                    onClick={() => {
-                      dispatch(phoneAll());
-                      resetForm();
-                      setOpen(false);
-                    }}
-                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
-                  >
-                    <RefreshIcon color="inherit" sx={{ display: "block" }} />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            </Grid>
-          </Toolbar>
-        </AppBar>
+                <RefreshIcon color="inherit" sx={{ display: "block" }} />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        </Grid>
+
         {open && (
           <Grid
             container
             spacing={2}
             alignItems="center"
-            sx={{ px: "24px", pt: "6px" }}
+            sx={{ pt: "6px", width: "100%" }}
           >
             <Grid item lg={3} sm={6}>
               <FormControl fullWidth sx={{ m: 1 }}>
@@ -468,6 +466,8 @@ export default function Phone() {
       {/* 936  width: "100%"*/}
       <BoxDataGrid>
         <DataGrid
+          rowHeight={36}
+          headerHeight={36}
           components={{
             Toolbar: CustomToolbar,
             NoRowsOverlay: CustomNoRowsOverlay,
@@ -475,8 +475,6 @@ export default function Phone() {
           rows={phoneReducer.isResult ? phoneReducer.isResult : []}
           columns={phoneColumns}
           pageSize={20}
-          rowHeight={36}
-          headerHeight={36}
           hideFooterSelectedRowCount
           rowsPerPageOptions={[20]}
           disableColumnMenu={true}

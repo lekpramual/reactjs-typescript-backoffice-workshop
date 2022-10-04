@@ -409,92 +409,88 @@ export default function Equipment() {
   }: any) => {
     return (
       <Form noValidate>
-        <AppBar
-          position="static"
-          color="default"
-          elevation={0}
-          sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+        <Grid
+          container
+          spacing={2}
+          alignItems="center"
+          sx={{ pt: "6px", width: "100%" }}
         >
-          <Toolbar>
-            <Grid container spacing={2} alignItems="center" sx={{ pt: "6px" }}>
-              <Grid item lg={3} md={6} xs={12}>
-                <FormControl fullWidth sx={{ m: 1 }}>
-                  <InputLabel htmlFor="outlined-adornment-keyword">
-                    เลขที่บันทึก
-                  </InputLabel>
-                  <Field
-                    as={OutlinedInput}
-                    id="keyword"
-                    name="keyword"
-                    startAdornment={
-                      <SearchIcon color="inherit" sx={{ display: "block" }} />
-                    }
-                    label="เลขที่บันทึก"
-                    size="small"
-                    placeholder="กรอก เลขที่บันทึก"
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item lg={4} md={6} xs={12}>
-                <FormControl fullWidth sx={{ m: 1 }}>
-                  <InputLabel htmlFor="outlined-adornment-keyword">
-                    เรื่องที่บันทึก
-                  </InputLabel>
-                  <Field
-                    as={OutlinedInput}
-                    id="keyword"
-                    name="keyword"
-                    startAdornment={
-                      <SearchIcon color="inherit" sx={{ display: "block" }} />
-                    }
-                    label="เรื่องที่บันทึก"
-                    size="small"
-                    placeholder="กรอก เรื่องที่บันทึก"
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item lg={4} md={6} xs={12}>
-                <FormControl fullWidth sx={{ m: 1 }} size="small">
-                  <InputLabel id="select-small-type">หน่วยงาน</InputLabel>
-                  <Field
-                    name="type"
-                    id="type"
-                    label="หน่วยงาน"
-                    component={CustomizedSelectForFormik}
-                  >
-                    <MenuItem value={0}>ทั้งหมด</MenuItem>
-                    <MenuItem value={1}>ศูนย์คอมพิวเตอร์</MenuItem>
-                  </Field>
-                </FormControl>
-              </Grid>
-              <Grid item lg={1} md={6} xs={12}>
-                <Stack direction="row" className="text-center">
-                  <Button
-                    size="small"
-                    type="submit"
-                    variant="contained"
-                    fullWidth
-                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805] mr-1"
-                  >
-                    ค้นหา
-                  </Button>
+          <Grid item lg={3} md={6} xs={12}>
+            <FormControl fullWidth sx={{ m: 1 }}>
+              <InputLabel htmlFor="outlined-adornment-keyword">
+                เลขที่บันทึก
+              </InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                startAdornment={
+                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                }
+                label="เลขที่บันทึก"
+                size="small"
+                placeholder="กรอก เลขที่บันทึก"
+              />
+            </FormControl>
+          </Grid>
+          <Grid item lg={3.5} md={6} xs={12}>
+            <FormControl fullWidth sx={{ m: 1 }}>
+              <InputLabel htmlFor="outlined-adornment-keyword">
+                เรื่องที่บันทึก
+              </InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                startAdornment={
+                  <SearchIcon color="inherit" sx={{ display: "block" }} />
+                }
+                label="เรื่องที่บันทึก"
+                size="small"
+                placeholder="กรอก เรื่องที่บันทึก"
+              />
+            </FormControl>
+          </Grid>
+          <Grid item lg={3.5} md={6} xs={12}>
+            <FormControl fullWidth sx={{ m: 1 }} size="small">
+              <InputLabel id="select-small-type">หน่วยงาน</InputLabel>
+              <Field
+                name="type"
+                id="type"
+                label="หน่วยงาน"
+                component={CustomizedSelectForFormik}
+              >
+                <MenuItem value={0}>ทั้งหมด</MenuItem>
+                <MenuItem value={1}>ศูนย์คอมพิวเตอร์</MenuItem>
+              </Field>
+            </FormControl>
+          </Grid>
+          <Grid item lg={2} md={6} xs={12}>
+            <Stack direction="row" className="text-center">
+              <Button
+                size="small"
+                type="submit"
+                variant="contained"
+                fullWidth
+                className="bg-[#36474f] text-[#fff] hover:text-[#fce805] mr-1"
+              >
+                ค้นหา
+              </Button>
 
-                  <Tooltip title="โหลดข้อมูล">
-                    <IconButton
-                      onClick={() => {
-                        resetForm();
-                      }}
-                      size="small"
-                      className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
-                    >
-                      <RefreshIcon color="inherit" />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-              </Grid>
-            </Grid>
-          </Toolbar>
-        </AppBar>
+              <Tooltip title="โหลดข้อมูล">
+                <IconButton
+                  onClick={() => {
+                    resetForm();
+                  }}
+                  size="small"
+                  className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
+                >
+                  <RefreshIcon color="inherit" />
+                </IconButton>
+              </Tooltip>
+            </Stack>
+          </Grid>
+        </Grid>
       </Form>
     );
   };
@@ -603,7 +599,8 @@ export default function Equipment() {
 
       <Paper
         // 936 "100%"
-        sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: "8px" }}
+        // sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: "8px" }}
+        sx={{ margin: "auto", overflow: "hidden", mb: "8px" }}
       >
         <Formik
           validate={(values) => {
@@ -629,14 +626,12 @@ export default function Equipment() {
           margin: "auto",
           overflow: "hidden",
         }}
-        square
       >
         <AppBar
           position="static"
           color="default"
-          elevation={0}
+          // elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
-          className="h-[40px]"
         >
           <Toolbar className="pl-5 pr-2">
             <Grid container alignItems="center">
@@ -663,21 +658,16 @@ export default function Equipment() {
         </AppBar>
         <BoxDataGrid>
           <DataGrid
-            rowHeight={26}
-            headerHeight={26}
+            rowHeight={36}
+            headerHeight={36}
             components={{
               NoRowsOverlay: CustomNoRowsOverlay,
             }}
             sx={{
-              backgroundColor: "white",
-              margin: "auto",
-              overflow: "hidden",
+              // backgroundColor: "white",
+              // margin: "auto",
+              // overflow: "hidden",
               minHeight: 450,
-              "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-                {
-                  color: "#fff",
-                  opacity: 0.5,
-                },
             }}
             rows={dataValue ? dataValue : []}
             // rows={[]}

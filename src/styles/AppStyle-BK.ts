@@ -30,11 +30,11 @@ export const BoxDataGrid = styled(Box)<BoxProps>(({ theme }) => ({
   // maxHeight: "450px",
 
   "& .MuiDataGrid-root": {
-    borderRadius: "0px",
+    // borderRadius: "0px",
   },
   "& .MuiDataGrid-root .MuiDataGrid-columnHeaders": {
-    borderTopLeftRadius: "0px",
-    borderTopRightRadius: "0px",
+    // borderTopLeftRadius: "0px",
+    // borderTopRightRadius: "0px",
   },
   "& .MuiDataGrid-root .MuiDataGrid-columnHeaderTitle": {
     fontFamily: "Mitr-R",

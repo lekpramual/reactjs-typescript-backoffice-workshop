@@ -134,7 +134,6 @@ export default function ProductView() {
           margin: "auto",
           overflow: "hidden",
         }}
-        square
       >
         <AppBar
           position="static"
@@ -251,183 +250,6 @@ export default function ProductView() {
       </Paper>
 
       <TabPanel value={value} index={0}>
-        {/* <Paper
-          sx={{
-            maxWidth: "100%",
-            margin: "auto",
-            overflow: "hidden",
-            mb: 1,
-            mt: 1,
-          }}
-          square
-        >
-          <AppBar
-            position="static"
-            color="default"
-            elevation={0}
-            sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
-            className="h-[40px]"
-          >
-            <Toolbar className="pl-5 pr-2">
-              <Grid
-                container
-                sx={{
-                  width: "100%",
-                }}
-              >
-                <Grid xs={6}>
-                  <Typography variant="subtitle2" component="span">
-                    วิธีการได้มา
-                  </Typography>
-                </Grid>
-                <Grid xs={6} className="text-right">
-                  <Typography variant="subtitle2" component="span">
-                    เลขที่ใบรับ : INV-0001
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Toolbar>
-          </AppBar>
-          <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                เรื่องที่บันทึก
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                ขออนุมัติซื้ออุปกรณ์ระบบคิวบริการผู้ป่วยนอก
-              </Typography>
-            </Grid>
-
-            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                เลขที่บันทึก
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                รอ 0032.102/97
-              </Typography>
-            </Grid>
-            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                ประเภทการซื้อ
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                ซื้อตามแผน
-              </Typography>
-            </Grid>
-            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                หน่วยงานที่ซื้อ
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                ศูนย์คอมพิวเตอร์
-              </Typography>
-            </Grid>
-
-            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                ผู้บันทึกข้อความ
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                นางสาวนันทนิจ มีสวัสดิ์
-              </Typography>
-            </Grid>
-            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                ผู้รับสินค้า
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                นายมนต์ชัย ศรีทอง
-              </Typography>
-            </Grid>
-
-            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                วันที่บันทึกข้อความ
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                19/09/2022
-              </Typography>
-            </Grid>
-            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                วันที่รับสินค้า
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                13/10/2022
-              </Typography>
-            </Grid>
-
-            <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                ซื้อจาก
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                บริษัท กรุงทองคอมพิวเตอร์ จำกัด
-              </Typography>
-            </Grid>
-            <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                ไฟล์แนบ
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                -
-              </Typography>
-            </Grid>
-            <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                รายละเอียด
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                -
-              </Typography>
-            </Grid>
-          </Grid>
-        </Paper> */}
-
         <Paper
           sx={{
             maxWidth: "100%",
@@ -436,7 +258,6 @@ export default function ProductView() {
             mb: 1,
             mt: 1,
           }}
-          square
         >
           <AppBar
             position="static"
@@ -550,7 +371,6 @@ export default function ProductView() {
             mb: 1,
             mt: 1,
           }}
-          square
         >
           <AppBar
             position="static"
@@ -587,7 +407,6 @@ export default function ProductView() {
             overflow: "hidden",
             mb: 1,
           }}
-          square
         >
           <AppBar
             position="static"
