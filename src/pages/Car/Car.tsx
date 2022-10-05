@@ -16,7 +16,7 @@ import { carSelector, carAll, carSearch } from "@/store/slices/carSlice";
 import { NumberWithCommas } from "@/utils";
 
 import { Typography, IconButton, TextField } from "@mui/material";
-
+import Paper from "@mui/material/Paper";
 import { Box, FormControl } from "@mui/material";
 import { BoxDataGrid } from "@/styles/AppStyle";
 
@@ -123,55 +123,65 @@ export default function Car() {
 
   return (
     <>
-      {/* 936  width: "100%"*/}
-      <BoxDataGrid>
-        <DataGrid
-          components={{ Toolbar: QuickSearchToolbar }}
-          componentsProps={{
-            toolbar: {
-              value: keywordSearchNoDelay,
-              onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                setKeywordSearch(e.target.value);
-                setKeywordSearchNoDelay(e.target.value);
+      <Paper
+        sx={{
+          maxWidth: "100%",
+          // minHeight: "100%",
+          margin: "auto",
+          overflow: "hidden",
+        }}
+      >
+        {/* 936  width: "100%"*/}
+        <BoxDataGrid>
+          <DataGrid
+            autoHeight
+            components={{ Toolbar: QuickSearchToolbar }}
+            componentsProps={{
+              toolbar: {
+                value: keywordSearchNoDelay,
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                  setKeywordSearch(e.target.value);
+                  setKeywordSearchNoDelay(e.target.value);
+                },
+                clearSearch: () => {
+                  // รีโหลดข้อมูลทั้งหมดใหม่
+                  dispatch(carAll());
+                  setKeywordSearch("");
+                  setKeywordSearchNoDelay("");
+                },
               },
-              clearSearch: () => {
-                // รีโหลดข้อมูลทั้งหมดใหม่
-                dispatch(carAll());
-                setKeywordSearch("");
-                setKeywordSearchNoDelay("");
+            }}
+            sx={{
+              // border-top-left-radius
+              backgroundColor: "white",
+              // maxWidth: "100%",
+              margin: "auto",
+              overflow: "hidden",
+              "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
+                {
+                  color: "#fff",
+                  opacity: 0.5,
+                },
+            }}
+            rows={carReducer.isResult ? carReducer.isResult : []}
+            columns={hosxpColumns}
+            pageSize={20}
+            rowHeight={36}
+            headerHeight={36}
+            hideFooterSelectedRowCount
+            rowsPerPageOptions={[20]}
+            disableColumnMenu={true}
+            loading={carReducer.isFetching}
+            getRowId={(row) => row.blacklistid + Math.random() * (100 - 1)}
+            localeText={{
+              MuiTablePagination: {
+                labelDisplayedRows: ({ from, to, count }) =>
+                  `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
               },
-            },
-          }}
-          sx={{
-            // border-top-left-radius
-            backgroundColor: "white",
-            // maxWidth: "100%",
-            margin: "auto",
-            overflow: "hidden",
-            "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-              {
-                color: "#fff",
-                opacity: 0.5,
-              },
-          }}
-          rows={carReducer.isResult ? carReducer.isResult : []}
-          columns={hosxpColumns}
-          pageSize={20}
-          rowHeight={36}
-          headerHeight={36}
-          hideFooterSelectedRowCount
-          rowsPerPageOptions={[20]}
-          disableColumnMenu={true}
-          loading={carReducer.isFetching}
-          getRowId={(row) => row.blacklistid + Math.random() * (100 - 1)}
-          localeText={{
-            MuiTablePagination: {
-              labelDisplayedRows: ({ from, to, count }) =>
-                `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
-            },
-          }}
-        />
-      </BoxDataGrid>
+            }}
+          />
+        </BoxDataGrid>
+      </Paper>
     </>
   );
 }

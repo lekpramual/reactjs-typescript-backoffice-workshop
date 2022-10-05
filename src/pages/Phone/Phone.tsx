@@ -24,6 +24,8 @@ import { PhoneSearch } from "@/types";
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
 
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -47,8 +49,15 @@ import Select from "@mui/material/Select";
 
 import thLocale from "date-fns/locale/th";
 
-import { Button, FormControl, InputLabel, OutlinedInput } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  Stack,
+} from "@mui/material";
 import { BoxDataGrid } from "@/styles/AppStyle";
+import { Box } from "@mui/system";
 
 const localeMap = {
   th: thLocale,
@@ -68,13 +77,27 @@ const CustomExportButton = (props: ButtonProps) => (
 );
 
 const CustomToolbar = (props: GridToolbarContainerProps) => (
-  <GridToolbarContainer
-    {...props}
-    sx={{
-      justifyContent: "end",
-    }}
-  >
-    <CustomExportButton title="ส่งออก Excel" />
+  <GridToolbarContainer {...props}>
+    <Stack
+      sx={{
+        flex: 1,
+      }}
+      direction="row"
+      justifyContent="space-between"
+      alignItems="baseline"
+      spacing={2}
+    >
+      <Typography variant="subtitle1" component={"span"}>
+        รายการใช้งานโทรศัพท์
+      </Typography>
+
+      <CustomExportButton
+        title="ส่งออก Excel"
+        size="small"
+        variant="contained"
+        color="primary"
+      />
+    </Stack>
   </GridToolbarContainer>
 );
 
@@ -239,7 +262,7 @@ export default function Phone() {
           alignItems="center"
           sx={{ pt: "6px", width: "100%" }}
         >
-          <Grid item lg={4} md={6} xs={6}>
+          <Grid item lg={4} md={4} xs={6}>
             <FormControl fullWidth sx={{ m: 1 }}>
               <InputLabel htmlFor="outlined-adornment-keyword">
                 ค้นหา
@@ -257,7 +280,7 @@ export default function Phone() {
               />
             </FormControl>
           </Grid>
-          <Grid item lg={4} md={6} xs={6}>
+          <Grid item lg={4} md={4} xs={6}>
             <FormControl fullWidth sx={{ m: 1 }} size="small">
               <InputLabel id="select-small-type">ประเภท</InputLabel>
               <Field
@@ -274,7 +297,65 @@ export default function Phone() {
               </Field>
             </FormControl>
           </Grid>
-          <Grid
+          <Grid item lg={4} md={4} xs={12}>
+            <FormControl fullWidth sx={{ m: 1 }} size="small">
+              <Stack direction="row" className="text-center ">
+                <Tooltip
+                  title="ค้นหาขั้นสูง"
+                  sx={{
+                    marginRight: 1,
+                  }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={() => (open ? handleClose() : handleOpen())}
+                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
+                  >
+                    {open ? (
+                      <KeyboardDoubleArrowUpTwoToneIcon
+                        color="inherit"
+                        sx={{ display: "block" }}
+                      />
+                    ) : (
+                      <KeyboardDoubleArrowDownTwoToneIcon
+                        color="inherit"
+                        sx={{ display: "block" }}
+                      />
+                    )}
+                  </IconButton>
+                </Tooltip>
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  className="hover:text-[#fce805]"
+                  size="small"
+                  sx={{
+                    marginRight: 1,
+                  }}
+                >
+                  ค้นหา
+                </Button>
+
+                <Tooltip title="โหลดข้อมูล">
+                  <IconButton
+                    onClick={() => {
+                      dispatch(phoneAll());
+                      resetForm();
+                      setOpen(false);
+                    }}
+                    size="small"
+                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
+                  >
+                    <RefreshIcon color="inherit" />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
+            </FormControl>
+          </Grid>
+
+          {/* <Grid
             item
             lg={1}
             md={4}
@@ -340,7 +421,7 @@ export default function Phone() {
                 <RefreshIcon color="inherit" sx={{ display: "block" }} />
               </IconButton>
             </Tooltip>
-          </Grid>
+          </Grid> */}
         </Grid>
 
         {open && (
@@ -350,7 +431,7 @@ export default function Phone() {
             alignItems="center"
             sx={{ pt: "6px", width: "100%" }}
           >
-            <Grid item lg={3} sm={6}>
+            <Grid item lg={3} sm={6} xs={6}>
               <FormControl fullWidth sx={{ m: 1 }}>
                 <LocalizationProvider
                   dateAdapter={AdapterDateFns}
@@ -375,7 +456,7 @@ export default function Phone() {
                 </LocalizationProvider>
               </FormControl>
             </Grid>
-            <Grid item lg={3} sm={6}>
+            <Grid item lg={3} sm={6} xs={6}>
               <FormControl fullWidth sx={{ m: 1 }}>
                 <LocalizationProvider
                   dateAdapter={AdapterDateFns}
@@ -400,7 +481,7 @@ export default function Phone() {
                 </LocalizationProvider>
               </FormControl>
             </Grid>
-            <Grid item lg={3} sm={6}>
+            <Grid item lg={3} sm={6} xs={6}>
               <FormControl fullWidth sx={{ m: 1 }} size="small">
                 <InputLabel id="select-small-disposition">
                   สถานะคู่สาย
@@ -418,7 +499,7 @@ export default function Phone() {
                 </Field>
               </FormControl>
             </Grid>
-            <Grid item lg={3} sm={6}>
+            <Grid item lg={3} sm={6} xs={6}>
               <FormControl fullWidth sx={{ m: 1 }} size="small">
                 <InputLabel id="select-small-dstchannel">โทรออกผ่าน</InputLabel>
                 <Field
@@ -464,34 +545,55 @@ export default function Phone() {
         </Formik>
       </Paper>
       {/* 936  width: "100%"*/}
-      <BoxDataGrid>
-        <DataGrid
-          rowHeight={36}
-          headerHeight={36}
-          components={{
-            Toolbar: CustomToolbar,
-            NoRowsOverlay: CustomNoRowsOverlay,
-          }}
-          rows={phoneReducer.isResult ? phoneReducer.isResult : []}
-          columns={phoneColumns}
-          pageSize={20}
-          hideFooterSelectedRowCount
-          rowsPerPageOptions={[20]}
-          disableColumnMenu={true}
-          loading={phoneReducer.isFetching}
-          getRowId={(row) => row.id}
-          localeText={{
-            MuiTablePagination: {
-              labelDisplayedRows: ({ from, to, count }) =>
-                `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
-            },
-            toolbarExport: "ส่งออก",
-            toolbarExportCSV: "ดาวน์โหลด Excel",
-          }}
-          columnBuffer={2}
-          columnThreshold={2}
-        />
-      </BoxDataGrid>
+      <Paper
+        sx={{
+          maxWidth: "100%",
+          // minHeight: "100%",
+          margin: "auto",
+          overflow: "hidden",
+        }}
+      >
+        <BoxDataGrid>
+          <DataGrid
+            autoHeight
+            rowHeight={36}
+            headerHeight={36}
+            components={{
+              Toolbar: CustomToolbar,
+              NoRowsOverlay: CustomNoRowsOverlay,
+            }}
+            sx={{
+              backgroundColor: "white",
+              margin: "auto",
+              overflow: "hidden",
+              // minHeight: "100%",
+              "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
+                {
+                  color: "#fff",
+                  opacity: 0.5,
+                },
+            }}
+            rows={phoneReducer.isResult ? phoneReducer.isResult : []}
+            columns={phoneColumns}
+            hideFooterSelectedRowCount
+            pageSize={15}
+            rowsPerPageOptions={[15]}
+            disableColumnMenu={true}
+            loading={phoneReducer.isFetching}
+            getRowId={(row) => row.id}
+            localeText={{
+              MuiTablePagination: {
+                labelDisplayedRows: ({ from, to, count }) =>
+                  `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
+              },
+              toolbarExport: "ส่งออก",
+              toolbarExportCSV: "ดาวน์โหลด Excel",
+            }}
+            columnBuffer={2}
+            columnThreshold={2}
+          />
+        </BoxDataGrid>
+      </Paper>
     </>
   );
 }

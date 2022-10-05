@@ -30,6 +30,7 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
+  Paper,
 } from "@mui/material";
 
 import { Box, Button, FormControl } from "@mui/material";
@@ -236,60 +237,69 @@ export default function Hosxp() {
   return (
     <>
       {/* 936  width: "100%"*/}
-
-      <BoxDataGrid>
-        <DataGrid
-          components={{
-            Toolbar: QuickSearchToolbar,
-            NoRowsOverlay: CustomNoRowsOverlay,
-          }}
-          componentsProps={{
-            toolbar: {
-              value: keywordSearchNoDelay,
-              onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                setKeywordSearch(e.target.value);
-                setKeywordSearchNoDelay(e.target.value);
+      <Paper
+        sx={{
+          maxWidth: "100%",
+          // minHeight: "100%",
+          margin: "auto",
+          overflow: "hidden",
+        }}
+      >
+        <BoxDataGrid>
+          <DataGrid
+            autoHeight
+            components={{
+              Toolbar: QuickSearchToolbar,
+              NoRowsOverlay: CustomNoRowsOverlay,
+            }}
+            componentsProps={{
+              toolbar: {
+                value: keywordSearchNoDelay,
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                  setKeywordSearch(e.target.value);
+                  setKeywordSearchNoDelay(e.target.value);
+                },
+                clearSearch: () => {
+                  // รีโหลดข้อมูลทั้งหมดใหม่
+                  dispatch(hosxpAll());
+                  setKeywordSearch("");
+                  setKeywordSearchNoDelay("");
+                },
               },
-              clearSearch: () => {
-                // รีโหลดข้อมูลทั้งหมดใหม่
-                dispatch(hosxpAll());
-                setKeywordSearch("");
-                setKeywordSearchNoDelay("");
+            }}
+            sx={{
+              // border-top-left-radius
+              backgroundColor: "white",
+              // maxWidth: "100%",
+              margin: "auto",
+              overflow: "hidden",
+              "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
+                {
+                  color: "#fff",
+                  opacity: 0.5,
+                },
+            }}
+            rows={hosxpReducer.isResult ? hosxpReducer.isResult : []}
+            columns={hosxpColumns}
+            pageSize={15}
+            rowHeight={36}
+            headerHeight={36}
+            hideFooterSelectedRowCount
+            rowsPerPageOptions={[15]}
+            disableColumnMenu={true}
+            loading={hosxpReducer.isFetching}
+            getRowId={(row) =>
+              parseInt(row.kskloginname) + Math.random() * (100 - 1)
+            }
+            localeText={{
+              MuiTablePagination: {
+                labelDisplayedRows: ({ from, to, count }) =>
+                  `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
               },
-            },
-          }}
-          sx={{
-            // border-top-left-radius
-            backgroundColor: "white",
-            // maxWidth: "100%",
-            margin: "auto",
-            overflow: "hidden",
-            "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-              {
-                color: "#fff",
-                opacity: 0.5,
-              },
-          }}
-          rows={hosxpReducer.isResult ? hosxpReducer.isResult : []}
-          columns={hosxpColumns}
-          pageSize={20}
-          rowHeight={36}
-          headerHeight={36}
-          hideFooterSelectedRowCount
-          rowsPerPageOptions={[20]}
-          disableColumnMenu={true}
-          loading={hosxpReducer.isFetching}
-          getRowId={(row) =>
-            parseInt(row.kskloginname) + Math.random() * (100 - 1)
-          }
-          localeText={{
-            MuiTablePagination: {
-              labelDisplayedRows: ({ from, to, count }) =>
-                `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
-            },
-          }}
-        />
-      </BoxDataGrid>
+            }}
+          />
+        </BoxDataGrid>
+      </Paper>
 
       {showDialog()}
     </>
