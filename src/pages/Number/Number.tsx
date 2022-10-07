@@ -21,6 +21,11 @@ import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
 import { Typography, IconButton, TextField } from "@mui/material";
 
 import Paper from "@mui/material/Paper";
+
+import Grid from "@mui/material/Grid";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+
 import { Box, FormControl } from "@mui/material";
 import { BoxDataGrid } from "@/styles/AppStyle";
 
@@ -135,6 +140,23 @@ export default function Number() {
           overflow: "hidden",
         }}
       >
+        <AppBar
+          position="static"
+          color="default"
+          // elevation={0}
+          sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+        >
+          <Toolbar className="pl-5 pr-2">
+            <Grid container alignItems="center">
+              <Grid item xs>
+                <Typography variant="subtitle2" component="span">
+                  รายการเบอร์ภายใน
+                </Typography>
+              </Grid>
+            </Grid>
+          </Toolbar>
+        </AppBar>
+
         <BoxDataGrid>
           <DataGrid
             autoHeight

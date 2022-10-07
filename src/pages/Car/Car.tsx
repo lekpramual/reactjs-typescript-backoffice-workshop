@@ -17,6 +17,9 @@ import { NumberWithCommas } from "@/utils";
 
 import { Typography, IconButton, TextField } from "@mui/material";
 import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
 import { Box, FormControl } from "@mui/material";
 import { BoxDataGrid } from "@/styles/AppStyle";
 
@@ -131,6 +134,23 @@ export default function Car() {
           overflow: "hidden",
         }}
       >
+        <AppBar
+          position="static"
+          color="default"
+          // elevation={0}
+          sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+        >
+          <Toolbar className="pl-5 pr-2">
+            <Grid container alignItems="center">
+              <Grid item xs>
+                <Typography variant="subtitle2" component="span">
+                  รายการทะเบียนรถ
+                </Typography>
+              </Grid>
+            </Grid>
+          </Toolbar>
+        </AppBar>
+
         {/* 936  width: "100%"*/}
         <BoxDataGrid>
           <DataGrid
@@ -165,11 +185,11 @@ export default function Car() {
             }}
             rows={carReducer.isResult ? carReducer.isResult : []}
             columns={hosxpColumns}
-            pageSize={20}
+            pageSize={15}
             rowHeight={36}
             headerHeight={36}
             hideFooterSelectedRowCount
-            rowsPerPageOptions={[20]}
+            rowsPerPageOptions={[15]}
             disableColumnMenu={true}
             loading={carReducer.isFetching}
             getRowId={(row) => row.blacklistid + Math.random() * (100 - 1)}

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 // redux
-import { useTheme } from "@mui/material";
+// import { useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import useMediaQuery from "@mui/material/useMediaQuery";
+// import useMediaQuery from "@mui/material/useMediaQuery";
 import CssBaseline from "@mui/material/CssBaseline";
 
 // Component
@@ -14,16 +14,14 @@ import Copyright from "@/layouts/Copyright";
 const drawerWidth = 256;
 
 function PrivateAppLayout() {
-  const theme = useTheme();
+  // const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   // const isSmUp = useMediaQuery(theme.breakpoints.up("sm"));
-  const isLgUp = useMediaQuery(theme.breakpoints.up("lg"));
+  // const isLgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
-  console.log(isLgUp);
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>

@@ -119,29 +119,29 @@ theme = {
         },
       },
     },
-    MuiDialog: {
-      styleOverrides: {
-        root: {
-          borderRadius: 0,
-        },
-      },
-    },
-    MuiDialogTitle: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "#36474f",
-          color: "#fff",
-          textAlign: "center",
-          padding: "5px",
-          height: "40px",
-        },
-      },
-    },
+    // MuiDialog: {
+    //   styleOverrides: {
+    //     root: {
+    //       borderRadius: 0,
+    //     },
+    //   },
+    // },
+    // MuiDialogTitle: {
+    //   styleOverrides: {
+    //     root: {
+    //       backgroundColor: "#36474f",
+    //       color: "#fff",
+    //       textAlign: "center",
+    //       padding: "5px",
+    //       height: "40px",
+    //     },
+    //   },
+    // },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: "#36474f",
-          color: "#fff",
+          // backgroundColor: "#36474f",
+          // color: "#fff",
           height: "40px",
         },
       },

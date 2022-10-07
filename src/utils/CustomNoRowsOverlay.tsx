@@ -7,7 +7,7 @@ export function CustomNoRowsOverlay() {
     <StyledGridOverlay>
       <svg
         width="120"
-        height="100"
+        height="120"
         viewBox="0 0 184 152"
         aria-hidden
         focusable="false"

@@ -20,8 +20,8 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 
-import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
-import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
+// import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
+// import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 
 import Barcode from "react-barcode";
 
@@ -123,7 +123,8 @@ export default function ProductView() {
               navigate(-1);
             }}
           >
-            <ArrowBackTwoToneIcon /> ย้อนกลับ
+            {/* <ArrowBackTwoToneIcon />  */}
+            ย้อนกลับ
           </Button>
         </Grid>
       </Grid>
@@ -352,12 +353,13 @@ export default function ProductView() {
         </Paper>
 
         <Grid container spacing={2} alignItems="center" className="mt-1">
-          <Grid xs={10} xsOffset={2} className="text-center">
+          <Grid xs={12} className="text-center">
             <Button
               variant="contained"
               className="w-[256px] bg-blue-500 hover:bg-blue-600"
             >
-              <PrintTwoToneIcon /> ปริ้นรายการอุปกรณ์
+              {/* <PrintTwoToneIcon /> */}
+              ปริ้นรายการอุปกรณ์
             </Button>
           </Grid>
         </Grid>

@@ -24,8 +24,6 @@ import { PhoneSearch } from "@/types";
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
 
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -57,7 +55,6 @@ import {
   Stack,
 } from "@mui/material";
 import { BoxDataGrid } from "@/styles/AppStyle";
-import { Box } from "@mui/system";
 
 const localeMap = {
   th: thLocale,
@@ -95,7 +92,8 @@ const CustomToolbar = (props: GridToolbarContainerProps) => (
         title="ส่งออก Excel"
         size="small"
         variant="contained"
-        color="primary"
+        // color="primary"
+        className="w-[96px] bg-cyan-500 hover:bg-cyan-600"
       />
     </Stack>
   </GridToolbarContainer>
@@ -566,13 +564,14 @@ export default function Phone() {
               backgroundColor: "white",
               margin: "auto",
               overflow: "hidden",
-              // minHeight: "100%",
               "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
                 {
                   color: "#fff",
                   opacity: 0.5,
                 },
             }}
+            // rows={[]}
+            getRowId={(row) => row.id}
             rows={phoneReducer.isResult ? phoneReducer.isResult : []}
             columns={phoneColumns}
             hideFooterSelectedRowCount
@@ -580,7 +579,6 @@ export default function Phone() {
             rowsPerPageOptions={[15]}
             disableColumnMenu={true}
             loading={phoneReducer.isFetching}
-            getRowId={(row) => row.id}
             localeText={{
               MuiTablePagination: {
                 labelDisplayedRows: ({ from, to, count }) =>

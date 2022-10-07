@@ -34,13 +34,9 @@ import Stack from "@mui/material/Stack";
 // import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
-import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
-import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
-import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -90,7 +86,17 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
   const { children, onClose, ...other } = props;
 
   return (
-    <DialogTitle sx={{ m: 0, p: 2, height: 48 }} {...other}>
+    <DialogTitle
+      sx={{
+        mt: 0,
+        p: "2px",
+        height: 40,
+        backgroundColor: "#36474f",
+        color: "#fff",
+        textAlign: "center",
+      }}
+      {...other}
+    >
       {children}
     </DialogTitle>
   );
@@ -690,10 +696,20 @@ export default function EquipmentCreate() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="info">
-            ยกเลิก
+          <Button
+            onClick={() => setOpenDialog(false)}
+            variant="contained"
+            color="error"
+            className="w-[96px] "
+          >
+            ปิด
           </Button>
-          <Button onClick={handleDeleteConfirm} color="primary">
+          <Button
+            onClick={handleDeleteConfirm}
+            variant="contained"
+            color="success"
+            className="w-[96px] "
+          >
             ตกลง
           </Button>
         </DialogActions>
@@ -737,8 +753,18 @@ export default function EquipmentCreate() {
             paddingRight: 24,
           }}
         >
+          <Button
+            onClick={() => setOpenDialogCreate(false)}
+            variant="contained"
+            color="error"
+            className="w-[96px] "
+          >
+            ปิด
+          </Button>
+
           <Button variant="contained" color="success" className="w-[128px] ">
-            <SaveTwoToneIcon /> บันทึก
+            {/* <SaveTwoToneIcon />  */}
+            บันทึก
           </Button>
         </DialogActions>
       </BootstrapDialog>
@@ -798,7 +824,8 @@ export default function EquipmentCreate() {
                     navigate(-1);
                   }}
                 >
-                  <ArrowBackTwoToneIcon /> ย้อนกลับ
+                  {/* <ArrowBackTwoToneIcon />  */}
+                  ย้อนกลับ
                 </Button>
               </Grid>
             </Grid>
@@ -850,7 +877,8 @@ export default function EquipmentCreate() {
                     setOpenDialogCreate(true);
                   }}
                 >
-                  <AddTwoToneIcon /> เพิ่ม
+                  {/* <AddTwoToneIcon />  */}
+                  เพิ่ม
                 </Button>
               </Grid>
             </Grid>
@@ -911,12 +939,14 @@ export default function EquipmentCreate() {
       <Grid container spacing={2} alignItems="center" className="mt-1">
         <Grid xs={6} className="text-right" item>
           <Button variant="contained" color="error" className="w-[128px] ">
-            <RestartAltTwoToneIcon /> ยกเลิก
+            {/* <RestartAltTwoToneIcon />  */}
+            ยกเลิก
           </Button>
         </Grid>
         <Grid xs={6} item>
           <Button variant="contained" color="success" className="w-[128px] ">
-            <SaveTwoToneIcon /> บันทึก
+            {/* <SaveTwoToneIcon />  */}
+            บันทึก
           </Button>
         </Grid>
       </Grid>

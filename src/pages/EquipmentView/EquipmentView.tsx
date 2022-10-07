@@ -8,9 +8,6 @@ import Paper from "@mui/material/Paper";
 // import Grid from "@mui/material/Grid";
 import Grid from "@mui/material/Unstable_Grid2";
 
-import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
-import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
-
 // @styles
 import { BoxDataGrid } from "@/styles/AppStyle";
 import { NumberWithCommas, CustomNoRowsOverlay, NumberWithPad } from "@/utils";
@@ -197,7 +194,8 @@ export default function EquipmentView() {
               navigate(-1);
             }}
           >
-            <ArrowBackTwoToneIcon /> ย้อนกลับ
+            {/* <ArrowBackTwoToneIcon />  */}
+            ย้อนกลับ
           </Button>
         </Grid>
       </Grid>
@@ -404,7 +402,8 @@ export default function EquipmentView() {
             variant="contained"
             className="w-[256px] bg-blue-500 hover:bg-blue-600"
           >
-            <PrintTwoToneIcon /> ปริ้นรายการอุปกรณ์
+            {/* <PrintTwoToneIcon />  */}
+            ปริ้นรายการอุปกรณ์
           </Button>
         </Grid>
       </Grid>

@@ -31,6 +31,9 @@ import {
   DialogActions,
   DialogTitle,
   Paper,
+  AppBar,
+  Toolbar,
+  Grid,
 } from "@mui/material";
 
 import { Box, Button, FormControl } from "@mui/material";
@@ -223,10 +226,20 @@ export default function Hosxp() {
           </DialogContentText>
         </DialogContent> */}
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="info">
-            ยกเลิก
+          <Button
+            onClick={() => setOpenDialog(false)}
+            variant="contained"
+            color="error"
+            className="w-[96px] "
+          >
+            ปิด
           </Button>
-          <Button onClick={handleDeleteConfirm} color="primary">
+          <Button
+            onClick={handleDeleteConfirm}
+            variant="contained"
+            color="success"
+            className="w-[96px] "
+          >
             ตกลง
           </Button>
         </DialogActions>
@@ -245,6 +258,23 @@ export default function Hosxp() {
           overflow: "hidden",
         }}
       >
+        <AppBar
+          position="static"
+          color="default"
+          // elevation={0}
+          sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+        >
+          <Toolbar className="pl-5 pr-2">
+            <Grid container alignItems="center">
+              <Grid item xs>
+                <Typography variant="subtitle2" component="span">
+                  รายการเข้าใช้งาน (Hosxp)
+                </Typography>
+              </Grid>
+            </Grid>
+          </Toolbar>
+        </AppBar>
+
         <BoxDataGrid>
           <DataGrid
             autoHeight

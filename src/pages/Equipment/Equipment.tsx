@@ -31,7 +31,6 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
@@ -208,7 +207,6 @@ export default function Equipment() {
               aria-label="view"
               size="small"
               onClick={() => {
-                console.log(row.id);
                 setOpenDialogCreate(true);
                 navigate("/app3/equipment/view?id=" + row.id);
               }}
@@ -525,10 +523,20 @@ export default function Equipment() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="info">
-            ยกเลิก
+          <Button
+            onClick={() => setOpenDialog(false)}
+            variant="contained"
+            color="error"
+            className="w-[96px] "
+          >
+            ปิด
           </Button>
-          <Button onClick={handleDeleteConfirm} color="primary">
+          <Button
+            onClick={handleDeleteConfirm}
+            variant="contained"
+            color="success"
+            className="w-[96px] "
+          >
             ตกลง
           </Button>
         </DialogActions>
@@ -650,7 +658,8 @@ export default function Equipment() {
                   component={Link}
                   to="/app3/equipment/create"
                 >
-                  <AddTwoToneIcon /> เพิ่ม
+                  {/* <AddTwoToneIcon /> */}
+                  เพิ่ม
                 </Button>
               </Grid>
             </Grid>
