@@ -769,12 +769,12 @@ export default function EquipmentCreate() {
             color="error"
             className="w-[96px] "
           >
-            ปิด
+            <CloseTwoToneIcon /> ปิด
           </Button>
 
           <Button variant="contained" color="success" className="w-[128px] ">
-            {/* <SaveTwoToneIcon />  */}
-            บันทึก
+            <DoneTwoToneIcon />
+            ตกลง
           </Button>
         </DialogActions>
       </BootstrapDialog>

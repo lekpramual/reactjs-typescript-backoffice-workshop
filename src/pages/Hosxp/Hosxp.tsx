@@ -8,6 +8,9 @@ import { useDebounce } from "@react-hook/debounce";
 
 import { Clear, Search } from "@mui/icons-material";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
+import DoneTwoToneIcon from "@mui/icons-material/DoneTwoTone";
+
 // @redux
 import { useSelector, useDispatch } from "react-redux";
 // @seletor
@@ -235,7 +238,7 @@ export default function Hosxp() {
             color="error"
             className="w-[96px] "
           >
-            ปิด
+            <CloseTwoToneIcon /> ปิด
           </Button>
           <Button
             onClick={handleDeleteConfirm}
@@ -243,7 +246,7 @@ export default function Hosxp() {
             color="success"
             className="w-[96px] "
           >
-            ตกลง
+            <DoneTwoToneIcon /> ตกลง
           </Button>
         </DialogActions>
       </Dialog>
