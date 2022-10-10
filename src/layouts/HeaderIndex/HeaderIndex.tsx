@@ -25,7 +25,14 @@ export default function HeaderIndex(props: HeaderProps) {
 
   return (
     <React.Fragment>
-      <AppBar color="primary" position="sticky" elevation={0}>
+      <AppBar
+        color="primary"
+        position="sticky"
+        elevation={0}
+        sx={{
+          height: "52px",
+        }}
+      >
         <Toolbar>
           <Container maxWidth="xl">
             <Grid container spacing={2} alignItems="center">

@@ -20,8 +20,9 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 
-// import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
-// import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
+import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
+import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
+import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTone";
 
 import Barcode from "react-barcode";
 
@@ -123,7 +124,7 @@ export default function ProductView() {
               navigate(-1);
             }}
           >
-            {/* <ArrowBackTwoToneIcon />  */}
+            <ArrowBackTwoToneIcon />
             ย้อนกลับ
           </Button>
         </Grid>
@@ -143,7 +144,7 @@ export default function ProductView() {
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
           className="h-[40px]"
         >
-          <Toolbar className="pl-5 pr-2">
+          <Toolbar className="pl-2 pr-2">
             <Grid
               container
               sx={{
@@ -151,8 +152,15 @@ export default function ProductView() {
               }}
             >
               <Grid xs={12}>
-                <Typography variant="subtitle2" component="span">
-                  รายการอุปกรณ์
+                <Typography
+                  variant="subtitle2"
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                >
+                  <AppRegistrationTwoToneIcon /> รายการอุปกรณ์
                 </Typography>
               </Grid>
             </Grid>
@@ -267,7 +275,7 @@ export default function ProductView() {
             sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
             className="h-[40px]"
           >
-            <Toolbar className="pl-5 pr-2">
+            <Toolbar className="pl-2 pr-2">
               <Grid
                 container
                 sx={{
@@ -275,8 +283,15 @@ export default function ProductView() {
                 }}
               >
                 <Grid xs={6}>
-                  <Typography variant="subtitle2" component="span">
-                    รายละเอียดอุปกรณ์
+                  <Typography
+                    variant="subtitle2"
+                    component="span"
+                    sx={{
+                      display: "flex",
+                      alignContent: "center",
+                    }}
+                  >
+                    <AppRegistrationTwoToneIcon /> รายละเอียดอุปกรณ์
                   </Typography>
                 </Grid>
                 <Grid xs={6} className="text-right">
@@ -358,7 +373,7 @@ export default function ProductView() {
               variant="contained"
               className="w-[256px] bg-blue-500 hover:bg-blue-600"
             >
-              {/* <PrintTwoToneIcon /> */}
+              <PrintTwoToneIcon />
               ปริ้นรายการอุปกรณ์
             </Button>
           </Grid>
@@ -381,7 +396,7 @@ export default function ProductView() {
             sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
             className="h-[40px]"
           >
-            <Toolbar className="pl-5 pr-2">
+            <Toolbar className="pl-2 pr-2">
               <Grid
                 container
                 sx={{
@@ -389,8 +404,15 @@ export default function ProductView() {
                 }}
               >
                 <Grid xs={12}>
-                  <Typography variant="subtitle2" component="span">
-                    Barcode
+                  <Typography
+                    variant="subtitle2"
+                    component="div"
+                    sx={{
+                      display: "flex",
+                      alignContent: "center",
+                    }}
+                  >
+                    <AppRegistrationTwoToneIcon /> Barcode
                   </Typography>
                 </Grid>
               </Grid>
@@ -417,7 +439,7 @@ export default function ProductView() {
             sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
             className="h-[40px]"
           >
-            <Toolbar className="pl-5 pr-2">
+            <Toolbar className="pl-2 pr-2">
               <Grid
                 container
                 sx={{
@@ -425,8 +447,15 @@ export default function ProductView() {
                 }}
               >
                 <Grid xs={12}>
-                  <Typography variant="subtitle2" component="span">
-                    รูปภาพประกอบ
+                  <Typography
+                    variant="subtitle2"
+                    component="div"
+                    sx={{
+                      display: "flex",
+                      alignContent: "center",
+                    }}
+                  >
+                    <AppRegistrationTwoToneIcon /> รูปภาพประกอบ
                   </Typography>
                 </Grid>
               </Grid>

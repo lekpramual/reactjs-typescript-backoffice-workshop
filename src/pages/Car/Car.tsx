@@ -4,7 +4,9 @@ import { DataGrid } from "@mui/x-data-grid";
 
 import { useDebounce } from "@react-hook/debounce";
 
+//@icons
 import { Clear, Search } from "@mui/icons-material";
+import DirectionsCarTwoToneIcon from "@mui/icons-material/DirectionsCarTwoTone";
 
 // @redux
 import { useSelector, useDispatch } from "react-redux";
@@ -140,11 +142,18 @@ export default function Car() {
           // elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
         >
-          <Toolbar className="pl-5 pr-2">
+          <Toolbar className="pl-2 pr-2">
             <Grid container alignItems="center">
               <Grid item xs>
-                <Typography variant="subtitle2" component="span">
-                  รายการทะเบียนรถ
+                <Typography
+                  variant="subtitle2"
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                >
+                  <DirectionsCarTwoToneIcon /> รายการทะเบียนรถ
                 </Typography>
               </Grid>
             </Grid>

@@ -17,6 +17,9 @@ import {
   Breadcrumbs,
 } from "@mui/material";
 
+// @icons
+import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
+import SearchTwoToneIcon from "@mui/icons-material/SearchTwoTone";
 // @type
 import { PhoneSearch } from "@/types";
 import MenuItem from "@mui/material/MenuItem";
@@ -35,8 +38,12 @@ import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
 import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
+import NoteAltTwoToneIcon from "@mui/icons-material/NoteAltTwoTone";
 import SearchIcon from "@mui/icons-material/Search";
 import RefreshIcon from "@mui/icons-material/Refresh";
+
+import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
+import DoneTwoToneIcon from "@mui/icons-material/DoneTwoTone";
 
 // @styles
 import { BootstrapDialog, BoxDataGrid } from "@/styles/AppStyle";
@@ -472,7 +479,7 @@ export default function Equipment() {
                 fullWidth
                 className="bg-[#36474f] text-[#fff] hover:text-[#fce805] mr-1"
               >
-                ค้นหา
+                <SearchTwoToneIcon /> ค้นหา
               </Button>
 
               <Tooltip title="โหลดข้อมูล">
@@ -529,7 +536,7 @@ export default function Equipment() {
             color="error"
             className="w-[96px] "
           >
-            ปิด
+            <CloseTwoToneIcon /> ปิด
           </Button>
           <Button
             onClick={handleDeleteConfirm}
@@ -537,7 +544,7 @@ export default function Equipment() {
             color="success"
             className="w-[96px] "
           >
-            ตกลง
+            <DoneTwoToneIcon /> ตกลง
           </Button>
         </DialogActions>
       </Dialog>
@@ -556,7 +563,7 @@ export default function Equipment() {
           id="alert-dialog-slide-title"
           onClose={() => setOpenDialogCreate(false)}
         >
-          <Typography variant="subtitle1" component={"b"}>
+          <Typography variant="subtitle1" component={"div"}>
             เพิ่มรายการอุปกรณ์
           </Typography>
         </BootstrapDialogTitle>
@@ -641,11 +648,18 @@ export default function Equipment() {
           // elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
         >
-          <Toolbar className="pl-5 pr-2">
+          <Toolbar className="pl-2 pr-2">
             <Grid container alignItems="center">
               <Grid item xs>
-                <Typography variant="subtitle2" component="span">
-                  รายการอุปกรณ์
+                <Typography
+                  variant="subtitle2"
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                >
+                  <NoteAltTwoToneIcon /> รายการอุปกรณ์
                 </Typography>
               </Grid>
               <Grid item>
@@ -658,7 +672,7 @@ export default function Equipment() {
                   component={Link}
                   to="/app3/equipment/create"
                 >
-                  {/* <AddTwoToneIcon /> */}
+                  <AddTwoToneIcon />
                   เพิ่ม
                 </Button>
               </Grid>

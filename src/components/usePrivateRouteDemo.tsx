@@ -10,7 +10,7 @@ import LockOpenTwoToneIcon from "@mui/icons-material/LockOpenTwoTone";
 import ContactPhoneTwoToneIcon from "@mui/icons-material/ContactPhoneTwoTone";
 import DirectionsCarTwoToneIcon from "@mui/icons-material/DirectionsCarTwoTone";
 import NoteAltTwoToneIcon from "@mui/icons-material/NoteAltTwoTone";
-import MoveDownTwoToneIcon from "@mui/icons-material/MoveDownTwoTone";
+// import MoveDownTwoToneIcon from "@mui/icons-material/MoveDownTwoTone";
 import InventoryTwoToneIcon from "@mui/icons-material/InventoryTwoTone";
 
 export function usePrivateRouteDemo() {
@@ -317,24 +317,24 @@ export function usePrivateRouteDemo() {
           show: false,
         },
 
-        {
-          id: "โอนย้ายอุปกรณ์",
-          icon: (
-            <Box
-              sx={{
-                ...iconCategory,
-              }}
-            >
-              <MoveDownTwoToneIcon
-                sx={{
-                  fontSize: 28,
-                }}
-              />
-            </Box>
-          ),
-          path: "/app3/move",
-          show: true,
-        },
+        // {
+        //   id: "โอนย้ายอุปกรณ์",
+        //   icon: (
+        //     <Box
+        //       sx={{
+        //         ...iconCategory,
+        //       }}
+        //     >
+        //       <MoveDownTwoToneIcon
+        //         sx={{
+        //           fontSize: 28,
+        //         }}
+        //       />
+        //     </Box>
+        //   ),
+        //   path: "/app3/move",
+        //   show: true,
+        // },
       ],
     },
   ];

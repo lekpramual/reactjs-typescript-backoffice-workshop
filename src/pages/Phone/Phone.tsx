@@ -32,6 +32,7 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import FaxTwoToneIcon from "@mui/icons-material/FaxTwoTone";
 import KeyboardDoubleArrowDownTwoToneIcon from "@mui/icons-material/KeyboardDoubleArrowDownTwoTone";
 import KeyboardDoubleArrowUpTwoToneIcon from "@mui/icons-material/KeyboardDoubleArrowUpTwoTone";
 
@@ -84,8 +85,15 @@ const CustomToolbar = (props: GridToolbarContainerProps) => (
       alignItems="baseline"
       spacing={2}
     >
-      <Typography variant="subtitle1" component={"span"}>
-        รายการใช้งานโทรศัพท์
+      <Typography
+        variant="subtitle1"
+        component={"div"}
+        sx={{
+          display: "flex",
+          alignContent: "center",
+        }}
+      >
+        <FaxTwoToneIcon /> รายการใช้งานโทรศัพท์
       </Typography>
 
       <CustomExportButton

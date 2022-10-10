@@ -34,6 +34,7 @@ import SaveAsTwoToneIcon from "@mui/icons-material/SaveAsTwoTone";
 import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
 import LocalPrintshopTwoToneIcon from "@mui/icons-material/LocalPrintshopTwoTone";
 import AddPhotoAlternateTwoToneIcon from "@mui/icons-material/AddPhotoAlternateTwoTone";
+import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTone";
 
 import Barcode from "react-barcode";
 
@@ -433,7 +434,6 @@ export default function ProductEdit() {
           margin: "auto",
           overflow: "hidden",
         }}
-       
       >
         <AppBar
           position="static"
@@ -442,7 +442,7 @@ export default function ProductEdit() {
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
           className="h-[40px]"
         >
-          <Toolbar className="pl-5 pr-2">
+          <Toolbar className="pl-2 pr-2">
             <Grid
               container
               sx={{
@@ -450,8 +450,15 @@ export default function ProductEdit() {
               }}
             >
               <Grid xs={6}>
-                <Typography variant="subtitle2" component="span">
-                  รายการอุปกรณ์
+                <Typography
+                  variant="subtitle2"
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                >
+                  <AppRegistrationTwoToneIcon /> รายการอุปกรณ์
                 </Typography>
               </Grid>
               <Grid xs={6} className="text-right">
@@ -486,7 +493,7 @@ export default function ProductEdit() {
           >
             <Tab
               label={
-                <Typography variant="subtitle1" component="span">
+                <Typography variant="subtitle1" component="div">
                   รายละเอียดอุปกรณ์
                 </Typography>
               }
@@ -521,7 +528,7 @@ export default function ProductEdit() {
             sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
             className="h-[40px]"
           >
-            <Toolbar className="pl-5 pr-2">
+            <Toolbar className="pl-2 pr-2">
               <Grid
                 container
                 sx={{
@@ -529,8 +536,15 @@ export default function ProductEdit() {
                 }}
               >
                 <Grid xs={12}>
-                  <Typography variant="subtitle2" component="span">
-                    รายละเอียดอุปกรณ์
+                  <Typography
+                    variant="subtitle2"
+                    component="div"
+                    sx={{
+                      display: "flex",
+                      alignContent: "center",
+                    }}
+                  >
+                    <AppRegistrationTwoToneIcon /> รายละเอียดอุปกรณ์
                   </Typography>
                 </Grid>
               </Grid>
@@ -553,13 +567,13 @@ export default function ProductEdit() {
 
         <Grid container spacing={2} alignItems="center" className="mt-1">
           <Grid xs={6} className="text-right">
-            <Button variant="contained" color="success" className="w-[128px] ">
-              <SaveAsTwoToneIcon /> ปรับปรุง
+            <Button variant="contained" color="error" className="w-[128px] ">
+              <RestartAltTwoToneIcon /> ยกเลิก
             </Button>
           </Grid>
           <Grid xs={6}>
-            <Button variant="contained" color="error" className="w-[128px] ">
-              <RestartAltTwoToneIcon /> ยกเลิก
+            <Button variant="contained" color="success" className="w-[128px] ">
+              <SaveAsTwoToneIcon /> ปรับปรุง
             </Button>
           </Grid>
         </Grid>
@@ -573,7 +587,6 @@ export default function ProductEdit() {
             mb: 1,
             mt: 1,
           }}
-         
         >
           <AppBar
             position="static"

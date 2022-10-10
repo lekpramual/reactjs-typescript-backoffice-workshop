@@ -38,6 +38,14 @@ import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 
+// @icons
+import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
+import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
+import SaveAsTwoToneIcon from "@mui/icons-material/SaveAsTwoTone";
+import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
+import DoneTwoToneIcon from "@mui/icons-material/DoneTwoTone";
+import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTone";
+
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -710,7 +718,7 @@ export default function EquipmentEdit() {
             color="error"
             className="w-[96px] "
           >
-            ปิด
+            <CloseTwoToneIcon /> ปิด
           </Button>
           <Button
             onClick={handleDeleteConfirm}
@@ -718,7 +726,7 @@ export default function EquipmentEdit() {
             color="success"
             className="w-[96px] "
           >
-            ตกลง
+            <DoneTwoToneIcon /> ตกลง
           </Button>
         </DialogActions>
       </Dialog>
@@ -767,11 +775,11 @@ export default function EquipmentEdit() {
             color="error"
             className="w-[96px] "
           >
-            ปิด
+            <CloseTwoToneIcon /> ปิด
           </Button>
 
           <Button variant="contained" color="success" className="w-[128px] ">
-            {/* <SaveTwoToneIcon />  */}
+            <SaveAsTwoToneIcon />
             ปรับปรุง
           </Button>
 
@@ -819,11 +827,18 @@ export default function EquipmentEdit() {
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
           className="h-[40px]"
         >
-          <Toolbar className="pl-5 pr-0">
+          <Toolbar className="pl-2 pr-0">
             <Grid container alignItems="center">
               <Grid item xs>
-                <Typography variant="subtitle2" component="span">
-                  วิธีการได้มา
+                <Typography
+                  variant="subtitle2"
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                >
+                  <AppRegistrationTwoToneIcon /> วิธีการได้มา
                 </Typography>
               </Grid>
               <Grid item>
@@ -837,7 +852,7 @@ export default function EquipmentEdit() {
                     navigate(-1);
                   }}
                 >
-                  {/* <ArrowBackTwoToneIcon />  */}
+                  <ArrowBackTwoToneIcon />
                   ย้อนกลับ
                 </Button>
               </Grid>
@@ -872,11 +887,18 @@ export default function EquipmentEdit() {
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
           className="h-[40px]"
         >
-          <Toolbar className="pl-5 pr-2">
+          <Toolbar className="pl-2 pr-2">
             <Grid container alignItems="center">
               <Grid item xs>
-                <Typography variant="subtitle2" component="span">
-                  รายการอุปกรณ์
+                <Typography
+                  variant="subtitle2"
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                >
+                  <AppRegistrationTwoToneIcon /> รายการอุปกรณ์
                 </Typography>
               </Grid>
             </Grid>
@@ -937,13 +959,13 @@ export default function EquipmentEdit() {
       <Grid container spacing={2} alignItems="center" className="mt-1">
         <Grid xs={6} className="text-right" item>
           <Button variant="contained" color="error" className="w-[128px] ">
-            {/* <RestartAltTwoToneIcon />  */}
+            <RestartAltTwoToneIcon />
             ยกเลิก
           </Button>
         </Grid>
         <Grid xs={6} item>
           <Button variant="contained" color="success" className="w-[128px] ">
-            {/* <SaveAsTwoToneIcon />  */}
+            <SaveAsTwoToneIcon />
             ปรับปรุง
           </Button>
         </Grid>

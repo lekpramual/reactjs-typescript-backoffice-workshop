@@ -27,6 +27,7 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
+import NoteAltTwoToneIcon from "@mui/icons-material/NoteAltTwoTone";
 import SearchIcon from "@mui/icons-material/Search";
 import RefreshIcon from "@mui/icons-material/Refresh";
 // @styles
@@ -332,7 +333,7 @@ export default function Product() {
                   fullWidth
                   className="bg-[#36474f] text-[#fff] hover:text-[#fce805] mr-1 "
                 >
-                  ค้นหา
+                  <SearchIcon /> ค้นหา
                 </Button>
 
                 <Tooltip title="โหลดข้อมูล">
@@ -421,11 +422,18 @@ export default function Product() {
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
           className="h-[40px]"
         >
-          <Toolbar className="pl-5 pr-2">
+          <Toolbar className="pl-2 pr-2">
             <Grid container alignItems="center">
               <Grid xs={12}>
-                <Typography variant="subtitle2" component="span">
-                  รายการอุปกรณ์
+                <Typography
+                  variant="subtitle2"
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                >
+                  <NoteAltTwoToneIcon /> รายการอุปกรณ์
                 </Typography>
               </Grid>
             </Grid>

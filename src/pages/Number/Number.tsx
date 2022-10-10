@@ -4,7 +4,10 @@ import { DataGrid } from "@mui/x-data-grid";
 
 import { useDebounce } from "@react-hook/debounce";
 
+//@icons
 import { Clear, Search } from "@mui/icons-material";
+import ContactPhoneTwoToneIcon from "@mui/icons-material/ContactPhoneTwoTone";
+
 // @redux
 import { useSelector, useDispatch } from "react-redux";
 
@@ -146,11 +149,18 @@ export default function Number() {
           // elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
         >
-          <Toolbar className="pl-5 pr-2">
+          <Toolbar className="pl-2 pr-2">
             <Grid container alignItems="center">
               <Grid item xs>
-                <Typography variant="subtitle2" component="span">
-                  รายการเบอร์ภายใน
+                <Typography
+                  variant="subtitle2"
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                >
+                  <ContactPhoneTwoToneIcon sx={{ mr: 1 }} /> รายการเบอร์ภายใน
                 </Typography>
               </Grid>
             </Grid>

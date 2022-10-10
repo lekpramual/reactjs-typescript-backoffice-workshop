@@ -23,6 +23,13 @@ import { PhoneSearch } from "@/types";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
+// @icons
+import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
+import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
+import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
+import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
+import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTone";
+
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -37,6 +44,9 @@ import IconButton from "@mui/material/IconButton";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
+import DoneTwoToneIcon from "@mui/icons-material/DoneTwoTone";
+
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -702,7 +712,7 @@ export default function EquipmentCreate() {
             color="error"
             className="w-[96px] "
           >
-            ปิด
+            <CloseTwoToneIcon /> ปิด
           </Button>
           <Button
             onClick={handleDeleteConfirm}
@@ -710,7 +720,7 @@ export default function EquipmentCreate() {
             color="success"
             className="w-[96px] "
           >
-            ตกลง
+            <DoneTwoToneIcon /> ตกลง
           </Button>
         </DialogActions>
       </Dialog>
@@ -806,11 +816,18 @@ export default function EquipmentCreate() {
           elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
         >
-          <Toolbar className="pl-5 pr-0">
+          <Toolbar className="pl-2 pr-2">
             <Grid container alignItems="center">
               <Grid item xs>
-                <Typography variant="subtitle2" component="span">
-                  วิธีการได้มา
+                <Typography
+                  variant="subtitle2"
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                >
+                  <AppRegistrationTwoToneIcon /> วิธีการได้มา
                 </Typography>
               </Grid>
               <Grid item>
@@ -824,7 +841,7 @@ export default function EquipmentCreate() {
                     navigate(-1);
                   }}
                 >
-                  {/* <ArrowBackTwoToneIcon />  */}
+                  <ArrowBackTwoToneIcon />
                   ย้อนกลับ
                 </Button>
               </Grid>
@@ -859,11 +876,18 @@ export default function EquipmentCreate() {
           elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
         >
-          <Toolbar className="pl-5 pr-2">
+          <Toolbar className="pl-2 pr-2">
             <Grid container alignItems="center">
               <Grid item xs>
-                <Typography variant="subtitle2" component="span">
-                  รายการอุปกรณ์
+                <Typography
+                  variant="subtitle2"
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                >
+                  <AppRegistrationTwoToneIcon /> รายการอุปกรณ์
                 </Typography>
               </Grid>
               <Grid item>
@@ -877,7 +901,7 @@ export default function EquipmentCreate() {
                     setOpenDialogCreate(true);
                   }}
                 >
-                  {/* <AddTwoToneIcon />  */}
+                  <AddTwoToneIcon />
                   เพิ่ม
                 </Button>
               </Grid>
@@ -939,13 +963,13 @@ export default function EquipmentCreate() {
       <Grid container spacing={2} alignItems="center" className="mt-1">
         <Grid xs={6} className="text-right" item>
           <Button variant="contained" color="error" className="w-[128px] ">
-            {/* <RestartAltTwoToneIcon />  */}
+            <RestartAltTwoToneIcon />
             ยกเลิก
           </Button>
         </Grid>
         <Grid xs={6} item>
           <Button variant="contained" color="success" className="w-[128px] ">
-            {/* <SaveTwoToneIcon />  */}
+            <SaveTwoToneIcon />
             บันทึก
           </Button>
         </Grid>

@@ -36,6 +36,9 @@ import {
   Grid,
 } from "@mui/material";
 
+//@icons
+import LockOpenTwoToneIcon from "@mui/icons-material/LockOpenTwoTone";
+
 import { Box, Button, FormControl } from "@mui/material";
 import { BoxDataGrid } from "@/styles/AppStyle";
 import { CustomNoRowsOverlay } from "@/utils";
@@ -264,11 +267,18 @@ export default function Hosxp() {
           // elevation={0}
           sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
         >
-          <Toolbar className="pl-5 pr-2">
+          <Toolbar className="pl-2 pr-2">
             <Grid container alignItems="center">
               <Grid item xs>
-                <Typography variant="subtitle2" component="span">
-                  รายการเข้าใช้งาน (Hosxp)
+                <Typography
+                  variant="subtitle2"
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                >
+                  <LockOpenTwoToneIcon /> รายการเข้าใช้งาน (Hosxp)
                 </Typography>
               </Grid>
             </Grid>
