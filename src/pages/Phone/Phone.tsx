@@ -84,6 +84,7 @@ const CustomToolbar = (props: GridToolbarContainerProps) => (
       justifyContent="space-between"
       alignItems="baseline"
       spacing={2}
+      className="pr-2 pb-1"
     >
       <Typography
         variant="subtitle1"
@@ -101,7 +102,7 @@ const CustomToolbar = (props: GridToolbarContainerProps) => (
         size="small"
         variant="contained"
         // color="primary"
-        className="w-[96px] bg-cyan-500 hover:bg-cyan-600"
+        className="w-[96px] h-[28px] bg-cyan-500 hover:bg-cyan-600"
       />
     </Stack>
   </GridToolbarContainer>

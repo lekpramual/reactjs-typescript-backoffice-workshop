@@ -35,6 +35,7 @@ import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
 import LocalPrintshopTwoToneIcon from "@mui/icons-material/LocalPrintshopTwoTone";
 import AddPhotoAlternateTwoToneIcon from "@mui/icons-material/AddPhotoAlternateTwoTone";
 import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTone";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 
 import Barcode from "react-barcode";
 
@@ -675,13 +676,19 @@ export default function ProductEdit() {
             </Toolbar>
           </AppBar>
           <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid xs={4}>
-              <Card sx={{ maxWidth: 345 }}>
+            <Grid
+              xs={4}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Card sx={{ width: "345px" }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
                     height="140"
-                    image="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e"
+                    image={`${process.env.PUBLIC_URL}/assets/img/no_image.png`}
                     alt="green iguana"
                   />
                   <CardContent>
@@ -694,19 +701,25 @@ export default function ProductEdit() {
                   </CardContent>
                 </CardActionArea>
                 <CardActions>
-                  <Button size="small" color="primary">
-                    ลบ
+                  <Button size="small" variant="contained" color="error">
+                    <DeleteTwoToneIcon /> ลบ
                   </Button>
                 </CardActions>
               </Card>
             </Grid>
-            <Grid xs={4}>
-              <Card sx={{ maxWidth: 345 }}>
+            <Grid
+              xs={4}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Card sx={{ width: "345px" }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
                     height="140"
-                    image="https://images.unsplash.com/photo-1551782450-a2132b4ba21d"
+                    image={`${process.env.PUBLIC_URL}/assets/img/no_image.png`}
                     alt="Burger"
                   />
                   <CardContent>
@@ -719,19 +732,25 @@ export default function ProductEdit() {
                   </CardContent>
                 </CardActionArea>
                 <CardActions>
-                  <Button size="small" color="primary">
-                    ลบ
+                  <Button size="small" variant="contained" color="error">
+                    <DeleteTwoToneIcon /> ลบ
                   </Button>
                 </CardActions>
               </Card>
             </Grid>
-            <Grid xs={4}>
-              <Card sx={{ maxWidth: 345 }}>
+            <Grid
+              xs={4}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Card sx={{ width: "345px" }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
                     height="140"
-                    image="https://images.unsplash.com/photo-1522770179533-24471fcdba45"
+                    image={`${process.env.PUBLIC_URL}/assets/img/no_image.png`}
                     alt="Camera"
                   />
                   <CardContent>
@@ -744,8 +763,8 @@ export default function ProductEdit() {
                   </CardContent>
                 </CardActionArea>
                 <CardActions>
-                  <Button size="small" color="primary">
-                    ลบ
+                  <Button size="small" variant="contained" color="error">
+                    <DeleteTwoToneIcon /> ลบ
                   </Button>
                 </CardActions>
               </Card>
