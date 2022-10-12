@@ -80,8 +80,9 @@ const CustomToolbar = (props: GridToolbarContainerProps) => (
       sx={{
         flex: 1,
       }}
-      direction="row"
       justifyContent="space-between"
+      direction="row"
+      
       alignItems="baseline"
       spacing={2}
       className="pr-2 pb-1"

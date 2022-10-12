@@ -147,7 +147,7 @@ export default function Product() {
       ),
     },
     {
-      headerName: "ชื่ออุปกรณ์",
+      headerName: "รายการอุปกรณ์",
       field: "companyName",
       flex: 1,
       minWidth: 364,

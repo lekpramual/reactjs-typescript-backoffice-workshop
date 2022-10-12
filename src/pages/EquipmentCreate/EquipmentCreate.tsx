@@ -39,8 +39,10 @@ import Stack from "@mui/material/Stack";
 
 // import Button from "@mui/material/Button";
 // import TextField from "@mui/material/TextField";
+import Switch from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
+
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
@@ -52,6 +54,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 // @styles
 import { styled } from "@mui/material/styles";
+// @components
+import ComputerCreate from "@/components/ComputerCreate";
 
 import thLocale from "date-fns/locale/th";
 import { BootstrapDialog, BoxDataGrid } from "@/styles/AppStyle";
@@ -596,7 +600,7 @@ export default function EquipmentCreate() {
                 label="หมวดหมู่"
                 component={CustomizedSelectForFormik}
               >
-                <MenuItem value={0}>อื่นๆ</MenuItem>
+                <MenuItem value={0}>คอมพิวเตอร์</MenuItem>
               </Field>
             </FormControl>
           </Grid>
@@ -671,6 +675,26 @@ export default function EquipmentCreate() {
               />
             </FormControl>
           </Grid>
+          <Grid item lg={12} md={12} xs={12}>
+            <Stack
+              direction="row"
+              sx={{
+                flex: 1,
+              }}
+              justifyContent="space-between"
+              alignItems={"center"}
+            >
+              <Typography variant="body2" component={"div"}>
+                รายละเอียดอุปกรณ์
+              </Typography>
+              <Switch defaultChecked color="success" />
+              {/* <Typography variant="body2" component={"div"}>
+                xxx
+              </Typography> */}
+            </Stack>
+          </Grid>
+
+          <ComputerCreate />
         </Grid>
       </Form>
     );
@@ -730,6 +754,7 @@ export default function EquipmentCreate() {
   const showDialogCreate = () => {
     return (
       <BootstrapDialog
+        maxWidth="lg"
         open={openDialogCreate}
         keepMounted
         aria-labelledby="alert-dialog-slide-title"
