@@ -209,23 +209,23 @@ theme = {
         },
       },
     },
-    // MuiFormControl: {
-    //   styleOverrides: {
-    //     root: {
-    //       height: "36px",
-    //     },
-    //   },
-    // },
+    MuiFormControl: {
+      styleOverrides: {
+        root: {
+          height: "28px",
+        },
+      },
+    },
     MuiInputBase: {
       styleOverrides: {
-        // root: {
-        //   height: "36px",
-        //   fontSize: "14px",
-        // },
-        // sizeSmall: {
-        //   height: "28px",
-        //   fontSize: "14px",
-        // },
+        root: {
+          height: "28px",
+          fontSize: "14px",
+        },
+        sizeSmall: {
+          height: "28px",
+          fontSize: "14px",
+        },
       },
     },
 
@@ -241,10 +241,10 @@ theme = {
             boxShadow: "none",
           },
         },
-        // sizeSmall: {
-        //   height: "28px",
-        //   fontSize: "14px",
-        // },
+        sizeSmall: {
+          height: "28px",
+          fontSize: "14px",
+        },
       },
     },
     MuiIconButton: {

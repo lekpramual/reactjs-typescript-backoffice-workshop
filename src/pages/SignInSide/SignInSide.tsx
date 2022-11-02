@@ -122,7 +122,7 @@ const SignInSide: React.FC<any> = () => {
             variant="h5"
             sx={{ color: "primary.main" }}
           >
-            REH Backoffice V 1.0
+            REH Backoffice V {process.env.REACT_APP_VERSION}
           </Typography>
           <Formik
             validate={(values) => {

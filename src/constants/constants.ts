@@ -24,8 +24,13 @@ export const apiUrl = "http://comcenter.reh.go.th:4203/api/v1";
 export const apiPhoneUrl = "http://192.168.144.1/phone/server/apis";
 export const apiUrlHis = "http://webapp3.intranet:8088";
 export const apiUrlBackOffice = "http://webapp3.intranet:8089";
+// export const apiUrlBackOfficeV1 = "http://localhost:4200";
+export const apiUrlBackOfficeV1 = "http://api.reh.go.th.:8090";
 export const imageUrl = "http://localhost:8085";
 export const secretKey = "96Udcddbo9y[";
+export const secretAuth = "pramual:96Udcddbo9y[";
+
+export const authen = `${process.env.APP_USER}:${process.env.PUBLIC_URL}`;
 
 export const YES = "YES";
 export const NO = "NO";
@@ -36,10 +41,14 @@ export const TOKEN = "TOKEN";
 export const LOGIN_STATUS = "LOGIN_STATUS";
 export const LOGIN_TOKENS = "LOGIN_TOKENS";
 
+export const LOGIN_STATUS_V2 = "LOGIN_STATUS_V2";
+export const LOGIN_TOKENS_V2 = "LOGIN_TOKENS_V2";
+
 export const server = {
   LOGIN_URL: `authen/login`,
   HOSXP_URL: `${apiUrlHis}/his`,
   SERVICE_URL: `${apiUrlBackOffice}/service`,
+  BACKOFFICE_URL_V1: `${apiUrlBackOfficeV1}/reh/api/v1`,
   LOGIN_PASSED: `yes`,
 };
 

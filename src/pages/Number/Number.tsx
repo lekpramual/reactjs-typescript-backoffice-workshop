@@ -41,11 +41,10 @@ function QuickSearchToolbar(props: QuickSearchToolbarProps) {
   return (
     <Box
       sx={{
-        p: 0.5,
-        pb: 0.5,
+        pb: 1.5,
       }}
     >
-      <FormControl sx={{ p: 0 }} fullWidth>
+      <FormControl fullWidth>
         <TextField
           variant="outlined"
           value={props.value}
@@ -204,8 +203,8 @@ export default function Number() {
             rows={numberReducer.isResult ? numberReducer.isResult : []}
             columns={hosxpColumns}
             pageSize={15}
-            rowHeight={36}
-            headerHeight={36}
+            rowHeight={28}
+            headerHeight={28}
             hideFooterSelectedRowCount
             rowsPerPageOptions={[15]}
             disableColumnMenu={true}

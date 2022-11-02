@@ -82,7 +82,6 @@ const CustomToolbar = (props: GridToolbarContainerProps) => (
       }}
       justifyContent="space-between"
       direction="row"
-      
       alignItems="baseline"
       spacing={2}
       className="pr-2 pb-1"
@@ -314,10 +313,16 @@ export default function Phone() {
                     marginRight: 1,
                   }}
                 >
-                  <IconButton
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    className="hover:text-[#fce805] w-[28px]"
                     size="small"
+                    sx={{
+                      marginRight: 1,
+                    }}
                     onClick={() => (open ? handleClose() : handleOpen())}
-                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
                   >
                     {open ? (
                       <KeyboardDoubleArrowUpTwoToneIcon
@@ -330,7 +335,7 @@ export default function Phone() {
                         sx={{ display: "block" }}
                       />
                     )}
-                  </IconButton>
+                  </Button>
                 </Tooltip>
 
                 <Button
@@ -347,89 +352,23 @@ export default function Phone() {
                 </Button>
 
                 <Tooltip title="โหลดข้อมูล">
-                  <IconButton
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    className="hover:text-[#fce805] w-[28px]"
+                    size="small"
                     onClick={() => {
                       dispatch(phoneAll());
                       resetForm();
                       setOpen(false);
                     }}
-                    size="small"
-                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
                   >
                     <RefreshIcon color="inherit" />
-                  </IconButton>
+                  </Button>
                 </Tooltip>
               </Stack>
             </FormControl>
           </Grid>
-
-          {/* <Grid
-            item
-            lg={1}
-            md={4}
-            xs={4}
-            sx={{
-              textAlign: "center",
-              display: { xs: "none", md: "block" },
-            }}
-          >
-            <Tooltip title="ค้นหาขั้นสูง" sx={{ m: 1 }}>
-              <IconButton
-                size="small"
-                onClick={() => (open ? handleClose() : handleOpen())}
-                className="bg-[#36474f] text-[#fff] hover:text-[#fce805] "
-              >
-                {open ? (
-                  <KeyboardDoubleArrowUpTwoToneIcon
-                    color="inherit"
-                    sx={{ display: "block" }}
-                  />
-                ) : (
-                  <KeyboardDoubleArrowDownTwoToneIcon
-                    color="inherit"
-                    sx={{ display: "block" }}
-                  />
-                )}
-              </IconButton>
-            </Tooltip>
-          </Grid>
-          <Grid item lg={2} md={4} xs={12}>
-            <FormControl fullWidth sx={{ m: 1 }} size="small">
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                className="hover:text-[#fce805]"
-                size="small"
-              >
-                ค้นหา
-              </Button>
-            </FormControl>
-          </Grid>
-          <Grid
-            item
-            lg={1}
-            md={4}
-            xs={4}
-            sx={{
-              textAlign: "center",
-              display: { xs: "none", md: "block" },
-            }}
-          >
-            <Tooltip title="โหลดข้อมูล">
-              <IconButton
-                onClick={() => {
-                  dispatch(phoneAll());
-                  resetForm();
-                  setOpen(false);
-                }}
-                size="small"
-                className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
-              >
-                <RefreshIcon color="inherit" sx={{ display: "block" }} />
-              </IconButton>
-            </Tooltip>
-          </Grid> */}
         </Grid>
 
         {open && (
@@ -564,8 +503,8 @@ export default function Phone() {
         <BoxDataGrid>
           <DataGrid
             autoHeight
-            rowHeight={36}
-            headerHeight={36}
+            rowHeight={28}
+            headerHeight={28}
             components={{
               Toolbar: CustomToolbar,
               NoRowsOverlay: CustomNoRowsOverlay,

@@ -37,6 +37,7 @@ import {
   AppBar,
   Toolbar,
   Grid,
+  Tooltip,
 } from "@mui/material";
 
 //@icons
@@ -55,11 +56,11 @@ function QuickSearchToolbar(props: QuickSearchToolbarProps) {
   return (
     <Box
       sx={{
-        p: 0.5,
-        pb: 0.5,
+        // p: 0.5,
+        pb: 1.5,
       }}
     >
-      <FormControl sx={{ p: 0 }} fullWidth>
+      <FormControl fullWidth>
         <TextField
           variant="outlined"
           value={props.value}
@@ -152,30 +153,33 @@ export default function Hosxp() {
     {
       headerName: "จัดการ",
       field: ".",
-      width: 120,
+      flex: 1,
+      minWidth: 70,
+      maxWidth: 70,
+      type: ".",
+      align: "center" as "center",
       sortable: false,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      headerClassName: "text-center bg-[#36474f] text-[#fff] text-[14px]",
       renderCell: ({ row }: GridRenderCellParams<string>) => (
-        <Stack direction="row">
-          {/* <IconButton
-            aria-label="edit"
-            size="large"
-            onClick={() => {
-              navigate("/stock/edit/" + row.id);
-            }}
-          >
-            <EditIcon fontSize="inherit" />
-          </IconButton> */}
-          <IconButton
-            aria-label="delete"
-            size="small"
-            onClick={() => {
-              setSelectedProduct(row);
-              setOpenDialog(true);
-            }}
-          >
-            <DeleteTwoToneIcon fontSize="inherit" />
-          </IconButton>
+        <Stack direction="row" className="text-center">
+          <Tooltip title="ปลดล็อก">
+            <Button
+              sx={{
+                minWidth: "30px",
+              }}
+              type="submit"
+              color="error"
+              variant="contained"
+              className="hover:text-[#fce805] w-[30px] h-[26px]"
+              size="small"
+              onClick={() => {
+                setSelectedProduct(row);
+                setOpenDialog(true);
+              }}
+            >
+              <DeleteTwoToneIcon color="inherit" />
+            </Button>
+          </Tooltip>
         </Stack>
       ),
     },
@@ -325,8 +329,8 @@ export default function Hosxp() {
             rows={hosxpReducer.isResult ? hosxpReducer.isResult : []}
             columns={hosxpColumns}
             pageSize={15}
-            rowHeight={36}
-            headerHeight={36}
+            rowHeight={28}
+            headerHeight={28}
             hideFooterSelectedRowCount
             rowsPerPageOptions={[15]}
             disableColumnMenu={true}

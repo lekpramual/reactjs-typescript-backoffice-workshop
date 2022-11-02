@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { encode } from "base-64";
 // @store PayloadAction
 import { RootState } from "@/store";
 // @type
@@ -7,7 +8,15 @@ import { User, LoginResult, reducerState } from "@/types";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 // @constants
-import { OK, LOGIN_STATUS, LOGIN_TOKENS, server, secretKey } from "@/constants";
+import {
+  OK,
+  LOGIN_STATUS,
+  LOGIN_TOKENS,
+  server,
+  secretAuth,
+  LOGIN_STATUS_V2,
+  LOGIN_TOKENS_V2,
+} from "@/constants";
 // @utils
 import { httpClient } from "@/utils";
 
@@ -26,12 +35,12 @@ const auth_headers = {
     "Access-Control-Allow-Origin": "*",
     // "Content-type": "application/json",
     "content-type": "multipart/form-data",
-    secretkey: secretKey,
+    authorization: "Basic " + encode(secretAuth),
   },
 };
 
 export const isLoggedIn = () => {
-  const loginStatus = localStorage.getItem(LOGIN_STATUS);
+  const loginStatus = localStorage.getItem(LOGIN_STATUS_V2);
   return loginStatus === OK;
 };
 
@@ -49,6 +58,9 @@ export const isLogout = (navigate: any) => {
     if (result.isConfirmed) {
       localStorage.removeItem(LOGIN_STATUS);
       localStorage.removeItem(LOGIN_TOKENS);
+      localStorage.removeItem(LOGIN_STATUS_V2);
+      localStorage.removeItem(LOGIN_TOKENS_V2);
+
       navigate("/login");
     }
   });
@@ -59,12 +71,11 @@ export const loginUser = createAsyncThunk(
   async ({ user, navigate }: { user: User; navigate: any }, thunkAPI) => {
     try {
       const response = await httpClient.post<LoginResult>(
-        server.LOGIN_URL,
+        `${server.BACKOFFICE_URL_V1}/authenticate`,
         user,
         auth_headers
       );
       let data = await response.data;
-      console.log(data);
 
       MySwal.fire({
         title: "<p>กำลังประมวลผล ...</p>",
@@ -80,8 +91,8 @@ export const loginUser = createAsyncThunk(
                 showConfirmButton: false,
                 timer: 1500,
               });
-              localStorage.setItem(LOGIN_STATUS, OK);
-              localStorage.setItem(LOGIN_TOKENS, data.token);
+              localStorage.setItem(LOGIN_STATUS_V2, OK);
+              localStorage.setItem(LOGIN_TOKENS_V2, data.data);
               navigate("/home");
               return data;
             }, 1000);
