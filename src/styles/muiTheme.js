@@ -258,6 +258,29 @@ theme = {
         // },
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          // backgroundColor: "#fce805",
+          display: "flex",
+          alignItems: "center",
+          alignContent: "center",
+        },
+        sizeSmall: {
+          padding: "0px 4px 2.5px 6px",
+        },
+        option: {
+          '&[aria-selected="true"]': {
+            backgroundColor: "#e3abed",
+          },
+
+          "&:hover": {
+            backgroundColor: "#9c27b0",
+          },
+          backgroundColor: "#fff",
+        },
+      },
+    },
   },
 };
 

@@ -5,3 +5,4 @@ export * from "@/types/phone.type";
 export * from "@/types/hosxp.type";
 export * from "@/types/number.type";
 export * from "@/types/car.type";
+export * from "@/types/equipment.type";

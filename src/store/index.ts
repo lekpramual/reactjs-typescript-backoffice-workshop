@@ -6,6 +6,8 @@ import loginReducer from "@/store/slices/loginSlice";
 import phoneReducer from "@/store/slices/phoneSlice";
 import hosxpReducer from "@/store/slices/hosxpSlice";
 import numberReducer from "@/store/slices/numberSlice";
+import equipmentReducer from "@/store/slices/equipmentSlice";
+import companyReducer from "@/store/slices/companySlice";
 
 const reducer = {
   loginReducer,
@@ -13,6 +15,8 @@ const reducer = {
   hosxpReducer,
   numberReducer,
   carReducer,
+  equipmentReducer,
+  companyReducer,
 };
 
 export const store = configureStore({
