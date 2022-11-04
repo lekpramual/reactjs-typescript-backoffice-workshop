@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@/store";
 import { encode } from "base-64";
 // @type
-import { EquipmentResult, reducerState } from "@/types";
+import { EquipmentResult, EquipmentSearch, reducerState } from "@/types";
 // @alert
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -42,7 +42,7 @@ export const equipmentAll = createAsyncThunk(
       );
       let data = await response.data;
       if (data.result === OK) {
-        console.log(data.data);
+        // console.log(data.data);
         return data.data;
       } else {
         console.log("Error Else :", data.message);
@@ -59,7 +59,7 @@ export const equipmentAll = createAsyncThunk(
         title: message,
         showConfirmButton: false,
       });
-      console.log(e.error.message);
+      // console.log(e.error.message);
 
       return thunkAPI.rejectWithValue(e.error.message);
     }
@@ -67,6 +67,137 @@ export const equipmentAll = createAsyncThunk(
 );
 
 // ค้นหาข้อมูล
+export const equipmentSearch = createAsyncThunk(
+  "equipment/search",
+  async (
+    { search, navigate }: { search: EquipmentSearch; navigate: any },
+    thunkAPI
+  ) => {
+    try {
+      let no = search.no;
+      let title = search.title;
+      let depart = search.depart["state"];
+
+      const { data: res } = await axios.get(
+        `${server.BACKOFFICE_URL_V1}/equipments?q=""${
+          no !== "" && `&no=${no}`
+        }${title !== "" && `&title=${title}`}${
+          depart !== "" && `&depart=${depart}`
+        }`,
+        header_get
+      );
+
+      let data = res;
+
+      if (data.result === OK) {
+        // console.log(data.data);
+        // navigate("/phone");
+        return data.data;
+      } else {
+        // console.log("Error Else :", data);
+        return thunkAPI.rejectWithValue({
+          message: "Failed to fetch phone.",
+        });
+      }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
+// ค้นหาข้อมูล จากไอดี
+export const equipmentSearchById = createAsyncThunk(
+  "equipment/searchbyId",
+  async ({ search }: { search: string }, thunkAPI) => {
+    try {
+      let id = search;
+      const { data: res } = await axios.get(
+        `${server.BACKOFFICE_URL_V1}/equipment?id=${id}`,
+        header_get
+      );
+      let data = res;
+      if (data.result === OK) {
+        // console.log(data.data);
+        // navigate("/phone");
+        return data.data;
+      } else {
+        // console.log("Error Else :", data);
+        return thunkAPI.rejectWithValue({
+          message: "Failed to fetch phone.",
+        });
+      }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => {
+    MySwal.fire({
+      title: "<p>กำลังโหลดข้อมูล ...</p>",
+      showConfirmButton: false,
+      timer: 1000,
+      didOpen: () => {
+        MySwal.showLoading();
+      },
+    });
+
+    setTimeout(() => resolve(), ms);
+  });
+
+export const equipmentSearchByIdV2 = createAsyncThunk(
+  "equipment/searchbyIdV2",
+  async ({ search }: { search: string }, thunkAPI) => {
+    try {
+      let id = search;
+      const { data: res } = await axios.get(
+        `${server.BACKOFFICE_URL_V1}/equipment?id=${id}`,
+        header_get
+      );
+      let data = res;
+      if (data.result === OK) {
+        await wait(1 * 1000);
+        return data.data;
+      } else {
+        // console.log("Error Else :", data);
+        return thunkAPI.rejectWithValue({
+          message: "Failed to fetch phone.",
+        });
+      }
+    } catch (e: any) {
+      console.log("Error", e.error.message);
+      setTimeout(() => {
+        MySwal.hideLoading();
+        let message = e.error.message;
+        MySwal.fire({
+          icon: "error",
+          title: message,
+          showConfirmButton: false,
+        });
+        return thunkAPI.rejectWithValue(e.error.message);
+      }, 1000);
+    }
+  }
+);
 
 const equipmentSlice = createSlice({
   name: "equipment",
@@ -85,6 +216,37 @@ const equipmentSlice = createSlice({
       state.errorMessage = action.payload as string;
     });
     builder.addCase(equipmentAll.pending, (state, action) => {
+      state.isFetching = true;
+    });
+
+    builder.addCase(equipmentSearch.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      state.isResult = action.payload;
+      return state;
+    });
+    builder.addCase(equipmentSearch.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.isResult = [];
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(equipmentSearch.pending, (state, action) => {
+      state.isFetching = true;
+    });
+    builder.addCase(equipmentSearchByIdV2.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      state.isResult = action.payload;
+      return state;
+    });
+    builder.addCase(equipmentSearchByIdV2.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.isResult = [];
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(equipmentSearchByIdV2.pending, (state, action) => {
       state.isFetching = true;
     });
   },

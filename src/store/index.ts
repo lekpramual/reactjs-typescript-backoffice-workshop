@@ -8,6 +8,7 @@ import hosxpReducer from "@/store/slices/hosxpSlice";
 import numberReducer from "@/store/slices/numberSlice";
 import equipmentReducer from "@/store/slices/equipmentSlice";
 import companyReducer from "@/store/slices/companySlice";
+import departmentReducer from "@/store/slices/departmentSlice";
 
 const reducer = {
   loginReducer,
@@ -17,6 +18,7 @@ const reducer = {
   carReducer,
   equipmentReducer,
   companyReducer,
+  departmentReducer,
 };
 
 export const store = configureStore({

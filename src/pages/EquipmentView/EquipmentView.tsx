@@ -1,11 +1,9 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 // @mui
 import { Box, Button, Breadcrumbs } from "@mui/material";
-
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-// import Grid from "@mui/material/Grid";
 import Grid from "@mui/material/Unstable_Grid2";
 
 // @icons
@@ -16,6 +14,15 @@ import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import { BoxDataGrid } from "@/styles/AppStyle";
 import { NumberWithCommas, CustomNoRowsOverlay, NumberWithPad } from "@/utils";
 import { DataGrid } from "@mui/x-data-grid";
+
+// @redux
+import { useSelector, useDispatch } from "react-redux";
+
+// @seletor
+import {
+  equipmentSelector,
+  equipmentSearchByIdV2,
+} from "@/store/slices/equipmentSlice";
 
 interface CustomFooterTotalProps {
   total: number;
@@ -46,13 +53,14 @@ function CustomFooterTotal(props: CustomFooterTotalProps) {
 
 function useQuery() {
   const { search } = useLocation();
-
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 
 export default function EquipmentView() {
   const navigate = useNavigate();
   let query = useQuery();
+  const dispatch = useDispatch<any>();
+  const equipmentReducer = useSelector(equipmentSelector);
 
   const [total, setTotal] = React.useState(0);
   // คอลัมข้อมูลการแสดง
@@ -152,6 +160,11 @@ export default function EquipmentView() {
     },
   ];
 
+  useEffect(() => {
+    let id = query.get("id") || "";
+    dispatch(equipmentSearchByIdV2({ search: id }));
+  }, [dispatch, query]);
+
   return (
     <Box>
       <Grid container>
@@ -208,6 +221,7 @@ export default function EquipmentView() {
         sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: 2 }}
       >
         <Grid container spacing={2} sx={{ p: 2 }}>
+          {JSON.stringify(equipmentReducer)}
           <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
             <Typography component={"div"} variant={"body1"}>
               เรื่องที่บันทึก

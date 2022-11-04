@@ -131,7 +131,7 @@ const loginSlice = createSlice({
   initialState: initialValues,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(loginUser.fulfilled, (state, action) => {
+    builder.addCase(loginUser.fulfilled, (state, _action) => {
       state.isFetching = false;
       state.isSuccess = true;
       return state;
@@ -141,7 +141,7 @@ const loginSlice = createSlice({
       state.isError = true;
       state.errorMessage = action.payload as string;
     });
-    builder.addCase(loginUser.pending, (state, action) => {
+    builder.addCase(loginUser.pending, (state, _action) => {
       state.isFetching = true;
     });
   },

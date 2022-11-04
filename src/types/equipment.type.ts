@@ -24,8 +24,10 @@ export interface EquipmentResult {
   data: EquipmentDetail[];
 }
 
-export interface EquipmentSearch {
+export type EquipmentSearch = {
   no: string;
   title: string;
   depart: string;
-}
+};
+
+export type EquipmentSearchById = { id: string };
