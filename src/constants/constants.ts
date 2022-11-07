@@ -24,8 +24,8 @@ export const apiUrl = "http://comcenter.reh.go.th:4203/api/v1";
 export const apiPhoneUrl = "http://192.168.144.1/phone/server/apis";
 export const apiUrlHis = "http://webapp3.intranet:8088";
 export const apiUrlBackOffice = "http://webapp3.intranet:8089";
-// export const apiUrlBackOfficeV1 = "http://localhost:4200";
-export const apiUrlBackOfficeV1 = "http://api.reh.go.th:8090";
+export const apiUrlBackOfficeV1 = "http://localhost:4200";
+// export const apiUrlBackOfficeV1 = "http://api.reh.go.th:8090";
 export const imageUrl = "http://localhost:8085";
 export const secretKey = "96Udcddbo9y[";
 export const secretAuth = "pramual:96Udcddbo9y[";
@@ -49,6 +49,7 @@ export const server = {
   HOSXP_URL: `${apiUrlHis}/his`,
   SERVICE_URL: `${apiUrlBackOffice}/service`,
   BACKOFFICE_URL_V1: `${apiUrlBackOfficeV1}/reh/api/v1`,
+  BACKOFFICE_URL_File: `${apiUrlBackOfficeV1}/files`,
   LOGIN_PASSED: `yes`,
 };
 

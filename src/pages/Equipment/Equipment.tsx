@@ -528,7 +528,7 @@ export default function Equipment() {
             hideFooterSelectedRowCount
             rowsPerPageOptions={[15]}
             disableColumnMenu={true}
-            loading={equipmentReducer.isFetching}
+            // loading={equipmentReducer.isFetching}
             getRowId={(row) => row.equipment_id}
             localeText={{
               MuiTablePagination: {

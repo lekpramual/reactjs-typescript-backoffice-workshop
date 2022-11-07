@@ -26,6 +26,9 @@ import Product from "./pages/Product";
 import ProductView from "./pages/ProductView";
 import ProductEdit from "./pages/ProductEdit";
 
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+
 export default function App() {
   useEffect(() => {
     // dispatch(loginActions.restoreLogin());
@@ -82,6 +85,7 @@ export default function App() {
             />
             <Route path="/app3/equipment/edit" element={<EquipmentEdit />} />
             <Route path="/app3/equipment/view" element={<EquipmentView />} />
+
             <Route path="/app3/product" element={<Product />} />
             <Route path="/app3/product/view" element={<ProductView />} />
             <Route path="/app3/product/edit" element={<ProductEdit />} />

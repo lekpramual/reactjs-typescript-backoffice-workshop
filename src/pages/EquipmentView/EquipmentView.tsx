@@ -7,13 +7,18 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 
 // @icons
-import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
+// import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 
+// constats
+import { server } from "@/constants";
 // @styles
 import { BoxDataGrid } from "@/styles/AppStyle";
-import { NumberWithCommas, CustomNoRowsOverlay, NumberWithPad } from "@/utils";
+import { NumberWithCommas, CustomNoRowsOverlay } from "@/utils";
 import { DataGrid } from "@mui/x-data-grid";
+
+// @day
+import moment from "moment";
 
 // @redux
 import { useSelector, useDispatch } from "react-redux";
@@ -63,23 +68,11 @@ export default function EquipmentView() {
   const equipmentReducer = useSelector(equipmentSelector);
 
   const [total, setTotal] = React.useState(0);
-  // คอลัมข้อมูลการแสดง
-  const dataValue = [
-    {
-      id: 1,
-      name: "เครื่องคอมพิวเตอร์ สำหรับสำนักงาน จอขนาด 21.5 นิ้ว",
-      groupName: "คอมพิวเตอร์",
-      typeName: "พัสดุ/มีเลขครุภัณฑ์",
-      qty: 2,
-      price: 14480,
-      priceTotal: 28960,
-    },
-  ];
 
   const dataColumns = [
     {
       headerName: "ชื่อรายการ",
-      field: "name",
+      field: "equipment_detail_title",
       flex: 1,
       minWidth: 364,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -92,7 +85,7 @@ export default function EquipmentView() {
     },
     {
       headerName: "หมวดหมู่",
-      field: "groupName",
+      field: "category_name",
       flex: 1,
       minWidth: 156,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -105,7 +98,7 @@ export default function EquipmentView() {
     },
     {
       headerName: "ชนิดวัสดุ/ครุภัณฑ์",
-      field: "typeName",
+      field: "equipment_detail_material_type",
       flex: 1,
       minWidth: 156,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -118,7 +111,7 @@ export default function EquipmentView() {
     },
     {
       headerName: "จำนวน",
-      field: "qty",
+      field: "equipment_detail_qty",
       type: "number",
       flex: 1,
       minWidth: 64,
@@ -134,7 +127,7 @@ export default function EquipmentView() {
     },
     {
       headerName: "ราคา/หน่วย",
-      field: "price",
+      field: "equipment_detail_price",
       flex: 1,
       minWidth: 96,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -147,7 +140,7 @@ export default function EquipmentView() {
     },
     {
       headerName: "ราคารวม",
-      field: "priceTotal",
+      field: "equipment_detail_price_total",
       flex: 1,
       minWidth: 96,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -196,7 +189,9 @@ export default function EquipmentView() {
                 // display: { xs: "none", md: "block" },
               }}
             >
-              {NumberWithPad(query.get("id"), 4)}
+              {equipmentReducer.isResult
+                ? equipmentReducer.isResult.map((data) => data.equipment_no)
+                : ""}
             </Typography>
           </Breadcrumbs>
         </Grid>
@@ -217,204 +212,228 @@ export default function EquipmentView() {
         </Grid>
       </Grid>
 
-      <Paper
-        sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: 2 }}
-      >
-        <Grid container spacing={2} sx={{ p: 2 }}>
-          {JSON.stringify(equipmentReducer)}
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              เรื่องที่บันทึก
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              ขออนุมัติซื้ออุปกรณ์ระบบคิวบริการผู้ป่วยนอก
-            </Typography>
-          </Grid>
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              เลขที่บันทึก
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              รอ 0032.102/97
-            </Typography>
-          </Grid>
-
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              ประเภทการซื้อ
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              ซื้อตามแผน
-            </Typography>
-          </Grid>
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              หน่วยงานที่ซื้อ
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              ศูนย์คอมพิวเตอร์
-            </Typography>
-          </Grid>
-
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              ผู้บันทึกข้อความ
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              นางสาวนันทนิจ มีสวัสดิ์
-            </Typography>
-          </Grid>
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              ผู้รับสินค้า
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              นายมนต์ชัย ศรีทอง
-            </Typography>
-          </Grid>
-
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              วันที่บันทึกข้อความ
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              19/09/2022
-            </Typography>
-          </Grid>
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              วันที่รับสินค้า
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              13/10/2022
-            </Typography>
-          </Grid>
-
-          <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              ซื้อจาก
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              บริษัท กรุงทองคอมพิวเตอร์ จำกัด
-            </Typography>
-          </Grid>
-          <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              ไฟล์แนบ
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              -
-            </Typography>
-          </Grid>
-          <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              รายละเอียด
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              -
-            </Typography>
-          </Grid>
-
-          <Grid xs={12}>
-            <BoxDataGrid>
-              <DataGrid
-                rowHeight={26}
-                headerHeight={26}
-                autoHeight
-                components={{
-                  Footer: CustomFooterTotal,
-                  NoRowsOverlay: CustomNoRowsOverlay,
-                }}
-                componentsProps={{
-                  footer: { total },
-                }}
-                onStateChange={(state) => {
-                  const total = dataValue
-                    .map((item) => item.priceTotal)
-                    .reduce((a, b) => a + b, 0);
-                  // console.log(total);
-                  setTotal(total);
-                }}
+      {equipmentReducer.isResult
+        ? equipmentReducer.isResult.map((data) => {
+            return (
+              <Paper
                 sx={{
-                  backgroundColor: "white",
-                  height: 250,
-                  width: "100%",
+                  maxWidth: "100%",
                   margin: "auto",
                   overflow: "hidden",
-                  "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-                    {
-                      color: "#fff",
-                      opacity: 0.5,
-                    },
+                  mb: 2,
                 }}
-                rows={dataValue ? dataValue : []}
-                // rows={[]}
-                columns={dataColumns}
-                pageSize={10}
-                hideFooterSelectedRowCount
-                rowsPerPageOptions={[10]}
-                disableColumnMenu={true}
-                // loading={hosxpReducer.isFetching}
-                getRowId={(row) =>
-                  // parseInt(row.kskloginname) + Math.random() * (100 - 1)
-                  row.id
-                }
-                localeText={{
-                  MuiTablePagination: {
-                    labelDisplayedRows: ({ from, to, count }) =>
-                      `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
-                  },
-                }}
-              />
-            </BoxDataGrid>
-          </Grid>
-        </Grid>
-      </Paper>
-      <Grid container spacing={2} alignItems="center" className="mt-1">
+                key={data.equipment_id}
+              >
+                <Grid container spacing={2} sx={{ p: 2 }}>
+                  <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+                    <Typography component={"div"} variant={"body1"}>
+                      เรื่องที่บันทึก
+                    </Typography>
+                    <Typography
+                      component={"div"}
+                      variant={"body2"}
+                      className="mt-[-2px] text-slate-500 hover:text-blue-600"
+                    >
+                      {data.equipment_title}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+                    <Typography component={"div"} variant={"body1"}>
+                      เลขที่บันทึก
+                    </Typography>
+                    <Typography
+                      component={"div"}
+                      variant={"body2"}
+                      className="mt-[-2px] text-slate-500 hover:text-blue-600"
+                    >
+                      {data.equipment_no_txt}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+                    <Typography component={"div"} variant={"body1"}>
+                      ประเภทการซื้อ
+                    </Typography>
+                    <Typography
+                      component={"div"}
+                      variant={"body2"}
+                      className="mt-[-2px] text-slate-500 hover:text-blue-600"
+                    >
+                      {data.equipment_type}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+                    <Typography component={"div"} variant={"body1"}>
+                      หน่วยงานที่ซื้อ
+                    </Typography>
+                    <Typography
+                      component={"div"}
+                      variant={"body2"}
+                      className="mt-[-2px] text-slate-500 hover:text-blue-600"
+                    >
+                      {data.dept_name}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+                    <Typography component={"div"} variant={"body1"}>
+                      ผู้บันทึกข้อความ
+                    </Typography>
+                    <Typography
+                      component={"div"}
+                      variant={"body2"}
+                      className="mt-[-2px] text-slate-500 hover:text-blue-600"
+                    >
+                      {data.equipment_member}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+                    <Typography component={"div"} variant={"body1"}>
+                      ผู้รับสินค้า
+                    </Typography>
+                    <Typography
+                      component={"div"}
+                      variant={"body2"}
+                      className="mt-[-2px] text-slate-500 hover:text-blue-600"
+                    >
+                      {data.equipment_member_get}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+                    <Typography component={"div"} variant={"body1"}>
+                      วันที่บันทึกข้อความ
+                    </Typography>
+                    <Typography
+                      component={"div"}
+                      variant={"body2"}
+                      className="mt-[-2px] text-slate-500 hover:text-blue-600"
+                    >
+                      {moment(data.equipment_date).format("DD/MM/yyyy")}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+                    <Typography component={"div"} variant={"body1"}>
+                      วันที่รับสินค้า
+                    </Typography>
+                    <Typography
+                      component={"div"}
+                      variant={"body2"}
+                      className="mt-[-2px] text-slate-500 hover:text-blue-600"
+                    >
+                      {moment(data.equipment_date_get).format("DD/MM/yyyy")}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
+                    <Typography component={"div"} variant={"body1"}>
+                      ซื้อจาก
+                    </Typography>
+                    <Typography
+                      component={"div"}
+                      variant={"body2"}
+                      className="mt-[-2px] text-slate-500 hover:text-blue-600"
+                    >
+                      {data.company_name}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
+                    <Typography component={"div"} variant={"body1"}>
+                      ไฟล์แนบ
+                    </Typography>
+                    <Typography
+                      component={"div"}
+                      variant={"body2"}
+                      className="mt-[-2px] text-slate-500 hover:text-blue-600"
+                    >
+                      {data.equipment_file != "" ? (
+                        <a
+                          href={`${server.BACKOFFICE_URL_File}/${data.equipment_file}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {data.equipment_file}
+                        </a>
+                      ) : (
+                        "-"
+                      )}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
+                    <Typography component={"div"} variant={"body1"}>
+                      รายละเอียด
+                    </Typography>
+                    <Typography
+                      component={"div"}
+                      variant={"body2"}
+                      className="mt-[-2px] text-slate-500 hover:text-blue-600"
+                    >
+                      {data.equipment_note}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={12}>
+                    <BoxDataGrid>
+                      <DataGrid
+                        rowHeight={26}
+                        headerHeight={26}
+                        autoHeight
+                        components={{
+                          Footer: CustomFooterTotal,
+                          NoRowsOverlay: CustomNoRowsOverlay,
+                        }}
+                        componentsProps={{
+                          footer: { total },
+                        }}
+                        onStateChange={(state) => {
+                          const total = data.equipment_detail
+                            ? data.equipment_detail
+                                .map(
+                                  (item) => item.equipment_detail_price_total
+                                )
+                                .reduce((a, b) => a + b, 0)
+                            : // console.log(total);
+                              0;
+                          setTotal(total);
+                        }}
+                        sx={{
+                          backgroundColor: "white",
+                          height: 250,
+                          width: "100%",
+                          margin: "auto",
+                          overflow: "hidden",
+                          "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
+                            {
+                              color: "#fff",
+                              opacity: 0.5,
+                            },
+                        }}
+                        rows={
+                          data.equipment_detail ? data.equipment_detail : []
+                        }
+                        columns={dataColumns}
+                        pageSize={10}
+                        hideFooterSelectedRowCount
+                        rowsPerPageOptions={[10]}
+                        disableColumnMenu={true}
+                        // loading={equipmentReducer.isFetching}
+                        getRowId={(row) =>
+                          // parseInt(row.kskloginname) + Math.random() * (100 - 1)
+                          row.equipment_detail_id
+                        }
+                        localeText={{
+                          MuiTablePagination: {
+                            labelDisplayedRows: ({ from, to, count }) =>
+                              `${from} ถึง ${to} จาก ${NumberWithCommas(
+                                count
+                              )}`,
+                          },
+                        }}
+                      />
+                    </BoxDataGrid>
+                  </Grid>
+                </Grid>
+              </Paper>
+            );
+          })
+        : []}
+
+      {/* <Grid container spacing={2} alignItems="center" className="mt-1">
         <Grid xs={12} className="text-center">
           <Button
             variant="contained"
@@ -424,7 +443,7 @@ export default function EquipmentView() {
             ปริ้นรายการอุปกรณ์
           </Button>
         </Grid>
-      </Grid>
+      </Grid> */}
     </Box>
   );
 }

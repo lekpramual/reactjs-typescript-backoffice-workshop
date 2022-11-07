@@ -10,6 +10,7 @@ import LockOpenTwoToneIcon from "@mui/icons-material/LockOpenTwoTone";
 import ContactPhoneTwoToneIcon from "@mui/icons-material/ContactPhoneTwoTone";
 import DirectionsCarTwoToneIcon from "@mui/icons-material/DirectionsCarTwoTone";
 import NoteAltTwoToneIcon from "@mui/icons-material/NoteAltTwoTone";
+import NoteAddTwoToneIcon from "@mui/icons-material/NoteAddTwoTone";
 // import MoveDownTwoToneIcon from "@mui/icons-material/MoveDownTwoTone";
 import InventoryTwoToneIcon from "@mui/icons-material/InventoryTwoTone";
 
@@ -191,7 +192,26 @@ export function usePrivateRouteDemo() {
       id: "อุปกรณ์",
       children: [
         {
-          id: "รายการรับอุปกรณ์",
+          id: "บันทึกรับอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <NoteAddTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/equipment",
+          show: true,
+        },
+
+        {
+          id: "ตรวจรับอุปกรณ์",
           icon: (
             <Box
               sx={{
@@ -205,7 +225,7 @@ export function usePrivateRouteDemo() {
               />
             </Box>
           ),
-          path: "/app3/equipment",
+          path: "/app3/equipmentin",
           show: true,
         },
         {

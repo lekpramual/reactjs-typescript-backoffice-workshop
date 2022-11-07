@@ -43,6 +43,7 @@ export const equipmentAll = createAsyncThunk(
       let data = await response.data;
       if (data.result === OK) {
         // console.log(data.data);
+        await wait(1 * 1000);
         return data.data;
       } else {
         console.log("Error Else :", data.message);
@@ -92,6 +93,7 @@ export const equipmentSearch = createAsyncThunk(
       if (data.result === OK) {
         // console.log(data.data);
         // navigate("/phone");
+        await wait(1 * 1000);
         return data.data;
       } else {
         // console.log("Error Else :", data);
@@ -155,7 +157,7 @@ const wait = (ms: number) =>
     MySwal.fire({
       title: "<p>กำลังโหลดข้อมูล ...</p>",
       showConfirmButton: false,
-      timer: 1000,
+      timer: ms,
       didOpen: () => {
         MySwal.showLoading();
       },
