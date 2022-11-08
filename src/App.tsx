@@ -26,9 +26,6 @@ import Product from "./pages/Product";
 import ProductView from "./pages/ProductView";
 import ProductEdit from "./pages/ProductEdit";
 
-import "@react-pdf-viewer/core/lib/styles/index.css";
-import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-
 export default function App() {
   useEffect(() => {
     // dispatch(loginActions.restoreLogin());

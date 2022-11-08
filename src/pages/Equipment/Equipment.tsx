@@ -203,7 +203,7 @@ export default function Equipment() {
             </Button>
           </Tooltip>
 
-          <Tooltip title="ลบข้อมูล">
+          <Tooltip title="ยกเลิกข้อมูล">
             <Button
               sx={{
                 minWidth: "30px",
@@ -454,8 +454,6 @@ export default function Equipment() {
           }}
           initialValues={initialValues}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
-
             dispatch(equipmentSearch({ search: values, navigate: navigate }));
             setSubmitting(false);
           }}

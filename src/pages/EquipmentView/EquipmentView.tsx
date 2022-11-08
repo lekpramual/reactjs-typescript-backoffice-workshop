@@ -342,7 +342,7 @@ export default function EquipmentView() {
                       variant={"body2"}
                       className="mt-[-2px] text-slate-500 hover:text-blue-600"
                     >
-                      {data.equipment_file != "" ? (
+                      {data.equipment_file !== "" ? (
                         <a
                           href={`${server.BACKOFFICE_URL_File}/${data.equipment_file}`}
                           target="_blank"

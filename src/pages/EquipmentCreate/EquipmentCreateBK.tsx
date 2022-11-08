@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // @form
 import { Formik, Form, Field } from "formik";
@@ -17,7 +17,6 @@ import {
   OutlinedInput,
   Breadcrumbs,
   Autocomplete,
-  Avatar,
 } from "@mui/material";
 
 // @type
@@ -31,8 +30,6 @@ import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
 import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTone";
-import UploadFileSharpIcon from "@mui/icons-material/UploadFileSharp";
-import PictureAsPdfSharpIcon from "@mui/icons-material/PictureAsPdfSharp";
 
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -43,9 +40,11 @@ import Stack from "@mui/material/Stack";
 
 // import Button from "@mui/material/Button";
 // import TextField from "@mui/material/TextField";
+import Switch from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 
+import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
@@ -56,9 +55,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 // @styles
 import { styled } from "@mui/material/styles";
-
-// constats
-import { server } from "@/constants";
+// @components
+import ComputerCreate from "@/components/ComputerCreate";
 
 import thLocale from "date-fns/locale/th";
 import { BootstrapDialog, BoxDataGrid } from "@/styles/AppStyle";
@@ -70,8 +68,6 @@ import {
   departmentSelector,
   departmentAll,
 } from "@/store/slices/departmentSlice";
-
-import { companySelector, companyAll } from "@/store/slices/companySlice";
 
 const localeMap = {
   th: thLocale,
@@ -129,7 +125,6 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
 };
 
 export default function EquipmentCreate() {
-  const formRef = useRef<any>();
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const [total, setTotal] = React.useState(0);
@@ -138,7 +133,6 @@ export default function EquipmentCreate() {
     React.useState<boolean>(false);
 
   const departmentReducer = useSelector(departmentSelector);
-  const companyReducer = useSelector(companySelector);
 
   // คอลัมข้อมูลการแสดง
   const dataValue = [
@@ -296,17 +290,13 @@ export default function EquipmentCreate() {
   };
 
   const initialEquipmentValues: any = {
-    equipment_depart: { name: "", id: null, state: "" }, // หน่วยงาน *
-    equipment_no_txt: "", // เลขที่บันทึก
-    equipment_type: "empty", // ประเภทการซื้อ *
-    equipment_title: "", // เรื่องที่บันทึก
-    equipment_member: "", // ผู้บันทึกข้อความ
-    equipment_member_get: "", // ผู้รับสินค้า
-    equipment_date: new Date(), // วันที่บันทึกข้อความ
-    equipment_date_get: new Date(), // วันที่รับสินค้า
-    equipment_company: "empty", // ซื้อจากบริษัท *
-    equipment_note: "", // รายละเอียด *
-    equipment_file: "-", // ไฟล์อัปโหลด *
+    depart: { name: "", id: null, state: "" },
+    keyword: "",
+    type: 0,
+    disposition: "ALL",
+    dstchannel: "ALL",
+    start: new Date(),
+    end: new Date(),
   };
 
   const CustomizedSelectForFormik = ({ children, form, field, label }: any) => {
@@ -324,12 +314,6 @@ export default function EquipmentCreate() {
         {children}
       </Select>
     );
-  };
-
-  const handleSubmit = () => {
-    if (formRef.current) {
-      formRef.current.handleSubmit();
-    }
   };
 
   const showFormCreate = ({
@@ -353,6 +337,10 @@ export default function EquipmentCreate() {
         >
           <Grid item lg={6} md={6} xs={6}>
             <FormControl fullWidth size="small">
+              <InputLabel htmlFor="outlined-adornment-title">
+                เรื่องที่บันทึก
+              </InputLabel>
+
               <Autocomplete
                 noOptionsText={"ไม่มีข้อมูล"}
                 disableListWrap
@@ -373,21 +361,20 @@ export default function EquipmentCreate() {
                 }
                 getOptionLabel={(option) => `${option.name}`}
                 onChange={(e, value) => {
+                  console.log(value);
                   setFieldValue(
-                    "equipment_depart",
-                    value !== null
-                      ? value
-                      : initialEquipmentValues.equipment_depart
+                    "depart",
+                    value !== null ? value : initialEquipmentValues.depart
                   );
                 }}
                 renderInput={(params) => (
                   <Field
                     sx={{ input: { marginTop: "-3px" } }}
                     {...params}
-                    name="equipment_depart"
-                    id="equipment_depart"
+                    name="depart"
+                    id="depart"
                     // margin="normal"
-                    label={"หน่วยงานที่บันทึก"}
+                    label={"หน่วยงาน"}
                     component={TextField}
                     size="small"
                     InputLabelProps={{
@@ -400,11 +387,11 @@ export default function EquipmentCreate() {
           </Grid>
           <Grid item lg={6} md={6} xs={6}>
             <FormControl fullWidth size="small">
-              <InputLabel htmlFor="equipment_no_txt">เลขที่บันทึก</InputLabel>
+              <InputLabel htmlFor="billnumber">เลขที่บันทึก</InputLabel>
               <Field
                 as={OutlinedInput}
-                id="equipment_no_txt"
-                name="equipment_no_txt"
+                id="keyword"
+                name="keyword"
                 label="เลขที่บันทึก"
                 size="small"
                 startAdornment={
@@ -416,26 +403,30 @@ export default function EquipmentCreate() {
           </Grid>
           <Grid item lg={6} md={6} xs={6}>
             <FormControl fullWidth size="small">
-              <InputLabel id="equipment_type">ประเภทการซื้อ</InputLabel>
+              <InputLabel id="select-small-type">ประเภทการซื้อ</InputLabel>
               <Field
-                name="equipment_type"
-                id="equipment_type"
+                name="type"
+                id="type"
                 label="ประเภทการซื้อ"
                 component={CustomizedSelectForFormik}
               >
-                <MenuItem value={"empty"}>เลือกประเภทการซื้อ</MenuItem>
-                <MenuItem value={"ซื้อในแผน"}>ซื้อในแผน</MenuItem>
-                <MenuItem value={"ซื้อนอกแผน"}>ซื้อนอกแผน</MenuItem>
+                <MenuItem value={0}>ซื้อตามแผน</MenuItem>
+                <MenuItem value={1}>เบอร์ - ต้นทาง</MenuItem>
+                <MenuItem value={2}>เบอร์ - ปลายทาง</MenuItem>
+                <MenuItem value={3}>หน่วยงาน - ต้นทาง</MenuItem>
+                <MenuItem value={4}>หน่วยงาน - ปลายทาง</MenuItem>
               </Field>
             </FormControl>
           </Grid>
           <Grid item lg={6} md={6} xs={6}>
             <FormControl fullWidth size="small">
-              <InputLabel htmlFor="equipment_title">เรื่องที่บันทึก</InputLabel>
+              <InputLabel htmlFor="outlined-adornment-keyword">
+                เรื่องที่บันทึก
+              </InputLabel>
               <Field
                 as={OutlinedInput}
-                id="equipment_title"
-                name="equipment_title"
+                id="keyword"
+                name="keyword"
                 startAdornment={
                   <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
                 }
@@ -447,11 +438,11 @@ export default function EquipmentCreate() {
           </Grid>
           <Grid item lg={6} md={6} xs={6}>
             <FormControl fullWidth size="small">
-              <InputLabel id="equipment_member">ผู้บันทึกข้อความ</InputLabel>
+              <InputLabel id="select-small-type">ผู้บันทึกข้อความ</InputLabel>
               <Field
                 as={OutlinedInput}
-                id="equipment_member"
-                name="equipment_member"
+                id="keyword"
+                name="keyword"
                 label="ผู้บันทึกข้อความ"
                 size="small"
                 startAdornment={
@@ -463,12 +454,12 @@ export default function EquipmentCreate() {
           </Grid>
           <Grid item lg={6} md={6} xs={6}>
             <FormControl fullWidth size="small">
-              <InputLabel id="equipment_member_get">ผู้รับสินค้า</InputLabel>
+              <InputLabel id="select-small-type">ผู้รับสินค้า</InputLabel>
               <Field
                 as={OutlinedInput}
-                id="equipment_member_get"
-                name="equipment_member_get"
-                label="ผู้รับสินค้า"
+                id="keyword"
+                name="keyword"
+                label="ผู้บันทึก"
                 size="small"
                 startAdornment={
                   <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
@@ -487,14 +478,14 @@ export default function EquipmentCreate() {
                 <DatePicker
                   label="วันที่บันทึกข้อความ"
                   inputFormat="dd/MM/yyyy"
-                  value={values.equipment_date}
+                  value={values.start}
                   onChange={(newValue: Date | null) => {
-                    setFieldValue("equipment_date", newValue, true);
+                    setFieldValue("start", newValue, true);
                   }}
                   renderInput={(params) => (
                     <Field
                       component={TextField}
-                      name="equipment_date"
+                      name="start"
                       {...params}
                       size="small"
                     />
@@ -512,14 +503,14 @@ export default function EquipmentCreate() {
                 <DatePicker
                   label="วันที่รับสินค้า"
                   inputFormat="dd/MM/yyyy"
-                  value={values.equipment_date_get}
+                  value={values.start}
                   onChange={(newValue: Date | null) => {
-                    setFieldValue("equipment_date_get", newValue, true);
+                    setFieldValue("start", newValue, true);
                   }}
                   renderInput={(params) => (
                     <Field
                       component={TextField}
-                      name="equipment_date_get"
+                      name="start"
                       {...params}
                       size="small"
                     />
@@ -530,38 +521,26 @@ export default function EquipmentCreate() {
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
             <FormControl fullWidth size="small">
-              <InputLabel id="equipment_company">ซื้ิอจากบริษัท</InputLabel>
+              <InputLabel id="select-small-type">ซื้ิอจาก</InputLabel>
               <Field
-                sx={{ input: { marginTop: "-3px" } }}
-                name="equipment_company"
-                id="equipment_company"
-                label="ซื้ิอจากบริษัท"
+                name="type"
+                id="type"
+                label="ซื้ิอจาก"
                 component={CustomizedSelectForFormik}
-                // placeholder="ซื้ิอจากบริษัท"
-                InputLabelProps={{
-                  style: { marginTop: "-3px" },
-                }}
               >
-                <MenuItem value={"empty"}>เลือกบริษัท</MenuItem>
-                {companyReducer.isResult
-                  ? companyReducer.isResult.map((row) => {
-                      return (
-                        <MenuItem value={row.company_id}>
-                          {row.company_name}
-                        </MenuItem>
-                      );
-                    })
-                  : []}
+                <MenuItem value={0}>บริษัท กรุงทองคอมพิวเตอร์ จำกัด</MenuItem>
               </Field>
             </FormControl>
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
             <FormControl fullWidth size="small">
-              <InputLabel htmlFor="equipment_note">รายละเอียด</InputLabel>
+              <InputLabel htmlFor="outlined-adornment-keyword">
+                รายละเอียด
+              </InputLabel>
               <Field
                 as={OutlinedInput}
-                id="equipment_note"
-                name="equipment_note"
+                id="keyword"
+                name="keyword"
                 size="small"
                 label="รายละเอียด"
                 startAdornment={
@@ -572,24 +551,35 @@ export default function EquipmentCreate() {
             </FormControl>
           </Grid>
           <Grid item lg={12} md={12} xs={12} sx={{ mb: 1 }}>
-            <label htmlFor="icon-button-file" className="w-[64px] h-[64px]">
-              {showPreviewImage(values)}
+            <label htmlFor="icon-button-file">
               <Input
                 accept="application/pdf"
                 type="file"
                 id="icon-button-file"
-                name="equipment_file"
-                onChange={(e: any) => {
+                name="image"
+                onChange={(e) => {
                   e.preventDefault();
-                  setFieldValue("file", e.target.files[0]); // for upload
-                  setFieldValue(
-                    "file_obj",
-                    URL.createObjectURL(e.target.files[0])
-                  ); // for preview image
+                  console.log("click ...");
+                  // setFieldValue("file", e.target.files[0]); // for upload
+                  // setFieldValue(
+                  //   "file_obj",
+                  //   URL.createObjectURL(e.target.files[0])
+                  // ); // for preview image
                 }}
               />
+              <Tooltip title="แนบไฟล์">
+                <IconButton
+                  color="primary"
+                  aria-label="upload picture"
+                  component="span"
+                >
+                  <AttachFileTwoToneIcon
+                    color="inherit"
+                    sx={{ display: "block" }}
+                  />{" "}
+                </IconButton>
+              </Tooltip>
             </label>
-
             {/* <FormControl size="small" sx={{ mb: 2 }}>
               <img
                 src={`${process.env.PUBLIC_URL}/images/ic_photo.png`}
@@ -740,6 +730,26 @@ export default function EquipmentCreate() {
               />
             </FormControl>
           </Grid>
+          <Grid item lg={12} md={12} xs={12}>
+            <Stack
+              direction="row"
+              sx={{
+                flex: 1,
+              }}
+              justifyContent="space-between"
+              alignItems={"center"}
+            >
+              <Typography variant="body2" component={"div"}>
+                รายละเอียดอุปกรณ์
+              </Typography>
+              <Switch defaultChecked color="success" />
+              {/* <Typography variant="body2" component={"div"}>
+                xxx
+              </Typography> */}
+            </Stack>
+          </Grid>
+
+          <ComputerCreate />
         </Grid>
       </Form>
     );
@@ -799,7 +809,7 @@ export default function EquipmentCreate() {
   const showDialogCreate = () => {
     return (
       <BootstrapDialog
-        maxWidth="md"
+        maxWidth="lg"
         open={openDialogCreate}
         keepMounted
         aria-labelledby="alert-dialog-slide-title"
@@ -815,7 +825,6 @@ export default function EquipmentCreate() {
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <Formik
-            key={"formproductcreate"}
             validate={(values) => {
               let errors: any = {};
 
@@ -852,75 +861,8 @@ export default function EquipmentCreate() {
     );
   };
 
-  const showPreviewImage = (values) => {
-    if (values.file_obj) {
-      return (
-        <>
-          <Avatar
-            variant="square"
-            sx={{
-              width: 64,
-              height: 64,
-              marginBottom: "5px",
-            }}
-          >
-            <PictureAsPdfSharpIcon />
-          </Avatar>
-          <a href={values.file_obj} target="_blank" rel="noreferrer">
-            {values.file_obj}
-          </a>
-        </>
-      );
-    } else if (values.equipment_file !== "-") {
-      return (
-        <>
-          <Avatar
-            variant="square"
-            sx={{
-              width: 64,
-              height: 64,
-              marginBottom: "5px",
-            }}
-          >
-            <PictureAsPdfSharpIcon />
-          </Avatar>
-          <a
-            href={`${server.BACKOFFICE_URL_File}/${values.equipment_file}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {values.equipment_file}
-          </a>
-        </>
-      );
-    } else {
-      return (
-        <Box
-          sx={{
-            width: 64,
-            height: 64,
-          }}
-        >
-          <Tooltip title="แนบไฟล์ PDF" className="w-[64px]">
-            <Avatar
-              variant="square"
-              sx={{
-                width: 64,
-                height: 64,
-                marginBottom: "5px",
-              }}
-            >
-              <UploadFileSharpIcon />
-            </Avatar>
-          </Tooltip>
-        </Box>
-      );
-    }
-  };
-
   useEffect(() => {
     dispatch(departmentAll());
-    dispatch(companyAll());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -992,8 +934,6 @@ export default function EquipmentCreate() {
           </Toolbar>
         </AppBar>
         <Formik
-          innerRef={formRef}
-          key={"formcreate"}
           validate={(values) => {
             let errors: any = {};
 
@@ -1001,7 +941,6 @@ export default function EquipmentCreate() {
           }}
           initialValues={initialEquipmentValues}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
             setSubmitting(false);
           }}
         >
@@ -1009,7 +948,7 @@ export default function EquipmentCreate() {
         </Formik>
       </Paper>
 
-      {/* <Paper
+      <Paper
         sx={{
           maxWidth: "100%",
           margin: "auto",
@@ -1105,8 +1044,7 @@ export default function EquipmentCreate() {
             }}
           />
         </BoxDataGrid>
-      </Paper> */}
-
+      </Paper>
       <Grid container spacing={2} alignItems="center" className="mt-1">
         <Grid xs={6} className="text-right" item>
           <Button variant="contained" color="error" className="w-[128px] ">
@@ -1115,12 +1053,7 @@ export default function EquipmentCreate() {
           </Button>
         </Grid>
         <Grid xs={6} item>
-          <Button
-            variant="contained"
-            color="success"
-            className="w-[128px] "
-            onClick={() => handleSubmit()}
-          >
+          <Button variant="contained" color="success" className="w-[128px] ">
             <SaveTwoToneIcon />
             บันทึก
           </Button>
