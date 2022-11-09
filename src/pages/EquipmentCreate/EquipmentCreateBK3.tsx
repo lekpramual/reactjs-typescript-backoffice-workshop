@@ -73,7 +73,6 @@ import {
 } from "@/store/slices/departmentSlice";
 
 import { companySelector, companyAll } from "@/store/slices/companySlice";
-import { any } from "prop-types";
 
 const localeMap = {
   th: thLocale,
@@ -112,6 +111,7 @@ function CustomFooterTotal(props: CustomFooterTotalProps) {
 
 const BootstrapDialogTitle = (props: DialogTitleProps) => {
   const { children, onClose, ...other } = props;
+
   return (
     <DialogTitle
       sx={{
@@ -297,10 +297,7 @@ export default function EquipmentCreate() {
   };
 
   const initialEquipmentValues: any = {
-    equipment_depart: {
-      label: "งานช่างซ่อมคอมพิวเตอร์ รวมงานธุรการศูนย์คอมพิวเตอร์",
-      value: 1,
-    }, // หน่วยงาน *
+    equipment_depart: [{ label: "", value: "" }], // หน่วยงาน *
     equipment_no_txt: "", // เลขที่บันทึก
     equipment_type: "empty", // ประเภทการซื้อ *
     equipment_title: "", // เรื่องที่บันทึก
@@ -343,16 +340,17 @@ export default function EquipmentCreate() {
     }
   };
 
-  const optionDeparts = departmentReducer.isResult
-    ? departmentReducer.isResult.map((i) => {
-        // const departs = [{ label: "test", value: "test" }];
-        // const depart = { value: i.dept_id, label: i.dept_name };
-        // return { value: i.dept_id, label: i.dept_name };
-        // departs.push({ value: i.dept_id, label: i.dept_name });
-        return { value: i.dept_id, label: i.dept_name };
-        // return departs;
-      })
-    : [];
+  const optionDeparts = () =>
+    departmentReducer.isResult
+      ? departmentReducer.isResult.map((i) => {
+          return { value: i.dept_id, label: i.dept_name };
+        })
+      : [];
+
+  const option = optionDeparts[0].push({
+    label: "เลือกหน่วยงานที่บันทึก",
+    value: "",
+  });
 
   const showFormCreate = ({
     handleSubmit,
@@ -381,28 +379,22 @@ export default function EquipmentCreate() {
                 noOptionsText={"ไม่มีข้อมูล"}
                 disableListWrap
                 size="small"
-                options={
-                  departmentReducer.isResult
-                    ? departmentReducer.isResult.map((i) => {
-                        return { value: i.dept_id, label: i.dept_name };
-                      })
-                    : []
-                }
+                options={option}
                 isOptionEqualToValue={(option: any, value: any) =>
                   option.value === value.value
                 }
                 getOptionLabel={(option) => `${option.label}`}
-                onChange={(e, value) => {
-                  setFieldValue(
-                    "equipment_depart",
-                    value !== null
-                      ? value
-                      : initialEquipmentValues.equipment_depart
-                  );
-                }}
+                // onChange={(e, value) => {
+                //   setFieldValue(
+                //     "equipment_depart",
+                //     value !== null
+                //       ? value
+                //       : initialEquipmentValues.equipment_depart
+                //   );
+                // }}
                 defaultValue={{
-                  label: "งานช่างซ่อมคอมพิวเตอร์ รวมงานธุรการศูนย์คอมพิวเตอร์",
-                  value: 1,
+                  label: "เลือกหน่วยงานที่บันทึก",
+                  value: "",
                 }}
                 renderInput={(params) => (
                   <Field
@@ -459,15 +451,9 @@ export default function EquipmentCreate() {
                 label="ประเภทการซื้อ"
                 component={CustomizedSelectForFormik}
               >
-                <MenuItem value={"empty"} key="empty">
-                  เลือกประเภทการซื้อ
-                </MenuItem>
-                <MenuItem value={"ซื้อในแผน"} key="ซื้อในแผน">
-                  ซื้อในแผน
-                </MenuItem>
-                <MenuItem value={"ซื้อนอกแผน"} key="ซื้อนอกแผน">
-                  ซื้อนอกแผน
-                </MenuItem>
+                <MenuItem value={"empty"}>เลือกประเภทการซื้อ</MenuItem>
+                <MenuItem value={"ซื้อในแผน"}>ซื้อในแผน</MenuItem>
+                <MenuItem value={"ซื้อนอกแผน"}>ซื้อนอกแผน</MenuItem>
               </Field>
             </FormControl>
           </Grid>
@@ -616,7 +602,7 @@ export default function EquipmentCreate() {
                 {companyReducer.isResult
                   ? companyReducer.isResult.map((row) => {
                       return (
-                        <MenuItem value={row.company_id} key={row.company_id}>
+                        <MenuItem value={row.company_id}>
                           {row.company_name}
                         </MenuItem>
                       );
@@ -713,6 +699,130 @@ export default function EquipmentCreate() {
     );
   };
 
+  const showFormProductCreate = ({
+    handleSubmit,
+    handleChange,
+    isSubmitting,
+    setFieldValue,
+    resetForm,
+    values,
+  }: any) => {
+    return (
+      <Form noValidate>
+        <Grid
+          container
+          spacing={2}
+          alignItems="center"
+          sx={{
+            pt: "16px",
+            px: "16px",
+          }}
+        >
+          <Grid item xs={12}>
+            <FormControl fullWidth size="small">
+              <InputLabel htmlFor="billnumber">ชื่อรายการ</InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                label="ชื่อรายการ"
+                size="small"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="กรอก ชื่อรายการ"
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="select-small-type">หมวดหมู่</InputLabel>
+              <Field
+                name="type"
+                id="type"
+                label="หมวดหมู่"
+                component={CustomizedSelectForFormik}
+              >
+                <MenuItem value={0}>คอมพิวเตอร์</MenuItem>
+              </Field>
+            </FormControl>
+          </Grid>
+          <Grid item lg={12} md={12} xs={12}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="select-small-type">
+                ชนิดวัสดุ/ครุภัณฑ์{" "}
+              </InputLabel>
+              <Field
+                name="type"
+                id="type"
+                label="ชนิดวัสดุ/ครุภัณฑ์ "
+                component={CustomizedSelectForFormik}
+              >
+                <MenuItem value={0}>พัสดุ มีเลขครุภัณฑ์</MenuItem>
+                <MenuItem value={1}>วัสดุ ไม่มีเลขครุภัณฑ์</MenuItem>
+              </Field>
+            </FormControl>
+          </Grid>
+          <Grid item lg={6} md={6} xs={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel htmlFor="outlined-adornment-keyword">
+                จำนวน
+              </InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                type="number"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                label="จำนวน"
+                size="small"
+                placeholder="กรอก จำนวน"
+              />
+            </FormControl>
+          </Grid>
+          <Grid item lg={6} md={6} xs={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="select-small-type">ราคาต่อหน่วย</InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                label="ราคาต่อหน่วย"
+                size="small"
+                type="number"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="กรอก ราคาต่อหน่วย"
+              />
+            </FormControl>
+          </Grid>
+
+          <Grid item lg={12} md={12} xs={12}>
+            <FormControl fullWidth size="small">
+              <InputLabel htmlFor="outlined-adornment-keyword">
+                รายละเอียด
+              </InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="keyword"
+                name="keyword"
+                size="small"
+                label="รายละเอียด"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="รายละเอียดเพิ่มเติม"
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+      </Form>
+    );
+  };
+
   // ฟังก์ชั่น ยืนยันการลบข้อมูล
   const handleDeleteConfirm = () => {
     // ปิด ป๊อปอัพ
@@ -761,6 +871,62 @@ export default function EquipmentCreate() {
           </Button>
         </DialogActions>
       </Dialog>
+    );
+  };
+
+  const showDialogCreate = () => {
+    return (
+      <BootstrapDialog
+        maxWidth="md"
+        open={openDialogCreate}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <BootstrapDialogTitle
+          id="alert-dialog-slide-title"
+          onClose={() => setOpenDialogCreate(false)}
+        >
+          <Typography variant="subtitle1" component={"b"}>
+            เพิ่มรายการอุปกรณ์
+          </Typography>
+        </BootstrapDialogTitle>
+        <DialogContent dividers>
+          <Formik
+            key={"formproductcreate"}
+            validate={(values) => {
+              let errors: any = {};
+
+              return errors;
+            }}
+            initialValues={initialValues}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(false);
+            }}
+          >
+            {(props) => showFormProductCreate(props)}
+          </Formik>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            paddingRight: 24,
+          }}
+        >
+          <Button
+            onClick={() => setOpenDialogCreate(false)}
+            variant="contained"
+            color="error"
+            className="w-[96px] "
+          >
+            <CloseTwoToneIcon /> ปิด
+          </Button>
+
+          <Button variant="contained" color="success" className="w-[128px] ">
+            <DoneTwoToneIcon />
+            ตกลง
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
     );
   };
 
@@ -1005,6 +1171,7 @@ export default function EquipmentCreate() {
         </BoxDataGrid>
       </Paper> */}
 
+      {JSON.stringify(optionDeparts)}
       <Grid container spacing={2} alignItems="center" className="mt-1">
         <Grid xs={6} className="text-right" item>
           <Button
@@ -1029,7 +1196,9 @@ export default function EquipmentCreate() {
           </Button>
         </Grid>
       </Grid>
+
       {showDialog()}
+      {showDialogCreate()}
     </Box>
   );
 }
