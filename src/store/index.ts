@@ -9,6 +9,8 @@ import numberReducer from "@/store/slices/numberSlice";
 import equipmentReducer from "@/store/slices/equipmentSlice";
 import companyReducer from "@/store/slices/companySlice";
 import departmentReducer from "@/store/slices/departmentSlice";
+import categoryReducer from "@/store/slices/categorySlice";
+import equipmentCartReducer from "@/store/slices/equipmentCartSlice";
 
 const reducer = {
   loginReducer,
@@ -19,6 +21,8 @@ const reducer = {
   equipmentReducer,
   companyReducer,
   departmentReducer,
+  categoryReducer,
+  equipmentCartReducer,
 };
 
 export const store = configureStore({

@@ -73,6 +73,12 @@ import {
 } from "@/store/slices/departmentSlice";
 
 import { companySelector, companyAll } from "@/store/slices/companySlice";
+import { categorySelector, categoryAll } from "@/store/slices/categorySlice";
+import {
+  equipmentCartSelector,
+  getEquipmentCart,
+} from "@/store/slices/equipmentCartSlice";
+
 import { any } from "prop-types";
 
 const localeMap = {
@@ -131,6 +137,7 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
 
 export default function EquipmentCreate() {
   const formRef = useRef<any>();
+  const formRefProduct = useRef<any>();
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const [total, setTotal] = React.useState(0);
@@ -140,6 +147,8 @@ export default function EquipmentCreate() {
 
   const departmentReducer = useSelector(departmentSelector);
   const companyReducer = useSelector(companySelector);
+  const categoryReducer = useSelector(categorySelector);
+  const equipmentCartReducer = useSelector(equipmentCartSelector);
 
   // คอลัมข้อมูลการแสดง
   const dataValue = [
@@ -287,19 +296,20 @@ export default function EquipmentCreate() {
     },
   ];
 
-  const initialValues: PhoneSearch = {
-    keyword: "",
-    type: 0,
-    disposition: "ALL",
-    dstchannel: "ALL",
-    start: new Date(),
-    end: new Date(),
+  const initialValues: any = {
+    equipment_detail_title: "", // รายการ
+    equipment_detail_category: "empty", // หมวดหมู่รหัส * // Todo set empty replate ''
+    equipment_detail_category_name: "", // หมวดหมู่ชื่อ *
+    equipment_detail_material_type: "empty", // ชนิดวัสดุ * // Todo set empty replate ''
+    equipment_detail_qty: "", // จำนวน
+    equipment_detail_price: "", // ราคาต่อหน่วย
+    equipment_detail_note: "", // รายละเอียด
   };
 
   const initialEquipmentValues: any = {
     equipment_depart: {
-      label: "งานช่างซ่อมคอมพิวเตอร์ รวมงานธุรการศูนย์คอมพิวเตอร์",
-      value: 1,
+      label: "เลือกหน่วยงานที่บันทึก",
+      value: 0,
     }, // หน่วยงาน *
     equipment_no_txt: "", // เลขที่บันทึก
     equipment_type: "empty", // ประเภทการซื้อ *
@@ -314,6 +324,29 @@ export default function EquipmentCreate() {
   };
 
   const CustomizedSelectForFormik = ({ children, form, field, label }: any) => {
+    const { name, value } = field;
+    const { setFieldValue } = form;
+
+    return (
+      <Select
+        label={label}
+        name={name}
+        value={value}
+        onChange={(e) => {
+          setFieldValue(name, e.target.value);
+        }}
+      >
+        {children}
+      </Select>
+    );
+  };
+
+  const CustomizedSelectForFormikV2 = ({
+    children,
+    form,
+    field,
+    label,
+  }: any) => {
     const { name, value } = field;
     const { setFieldValue } = form;
     return (
@@ -336,23 +369,42 @@ export default function EquipmentCreate() {
     }
   };
 
+  const handleProductSubmit = () => {
+    if (formRefProduct.current) {
+      formRefProduct.current.handleSubmit();
+    }
+  };
+
   const resetForm = () => {
     if (formRef.current) {
       // formRef.current.resetForm();
       window.location.reload();
     }
   };
+  const resetProductForm = () => {
+    if (formRefProduct.current) {
+      console.log("Reset Product form ...");
+      formRefProduct.current.resetForm();
+    }
+  };
 
-  const optionDeparts = departmentReducer.isResult
-    ? departmentReducer.isResult.map((i) => {
+  function optionNewDeparts() {
+    const departs = [{ label: "--เลือกหน่วยงานที่บันทึก--", value: 0 }];
+    if (departmentReducer.isResult) {
+      departmentReducer.isResult.map((i) => {
         // const departs = [{ label: "test", value: "test" }];
         // const depart = { value: i.dept_id, label: i.dept_name };
         // return { value: i.dept_id, label: i.dept_name };
-        // departs.push({ value: i.dept_id, label: i.dept_name });
-        return { value: i.dept_id, label: i.dept_name };
-        // return departs;
-      })
-    : [];
+        departs.push({ value: i.dept_id, label: i.dept_name });
+        // return { value: i.dept_id, label: i.dept_name };
+        //
+      });
+
+      return departs;
+    } else {
+      return departs;
+    }
+  }
 
   const showFormCreate = ({
     handleSubmit,
@@ -376,36 +428,49 @@ export default function EquipmentCreate() {
           }}
         >
           <Grid item lg={6} md={6} xs={6}>
-            <FormControl fullWidth size="small">
+            <FormControl
+              fullWidth
+              size="small"
+              error={
+                errors.equipment_depart && touched.equipment_depart && true
+              }
+            >
               <Autocomplete
                 noOptionsText={"ไม่มีข้อมูล"}
                 disableListWrap
+                disableClearable={true}
                 size="small"
-                options={
-                  departmentReducer.isResult
-                    ? departmentReducer.isResult.map((i) => {
-                        return { value: i.dept_id, label: i.dept_name };
-                      })
-                    : []
-                }
+                options={optionNewDeparts()}
                 isOptionEqualToValue={(option: any, value: any) =>
                   option.value === value.value
                 }
                 getOptionLabel={(option) => `${option.label}`}
-                onChange={(e, value) => {
-                  setFieldValue(
-                    "equipment_depart",
-                    value !== null
-                      ? value
-                      : initialEquipmentValues.equipment_depart
-                  );
+                onChange={(e, value, reason) => {
+                  if (reason === "clear") {
+                    console.log("clear ..." + value);
+
+                    // setFieldValue("equipment_depart", [
+                    //   {
+                    //     label: "เลือกหน่วยงานที่บันทึก",
+                    //     value: 0,
+                    //   },
+                    // ]);
+                  } else {
+                    setFieldValue(
+                      "equipment_depart",
+                      value !== null
+                        ? value
+                        : initialEquipmentValues.equipment_depart
+                    );
+                  }
                 }}
                 defaultValue={{
-                  label: "งานช่างซ่อมคอมพิวเตอร์ รวมงานธุรการศูนย์คอมพิวเตอร์",
-                  value: 1,
+                  label: "--เลือกหน่วยงานที่บันทึก--",
+                  value: 0,
                 }}
                 renderInput={(params) => (
                   <Field
+                    required
                     sx={{ input: { marginTop: "-3px" } }}
                     {...params}
                     name="equipment_depart"
@@ -460,7 +525,7 @@ export default function EquipmentCreate() {
                 component={CustomizedSelectForFormik}
               >
                 <MenuItem value={"empty"} key="empty">
-                  เลือกประเภทการซื้อ
+                  --เลือกประเภทการซื้อ--
                 </MenuItem>
                 <MenuItem value={"ซื้อในแผน"} key="ซื้อในแผน">
                   ซื้อในแผน
@@ -612,7 +677,7 @@ export default function EquipmentCreate() {
                   style: { marginTop: "-3px" },
                 }}
               >
-                <MenuItem value={"empty"}>เลือกบริษัท</MenuItem>
+                <MenuItem value={"empty"}>--เลือกบริษัท--</MenuItem>
                 {companyReducer.isResult
                   ? companyReducer.isResult.map((row) => {
                       return (
@@ -713,6 +778,203 @@ export default function EquipmentCreate() {
     );
   };
 
+  // บันทึกรายการ อุปกรณ์
+  const showFormProductCreate = ({
+    handleSubmit,
+    handleChange,
+    isSubmitting,
+    setFieldValue,
+    resetForm,
+    values,
+    errors,
+    touched,
+  }: any) => {
+    return (
+      <Form noValidate>
+        <Grid
+          container
+          spacing={2}
+          alignItems="center"
+          sx={{
+            pt: "16px",
+            px: "16px",
+          }}
+        >
+          <Grid item xs={12}>
+            <FormControl
+              fullWidth
+              size="small"
+              required
+              error={
+                errors.equipment_detail_title &&
+                touched.equipment_detail_title &&
+                true
+              }
+            >
+              <InputLabel htmlFor="equipment_detail_title">
+                ชื่อรายการ
+              </InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="equipment_detail_title"
+                name="equipment_detail_title"
+                label="ชื่อรายการ"
+                size="small"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="กรอก ชื่อรายการ"
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl
+              fullWidth
+              size="small"
+              required
+              error={
+                errors.equipment_detail_category &&
+                touched.equipment_detail_category &&
+                true
+              }
+            >
+              <InputLabel id="equipment_detail_category">หมวดหมู่</InputLabel>
+              <Field
+                name="equipment_detail_category"
+                id="equipment_detail_category"
+                label="หมวดหมู่"
+                component={CustomizedSelectForFormikV2}
+              >
+                <MenuItem value={"empty"}>-- เลือกหมวดหมู่ --</MenuItem>
+                {categoryReducer.isResult
+                  ? categoryReducer.isResult.map((row) => {
+                      return (
+                        <MenuItem
+                          value={row.category_id}
+                          key={row.category_name}
+                          onClick={() => {
+                            // เซตชื่อหมวดหมู่
+                            setFieldValue(
+                              "equipment_detail_category_name",
+                              row.category_name
+                            );
+                            console.log("click ...", row.category_name);
+                          }}
+                        >
+                          {row.category_name}
+                        </MenuItem>
+                      );
+                    })
+                  : []}
+              </Field>
+            </FormControl>
+          </Grid>
+          <Grid item lg={12} md={12} xs={12}>
+            <FormControl
+              fullWidth
+              size="small"
+              required
+              error={
+                errors.equipment_detail_material_type &&
+                touched.equipment_detail_material_type &&
+                true
+              }
+            >
+              <InputLabel id="equipment_detail_material_type">
+                ชนิดวัสดุ/ครุภัณฑ์{" "}
+              </InputLabel>
+              <Field
+                name="equipment_detail_material_type"
+                id="equipment_detail_material_type"
+                label="ชนิดวัสดุ/ครุภัณฑ์ "
+                component={CustomizedSelectForFormik}
+              >
+                <MenuItem value={"empty"}>-- ชนิดวัสดุ/ครุภัณฑ์ --</MenuItem>
+                <MenuItem value="วัสดุ-มีเลขครุภัณฑ์">
+                  พัสดุ-มีเลขครุภัณฑ์
+                </MenuItem>
+                <MenuItem value="วัสดุ-ไม่มีเลขครุภัณฑ์">
+                  วัสดุ-ไม่มีเลขครุภัณฑ์
+                </MenuItem>
+              </Field>
+            </FormControl>
+          </Grid>
+          <Grid item lg={6} md={6} xs={6}>
+            <FormControl
+              fullWidth
+              size="small"
+              required
+              error={
+                errors.equipment_detail_qty &&
+                touched.equipment_detail_qty &&
+                true
+              }
+            >
+              <InputLabel htmlFor="equipment_detail_qty">จำนวน</InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="equipment_detail_qty"
+                name="equipment_detail_qty"
+                type="number"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                label="จำนวน"
+                size="small"
+                placeholder="กรอก จำนวน"
+              />
+            </FormControl>
+          </Grid>
+          <Grid item lg={6} md={6} xs={6}>
+            <FormControl
+              fullWidth
+              size="small"
+              required
+              error={
+                errors.equipment_detail_price &&
+                touched.equipment_detail_price &&
+                true
+              }
+            >
+              <InputLabel id="equipment_detail_price">ราคาต่อหน่วย</InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="equipment_detail_price"
+                name="equipment_detail_price"
+                label="ราคาต่อหน่วย"
+                size="small"
+                type="number"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="กรอก ราคาต่อหน่วย"
+              />
+            </FormControl>
+          </Grid>
+
+          <Grid item lg={12} md={12} xs={12}>
+            <FormControl fullWidth size="small">
+              <InputLabel htmlFor="equipment_detail_note">
+                รายละเอียด
+              </InputLabel>
+              <Field
+                as={OutlinedInput}
+                id="equipment_detail_note"
+                name="equipment_detail_note"
+                size="small"
+                label="รายละเอียด"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="รายละเอียดเพิ่มเติม"
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+      </Form>
+    );
+  };
+
   // ฟังก์ชั่น ยืนยันการลบข้อมูล
   const handleDeleteConfirm = () => {
     // ปิด ป๊อปอัพ
@@ -744,7 +1006,9 @@ export default function EquipmentCreate() {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => setOpenDialog(false)}
+            onClick={() => {
+              setOpenDialog(false);
+            }}
             variant="contained"
             color="error"
             className="w-[96px] "
@@ -761,6 +1025,92 @@ export default function EquipmentCreate() {
           </Button>
         </DialogActions>
       </Dialog>
+    );
+  };
+
+  const showDialogCreate = () => {
+    return (
+      <BootstrapDialog
+        maxWidth="md"
+        open={openDialogCreate}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <BootstrapDialogTitle
+          id="alert-dialog-slide-title"
+          onClose={() => setOpenDialogCreate(false)}
+        >
+          <Typography variant="subtitle1" component={"b"}>
+            เพิ่มรายการอุปกรณ์
+          </Typography>
+        </BootstrapDialogTitle>
+        <DialogContent dividers>
+          <Formik
+            innerRef={formRefProduct}
+            validate={(values) => {
+              let errors: any = {};
+
+              if (!values.equipment_detail_title)
+                errors.equipment_detail_title = "กรอกชื่อรายการ";
+
+              if (values.equipment_detail_category === "empty")
+                errors.equipment_detail_category = "เลือกหมวดหมู่";
+
+              if (values.equipment_detail_material_type === "empty")
+                errors.equipment_detail_material_type = "เลือกชนิดวัสดุ";
+
+              if (
+                !values.equipment_detail_qty ||
+                values.equipment_detail_qty <= 0
+              )
+                errors.equipment_detail_qty = "กรอกจำนวน";
+
+              if (
+                !values.equipment_detail_price ||
+                values.equipment_detail_price <= 0
+              )
+                errors.equipment_detail_price = "กรอกราคาต่อหน่วย";
+
+              return errors;
+            }}
+            initialValues={initialValues}
+            onSubmit={(values, { setSubmitting }) => {
+              console.log(values);
+              setSubmitting(false);
+            }}
+          >
+            {(props) => showFormProductCreate(props)}
+          </Formik>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            paddingRight: 24,
+          }}
+        >
+          <Button
+            onClick={() => {
+              setOpenDialogCreate(false);
+              resetProductForm();
+            }}
+            variant="contained"
+            color="error"
+            className="w-[96px] "
+          >
+            <CloseTwoToneIcon /> ปิด
+          </Button>
+
+          <Button
+            variant="contained"
+            color="success"
+            className="w-[128px] "
+            onClick={() => handleProductSubmit()}
+          >
+            <DoneTwoToneIcon />
+            ตกลง
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
     );
   };
 
@@ -803,6 +1153,8 @@ export default function EquipmentCreate() {
   useEffect(() => {
     dispatch(departmentAll());
     dispatch(companyAll());
+    dispatch(categoryAll());
+    dispatch(getEquipmentCart());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -878,6 +1230,9 @@ export default function EquipmentCreate() {
           validate={(values) => {
             let errors: any = {};
 
+            if (values.equipment_depart.value === 0)
+              errors.equipment_depart = " ";
+
             if (!values.equipment_no_txt)
               errors.equipment_no_txt = "กรอกเลขที่บันทึก";
 
@@ -907,7 +1262,7 @@ export default function EquipmentCreate() {
         </Formik>
       </Paper>
 
-      {/* <Paper
+      <Paper
         sx={{
           maxWidth: "100%",
           margin: "auto",
@@ -952,6 +1307,8 @@ export default function EquipmentCreate() {
             </Grid>
           </Toolbar>
         </AppBar>
+        {/* @TODO บันทึกข้อมูลรายการอุปกรณ์ โดยใช้ action  */}
+        {JSON.stringify(equipmentCartReducer)}
         <BoxDataGrid>
           <DataGrid
             rowHeight={26}
@@ -983,8 +1340,8 @@ export default function EquipmentCreate() {
                   opacity: 0.5,
                 },
             }}
-            rows={dataValue ? dataValue : []}
-            // rows={[]}
+            // rows={dataValue ? dataValue : []}
+            rows={[]}
             columns={dataColumns}
             pageSize={10}
             hideFooterSelectedRowCount
@@ -1003,7 +1360,7 @@ export default function EquipmentCreate() {
             }}
           />
         </BoxDataGrid>
-      </Paper> */}
+      </Paper>
 
       <Grid container spacing={2} alignItems="center" className="mt-1">
         <Grid xs={6} className="text-right" item>
@@ -1029,7 +1386,10 @@ export default function EquipmentCreate() {
           </Button>
         </Grid>
       </Grid>
+
       {showDialog()}
+
+      {showDialogCreate()}
     </Box>
   );
 }
