@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 // @store PayloadAction
 import { RootState } from "@/store";
 // @type
@@ -9,67 +9,61 @@ import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
-const initialState: any = {
-  numberCart: 0,
-  Carts: [],
+// We can safely reuse
+// types created earlier:
+type TodoId = string;
+
+// let cart: any = {
+//   equipment_detail_title: action.payload.equipment_detail_title,
+//   equipment_detail_category: action.payload.equipment_detail_category,
+//   equipment_detail_material_type:
+//     action.payload.equipment_detail_material_type,
+//   equipment_detail_qty: action.payload.equipment_detail_qty,
+//   equipment_detail_price: action.payload.equipment_detail_price,
+//   // equipment_detail_price_total:
+//   //   action.payload.equipment_detail_qty *
+//   //   action.payload.equipment_detail_price,
+//   equipment_detail_note: action.payload.equipment_detail_note,
+// };
+
+type Todo = {
+  id: TodoId;
+  equipment_detail_title: string;
+  equipment_detail_category: string;
+  equipment_detail_category_name: string;
+  equipment_detail_material_type: string;
+  equipment_detail_qty: number;
+  equipment_detail_price: number;
+  equipment_detail_price_total: number;
+  equipment_detail_note: string;
+};
+
+type TodosState = {
+  list: Todo[];
+};
+
+const initialState: TodosState = {
+  list: [],
 };
 
 const equipmentCartSlice = createSlice({
   name: "equipmentCart",
-  initialState: initialState,
+  // initialState: initialState,
+  initialState,
   reducers: {
-    getEquipmentCart: (state) => {
-      return { ...state };
+    addEquipmentCart: (state: TodosState, action: PayloadAction<Todo>) => {
+      state.list.push(action.payload);
     },
-    addEquipmentCart: (state: any, action: any) => {
-      if (state.numberCart === 0) {
-        let cart: any = {
-          equipment_detail_title: action.payload.equipment_detail_title,
-          equipment_detail_category: action.payload.equipment_detail_category,
-          equipment_detail_material_type:
-            action.payload.equipment_detail_material_type,
-          equipment_detail_qty: action.payload.equipment_detail_qty,
-          equipment_detail_price: action.payload.equipment_detail_price,
-          equipment_detail_price_total:
-            action.payload.equipment_detail_qty *
-            action.payload.equipment_detail_price,
-          equipment_detail_note: action.payload.equipment_detail_note,
-        };
-        state.Carts.push(cart);
-      }
-      return {
-        ...state,
-        numberCart: state.numberCart + 1,
-      };
-    },
-    saveEquipmentCart: (state: any, action: any) => {
-      console.log(action);
-      if (state.numberCart === 0) {
-        let cart: any = {
-          equipment_detail_title: action.payload.equipment_detail_title,
-          equipment_detail_category: action.payload.equipment_detail_category,
-          equipment_detail_material_type:
-            action.payload.equipment_detail_material_type,
-          equipment_detail_qty: action.payload.equipment_detail_qty,
-          equipment_detail_price: action.payload.equipment_detail_price,
-          equipment_detail_price_total:
-            action.payload.equipment_detail_qty *
-            action.payload.equipment_detail_price,
-          equipment_detail_note: action.payload.equipment_detail_note,
-        };
-        state.Carts.push(cart);
-      }
-      return {
-        ...state,
-        numberCart: state.numberCart + 1,
-      };
+    deleteEquipmentCart: (state: TodosState, action: PayloadAction<TodoId>) => {
+      state.list = state.list.filter((todo) => todo.id !== action.payload);
     },
   },
   extraReducers: (builder) => {},
 });
 
 // Export all of the actions:
-export const { getEquipmentCart } = equipmentCartSlice.actions;
+export const { addEquipmentCart, deleteEquipmentCart } =
+  equipmentCartSlice.actions;
 export const equipmentCartSelector = (store: RootState) =>
   store.equipmentCartReducer;
 export default equipmentCartSlice.reducer;

@@ -76,7 +76,8 @@ import { companySelector, companyAll } from "@/store/slices/companySlice";
 import { categorySelector, categoryAll } from "@/store/slices/categorySlice";
 import {
   equipmentCartSelector,
-  getEquipmentCart,
+  addEquipmentCart,
+  deleteEquipmentCart,
 } from "@/store/slices/equipmentCartSlice";
 
 import { any } from "prop-types";
@@ -150,37 +151,12 @@ export default function EquipmentCreate() {
   const categoryReducer = useSelector(categorySelector);
   const equipmentCartReducer = useSelector(equipmentCartSelector);
 
-  // คอลัมข้อมูลการแสดง
-  const dataValue = [
-    {
-      id: 1,
-      name: "เครื่องคอมพิวเตอร์ สำหรับสำนักงาน จอขนาด 21.5 นิ้ว",
-      groupName: "คอมพิวเตอร์",
-      typeName: "พัสดุ/มีเลขครุภัณฑ์",
-      qty: 2,
-      price: 14480,
-      priceTotal: 28960,
-    },
-  ];
+  const [equipmentCart, setEquipmentCart] = React.useState<any>([]);
 
   const dataColumns = [
-    // {
-    //   headerName: "#",
-    //   field: "id",
-    //   flex: 1,
-    //   minWidth: 32,
-    //   headerClassName:
-    //     "bg-[#36474f] text-[#fff] text-[14px]   fill-[#fff] ",
-    //   sortable: false,
-    //   renderCell: ({ value }: any) => (
-    //     <Typography variant="body1" className="text-[14px]">
-    //       {value}
-    //     </Typography>
-    //   ),
-    // },
     {
       headerName: "ชื่อรายการ",
-      field: "name",
+      field: "equipment_detail_title",
       flex: 1,
       minWidth: 364,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -193,7 +169,7 @@ export default function EquipmentCreate() {
     },
     {
       headerName: "หมวดหมู่",
-      field: "groupName",
+      field: "equipment_detail_category_name",
       flex: 1,
       minWidth: 156,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -206,7 +182,7 @@ export default function EquipmentCreate() {
     },
     {
       headerName: "ชนิดวัสดุ/ครุภัณฑ์",
-      field: "typeName",
+      field: "equipment_detail_material_type",
       flex: 1,
       minWidth: 156,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -219,7 +195,7 @@ export default function EquipmentCreate() {
     },
     {
       headerName: "จำนวน",
-      field: "qty",
+      field: "equipment_detail_qty",
       type: "number",
       flex: 1,
       minWidth: 64,
@@ -235,7 +211,7 @@ export default function EquipmentCreate() {
     },
     {
       headerName: "ราคา/หน่วย",
-      field: "price",
+      field: "equipment_detail_price",
       flex: 1,
       minWidth: 96,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -248,7 +224,7 @@ export default function EquipmentCreate() {
     },
     {
       headerName: "ราคารวม",
-      field: "priceTotal",
+      field: "equipment_detail_price_total",
       flex: 1,
       minWidth: 96,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -267,30 +243,47 @@ export default function EquipmentCreate() {
       sortable: false,
       align: "center" as "center",
       headerAlign: "center" as "center",
-      headerClassName: "text-center bg-[#36474f] text-[#fff] text-[14px] ",
+      headerClassName:
+        "text-center bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       renderCell: ({ row }: GridRenderCellParams<string>) => (
         <Stack direction="row" className="text-center">
-          <IconButton
-            aria-label="edit"
-            size="small"
-            onClick={() => {
-              console.log(row.id);
-              setOpenDialogCreate(true);
-              // navigate("/stock/edit/" + row.id);
-            }}
-          >
-            <EditTwoToneIcon fontSize="inherit" />
-          </IconButton>
-          <IconButton
-            aria-label="delete"
-            size="small"
-            onClick={() => {
-              console.log(row);
-              setOpenDialog(true);
-            }}
-          >
-            <DeleteTwoToneIcon fontSize="inherit" />
-          </IconButton>
+          <Tooltip title="แก้ไขข้อมูล">
+            <Button
+              sx={{
+                minWidth: "30px",
+              }}
+              type="submit"
+              color="success"
+              variant="contained"
+              className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
+              size="small"
+              onClick={() => {
+                console.log(row.id);
+                setOpenDialogCreate(true);
+              }}
+            >
+              <EditTwoToneIcon fontSize="inherit" />
+            </Button>
+          </Tooltip>
+
+          <Tooltip title="ยกเลิกข้อมูล">
+            <Button
+              sx={{
+                minWidth: "30px",
+              }}
+              type="submit"
+              color="error"
+              variant="contained"
+              className="hover:text-[#fce805] w-[30px] h-[26px]"
+              size="small"
+              onClick={() => {
+                setEquipmentCart(row);
+                setOpenDialog(true);
+              }}
+            >
+              <DeleteTwoToneIcon fontSize="inherit" />
+            </Button>
+          </Tooltip>
         </Stack>
       ),
     },
@@ -298,9 +291,9 @@ export default function EquipmentCreate() {
 
   const initialValues: any = {
     equipment_detail_title: "", // รายการ
-    equipment_detail_category: "empty", // หมวดหมู่รหัส * // Todo set empty replate ''
+    equipment_detail_category: "empty", // หมวดหมู่รหัส *
     equipment_detail_category_name: "", // หมวดหมู่ชื่อ *
-    equipment_detail_material_type: "empty", // ชนิดวัสดุ * // Todo set empty replate ''
+    equipment_detail_material_type: "empty", // ชนิดวัสดุ *
     equipment_detail_qty: "", // จำนวน
     equipment_detail_price: "", // ราคาต่อหน่วย
     equipment_detail_note: "", // รายละเอียด
@@ -979,6 +972,9 @@ export default function EquipmentCreate() {
   const handleDeleteConfirm = () => {
     // ปิด ป๊อปอัพ
     setOpenDialog(false);
+    // ลบข้อมูล
+    // const id = equipmentCart ? equipmentCart.id : 0;
+    // dispatch(deleteEquipmentCart(id));
   };
 
   const showDialog = () => {
@@ -997,11 +993,14 @@ export default function EquipmentCreate() {
             style={{ width: 100, borderRadius: "5%" }}
           /> */}
           <br />
-          ยืนยันการลบ รายการอุปกรณ์ : จอ 42 นิ้ว
+          ยืนยันการลบ :{" "}
+          {equipmentCart ? equipmentCart.equipment_detail_title : ""}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            คุณไม่สามารถกู้คืนอุปกรณ์ที่ถูกลบได้.
+            คุณไม่สามารถกู้คืนราย{" "}
+            {equipmentCart ? equipmentCart.equipment_detail_title : ""}{" "}
+            ที่ถูกลบได้.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -1016,7 +1015,12 @@ export default function EquipmentCreate() {
             <CloseTwoToneIcon /> ปิด
           </Button>
           <Button
-            onClick={handleDeleteConfirm}
+            onClick={() => {
+              handleDeleteConfirm();
+              dispatch(
+                deleteEquipmentCart(equipmentCart ? equipmentCart.id : "")
+              );
+            }}
             variant="contained"
             color="success"
             className="w-[96px] "
@@ -1076,8 +1080,26 @@ export default function EquipmentCreate() {
             }}
             initialValues={initialValues}
             onSubmit={(values, { setSubmitting }) => {
-              console.log(values);
+              dispatch(
+                addEquipmentCart({
+                  id: Date.now().toString(),
+                  equipment_detail_title: values.equipment_detail_title,
+                  equipment_detail_category: values.equipment_detail_category,
+                  equipment_detail_category_name:
+                    values.equipment_detail_category_name,
+                  equipment_detail_material_type:
+                    values.equipment_detail_material_type,
+                  equipment_detail_qty: values.equipment_detail_qty,
+                  equipment_detail_price: values.equipment_detail_price,
+                  equipment_detail_price_total:
+                    values.equipment_detail_qty * values.equipment_detail_price,
+                  equipment_detail_note: values.equipment_detail_note,
+                })
+              );
               setSubmitting(false);
+              // รีเซตฟอร์ม
+              resetProductForm();
+              // ปิด ฟอร์ม
             }}
           >
             {(props) => showFormProductCreate(props)}
@@ -1104,7 +1126,9 @@ export default function EquipmentCreate() {
             variant="contained"
             color="success"
             className="w-[128px] "
-            onClick={() => handleProductSubmit()}
+            onClick={() => {
+              handleProductSubmit();
+            }}
           >
             <DoneTwoToneIcon />
             ตกลง
@@ -1154,7 +1178,7 @@ export default function EquipmentCreate() {
     dispatch(departmentAll());
     dispatch(companyAll());
     dispatch(categoryAll());
-    dispatch(getEquipmentCart());
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -1307,12 +1331,12 @@ export default function EquipmentCreate() {
             </Grid>
           </Toolbar>
         </AppBar>
-        {/* @TODO บันทึกข้อมูลรายการอุปกรณ์ โดยใช้ action  */}
-        {JSON.stringify(equipmentCartReducer)}
+        {/* บันทึกข้อมูลรายการอุปกรณ์ โดยใช้ action  */}
+
         <BoxDataGrid>
           <DataGrid
-            rowHeight={26}
-            headerHeight={26}
+            rowHeight={28}
+            headerHeight={28}
             autoHeight
             components={{
               Footer: CustomFooterTotal,
@@ -1322,8 +1346,8 @@ export default function EquipmentCreate() {
               footer: { total },
             }}
             onStateChange={(state) => {
-              const total = dataValue
-                .map((item) => item.priceTotal)
+              const total = equipmentCartReducer.list
+                .map((item) => item.equipment_detail_price_total)
                 .reduce((a, b) => a + b, 0);
               // console.log(total);
               setTotal(total);
@@ -1340,8 +1364,8 @@ export default function EquipmentCreate() {
                   opacity: 0.5,
                 },
             }}
-            // rows={dataValue ? dataValue : []}
-            rows={[]}
+            rows={equipmentCartReducer.list ? equipmentCartReducer.list : []}
+            // rows={[]}
             columns={dataColumns}
             pageSize={10}
             hideFooterSelectedRowCount
