@@ -1,33 +1,12 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // @store PayloadAction
 import { RootState } from "@/store";
-// @type
-import { reducerState } from "@/types";
-// @alert
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-
-const MySwal = withReactContent(Swal);
-
 // We can safely reuse
 // types created earlier:
-type TodoId = string;
+type equipmentCartId = string;
 
-// let cart: any = {
-//   equipment_detail_title: action.payload.equipment_detail_title,
-//   equipment_detail_category: action.payload.equipment_detail_category,
-//   equipment_detail_material_type:
-//     action.payload.equipment_detail_material_type,
-//   equipment_detail_qty: action.payload.equipment_detail_qty,
-//   equipment_detail_price: action.payload.equipment_detail_price,
-//   // equipment_detail_price_total:
-//   //   action.payload.equipment_detail_qty *
-//   //   action.payload.equipment_detail_price,
-//   equipment_detail_note: action.payload.equipment_detail_note,
-// };
-
-type Todo = {
-  id: TodoId;
+type EquipmentCart = {
+  id: equipmentCartId;
   equipment_detail_title: string;
   equipment_detail_category: string;
   equipment_detail_category_name: string;
@@ -38,12 +17,22 @@ type Todo = {
   equipment_detail_note: string;
 };
 
-type TodosState = {
-  list: Todo[];
+type EquipmentCartState = {
+  isFetching: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  isResult: EquipmentCart[];
+  isResultEdit: EquipmentCart[];
+  errorMessage: string;
 };
 
-const initialState: TodosState = {
-  list: [],
+const initialState: EquipmentCartState = {
+  isFetching: false,
+  isSuccess: false,
+  isError: false,
+  isResult: [],
+  isResultEdit: [],
+  errorMessage: "",
 };
 
 const equipmentCartSlice = createSlice({
@@ -51,19 +40,78 @@ const equipmentCartSlice = createSlice({
   // initialState: initialState,
   initialState,
   reducers: {
-    addEquipmentCart: (state: TodosState, action: PayloadAction<Todo>) => {
-      state.list.push(action.payload);
+    addEquipmentCartEdit: (
+      state: EquipmentCartState,
+      action: PayloadAction<EquipmentCart>
+    ) => {
+      console.log(action);
+      state.isResultEdit.push(action.payload);
     },
-    deleteEquipmentCart: (state: TodosState, action: PayloadAction<TodoId>) => {
-      state.list = state.list.filter((todo) => todo.id !== action.payload);
+
+    resetEquipmentCartEdit: (state: EquipmentCartState) => {
+      state.isResultEdit = [];
+    },
+
+    updateEquipmentCartEdit: (
+      state: EquipmentCartState,
+      action: PayloadAction<EquipmentCart>
+    ) => {
+      const index = state.isResult.findIndex(
+        ({ id }) => id === action.payload.id
+      );
+
+      state.isResult[index].equipment_detail_title =
+        action.payload.equipment_detail_title;
+
+      state.isResult[index].equipment_detail_category =
+        action.payload.equipment_detail_category;
+
+      state.isResult[index].equipment_detail_category_name =
+        action.payload.equipment_detail_category_name;
+
+      state.isResult[index].equipment_detail_material_type =
+        action.payload.equipment_detail_material_type;
+
+      state.isResult[index].equipment_detail_qty =
+        action.payload.equipment_detail_qty;
+
+      state.isResult[index].equipment_detail_price =
+        action.payload.equipment_detail_price;
+
+      state.isResult[index].equipment_detail_price_total =
+        action.payload.equipment_detail_qty *
+        action.payload.equipment_detail_price;
+
+      state.isResult[index].equipment_detail_note =
+        action.payload.equipment_detail_note;
+    },
+    addEquipmentCart: (
+      state: EquipmentCartState,
+      action: PayloadAction<EquipmentCart>
+    ) => {
+      state.isResult.push(action.payload);
+    },
+
+    deleteEquipmentCart: (
+      state: EquipmentCartState,
+      action: PayloadAction<equipmentCartId>
+    ) => {
+      state.isResult = state.isResult.filter(
+        (todo) => todo.id !== action.payload
+      );
     },
   },
   extraReducers: (builder) => {},
 });
 
 // Export all of the actions:
-export const { addEquipmentCart, deleteEquipmentCart } =
-  equipmentCartSlice.actions;
+export const {
+  addEquipmentCart,
+  addEquipmentCartEdit,
+  resetEquipmentCartEdit,
+  updateEquipmentCartEdit,
+  deleteEquipmentCart,
+} = equipmentCartSlice.actions;
 export const equipmentCartSelector = (store: RootState) =>
   store.equipmentCartReducer;
 export default equipmentCartSlice.reducer;

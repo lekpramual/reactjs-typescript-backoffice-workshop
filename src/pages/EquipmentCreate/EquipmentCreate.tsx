@@ -17,11 +17,9 @@ import {
   OutlinedInput,
   Breadcrumbs,
   Autocomplete,
-  Avatar,
 } from "@mui/material";
 
 // @type
-import { PhoneSearch } from "@/types";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
@@ -31,8 +29,6 @@ import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
 import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTone";
-import UploadFileSharpIcon from "@mui/icons-material/UploadFileSharp";
-import PictureAsPdfSharpIcon from "@mui/icons-material/PictureAsPdfSharp";
 
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -41,10 +37,7 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 
-// import Button from "@mui/material/Button";
-// import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
 
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
@@ -62,7 +55,7 @@ import { styled } from "@mui/material/styles";
 import { server } from "@/constants";
 
 import thLocale from "date-fns/locale/th";
-import { BootstrapDialog, BoxDataGrid } from "@/styles/AppStyle";
+import { BoxDataGrid } from "@/styles/AppStyle";
 import { NumberWithCommas, CustomNoRowsOverlay } from "@/utils";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 // @redux
@@ -73,14 +66,16 @@ import {
 } from "@/store/slices/departmentSlice";
 
 import { companySelector, companyAll } from "@/store/slices/companySlice";
-import { categorySelector, categoryAll } from "@/store/slices/categorySlice";
+import { categoryAll } from "@/store/slices/categorySlice";
 import {
   equipmentCartSelector,
-  addEquipmentCart,
+  addEquipmentCartEdit,
+  resetEquipmentCartEdit,
   deleteEquipmentCart,
 } from "@/store/slices/equipmentCartSlice";
 
-import { any } from "prop-types";
+// @component cart
+import EquipmentCartForm from "./EquipmentCartForm";
 
 const localeMap = {
   th: thLocale,
@@ -117,28 +112,9 @@ function CustomFooterTotal(props: CustomFooterTotalProps) {
   );
 }
 
-const BootstrapDialogTitle = (props: DialogTitleProps) => {
-  const { children, onClose, ...other } = props;
-  return (
-    <DialogTitle
-      sx={{
-        mt: 0,
-        p: "2px",
-        height: 40,
-        backgroundColor: "#36474f",
-        color: "#fff",
-        textAlign: "center",
-      }}
-      {...other}
-    >
-      {children}
-    </DialogTitle>
-  );
-};
-
 export default function EquipmentCreate() {
   const formRef = useRef<any>();
-  const formRefProduct = useRef<any>();
+
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const [total, setTotal] = React.useState(0);
@@ -148,7 +124,7 @@ export default function EquipmentCreate() {
 
   const departmentReducer = useSelector(departmentSelector);
   const companyReducer = useSelector(companySelector);
-  const categoryReducer = useSelector(categorySelector);
+
   const equipmentCartReducer = useSelector(equipmentCartSelector);
 
   const [equipmentCart, setEquipmentCart] = React.useState<any>([]);
@@ -258,7 +234,8 @@ export default function EquipmentCreate() {
               className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
               size="small"
               onClick={() => {
-                console.log(row.id);
+                // console.log(row.id);
+                dispatch(addEquipmentCartEdit(row));
                 setOpenDialogCreate(true);
               }}
             >
@@ -288,16 +265,6 @@ export default function EquipmentCreate() {
       ),
     },
   ];
-
-  const initialValues: any = {
-    equipment_detail_title: "", // รายการ
-    equipment_detail_category: "empty", // หมวดหมู่รหัส *
-    equipment_detail_category_name: "", // หมวดหมู่ชื่อ *
-    equipment_detail_material_type: "empty", // ชนิดวัสดุ *
-    equipment_detail_qty: "", // จำนวน
-    equipment_detail_price: "", // ราคาต่อหน่วย
-    equipment_detail_note: "", // รายละเอียด
-  };
 
   const initialEquipmentValues: any = {
     equipment_depart: {
@@ -334,37 +301,9 @@ export default function EquipmentCreate() {
     );
   };
 
-  const CustomizedSelectForFormikV2 = ({
-    children,
-    form,
-    field,
-    label,
-  }: any) => {
-    const { name, value } = field;
-    const { setFieldValue } = form;
-    return (
-      <Select
-        label={label}
-        name={name}
-        value={value}
-        onChange={(e) => {
-          setFieldValue(name, e.target.value);
-        }}
-      >
-        {children}
-      </Select>
-    );
-  };
-
   const handleSubmit = () => {
     if (formRef.current) {
       formRef.current.handleSubmit();
-    }
-  };
-
-  const handleProductSubmit = () => {
-    if (formRefProduct.current) {
-      formRefProduct.current.handleSubmit();
     }
   };
 
@@ -374,25 +313,13 @@ export default function EquipmentCreate() {
       window.location.reload();
     }
   };
-  const resetProductForm = () => {
-    if (formRefProduct.current) {
-      console.log("Reset Product form ...");
-      formRefProduct.current.resetForm();
-    }
-  };
 
   function optionNewDeparts() {
     const departs = [{ label: "--เลือกหน่วยงานที่บันทึก--", value: 0 }];
     if (departmentReducer.isResult) {
       departmentReducer.isResult.map((i) => {
-        // const departs = [{ label: "test", value: "test" }];
-        // const depart = { value: i.dept_id, label: i.dept_name };
-        // return { value: i.dept_id, label: i.dept_name };
-        departs.push({ value: i.dept_id, label: i.dept_name });
-        // return { value: i.dept_id, label: i.dept_name };
-        //
+        return departs.push({ value: i.dept_id, label: i.dept_name });
       });
-
       return departs;
     } else {
       return departs;
@@ -771,203 +698,6 @@ export default function EquipmentCreate() {
     );
   };
 
-  // บันทึกรายการ อุปกรณ์
-  const showFormProductCreate = ({
-    handleSubmit,
-    handleChange,
-    isSubmitting,
-    setFieldValue,
-    resetForm,
-    values,
-    errors,
-    touched,
-  }: any) => {
-    return (
-      <Form noValidate>
-        <Grid
-          container
-          spacing={2}
-          alignItems="center"
-          sx={{
-            pt: "16px",
-            px: "16px",
-          }}
-        >
-          <Grid item xs={12}>
-            <FormControl
-              fullWidth
-              size="small"
-              required
-              error={
-                errors.equipment_detail_title &&
-                touched.equipment_detail_title &&
-                true
-              }
-            >
-              <InputLabel htmlFor="equipment_detail_title">
-                ชื่อรายการ
-              </InputLabel>
-              <Field
-                as={OutlinedInput}
-                id="equipment_detail_title"
-                name="equipment_detail_title"
-                label="ชื่อรายการ"
-                size="small"
-                startAdornment={
-                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
-                }
-                placeholder="กรอก ชื่อรายการ"
-              />
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <FormControl
-              fullWidth
-              size="small"
-              required
-              error={
-                errors.equipment_detail_category &&
-                touched.equipment_detail_category &&
-                true
-              }
-            >
-              <InputLabel id="equipment_detail_category">หมวดหมู่</InputLabel>
-              <Field
-                name="equipment_detail_category"
-                id="equipment_detail_category"
-                label="หมวดหมู่"
-                component={CustomizedSelectForFormikV2}
-              >
-                <MenuItem value={"empty"}>-- เลือกหมวดหมู่ --</MenuItem>
-                {categoryReducer.isResult
-                  ? categoryReducer.isResult.map((row) => {
-                      return (
-                        <MenuItem
-                          value={row.category_id}
-                          key={row.category_name}
-                          onClick={() => {
-                            // เซตชื่อหมวดหมู่
-                            setFieldValue(
-                              "equipment_detail_category_name",
-                              row.category_name
-                            );
-                            console.log("click ...", row.category_name);
-                          }}
-                        >
-                          {row.category_name}
-                        </MenuItem>
-                      );
-                    })
-                  : []}
-              </Field>
-            </FormControl>
-          </Grid>
-          <Grid item lg={12} md={12} xs={12}>
-            <FormControl
-              fullWidth
-              size="small"
-              required
-              error={
-                errors.equipment_detail_material_type &&
-                touched.equipment_detail_material_type &&
-                true
-              }
-            >
-              <InputLabel id="equipment_detail_material_type">
-                ชนิดวัสดุ/ครุภัณฑ์{" "}
-              </InputLabel>
-              <Field
-                name="equipment_detail_material_type"
-                id="equipment_detail_material_type"
-                label="ชนิดวัสดุ/ครุภัณฑ์ "
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={"empty"}>-- ชนิดวัสดุ/ครุภัณฑ์ --</MenuItem>
-                <MenuItem value="วัสดุ-มีเลขครุภัณฑ์">
-                  พัสดุ-มีเลขครุภัณฑ์
-                </MenuItem>
-                <MenuItem value="วัสดุ-ไม่มีเลขครุภัณฑ์">
-                  วัสดุ-ไม่มีเลขครุภัณฑ์
-                </MenuItem>
-              </Field>
-            </FormControl>
-          </Grid>
-          <Grid item lg={6} md={6} xs={6}>
-            <FormControl
-              fullWidth
-              size="small"
-              required
-              error={
-                errors.equipment_detail_qty &&
-                touched.equipment_detail_qty &&
-                true
-              }
-            >
-              <InputLabel htmlFor="equipment_detail_qty">จำนวน</InputLabel>
-              <Field
-                as={OutlinedInput}
-                id="equipment_detail_qty"
-                name="equipment_detail_qty"
-                type="number"
-                startAdornment={
-                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
-                }
-                label="จำนวน"
-                size="small"
-                placeholder="กรอก จำนวน"
-              />
-            </FormControl>
-          </Grid>
-          <Grid item lg={6} md={6} xs={6}>
-            <FormControl
-              fullWidth
-              size="small"
-              required
-              error={
-                errors.equipment_detail_price &&
-                touched.equipment_detail_price &&
-                true
-              }
-            >
-              <InputLabel id="equipment_detail_price">ราคาต่อหน่วย</InputLabel>
-              <Field
-                as={OutlinedInput}
-                id="equipment_detail_price"
-                name="equipment_detail_price"
-                label="ราคาต่อหน่วย"
-                size="small"
-                type="number"
-                startAdornment={
-                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
-                }
-                placeholder="กรอก ราคาต่อหน่วย"
-              />
-            </FormControl>
-          </Grid>
-
-          <Grid item lg={12} md={12} xs={12}>
-            <FormControl fullWidth size="small">
-              <InputLabel htmlFor="equipment_detail_note">
-                รายละเอียด
-              </InputLabel>
-              <Field
-                as={OutlinedInput}
-                id="equipment_detail_note"
-                name="equipment_detail_note"
-                size="small"
-                label="รายละเอียด"
-                startAdornment={
-                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
-                }
-                placeholder="รายละเอียดเพิ่มเติม"
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-      </Form>
-    );
-  };
-
   // ฟังก์ชั่น ยืนยันการลบข้อมูล
   const handleDeleteConfirm = () => {
     // ปิด ป๊อปอัพ
@@ -993,12 +723,12 @@ export default function EquipmentCreate() {
             style={{ width: 100, borderRadius: "5%" }}
           /> */}
           <br />
-          ยืนยันการลบ :{" "}
+          ยืนยันการลบ อุปกรณ์รายการ :{" "}
           {equipmentCart ? equipmentCart.equipment_detail_title : ""}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            คุณไม่สามารถกู้คืนราย{" "}
+            คุณไม่สามารถกู้คืนรายการ{" "}
             {equipmentCart ? equipmentCart.equipment_detail_title : ""}{" "}
             ที่ถูกลบได้.
           </DialogContentText>
@@ -1029,112 +759,6 @@ export default function EquipmentCreate() {
           </Button>
         </DialogActions>
       </Dialog>
-    );
-  };
-
-  const showDialogCreate = () => {
-    return (
-      <BootstrapDialog
-        maxWidth="md"
-        open={openDialogCreate}
-        keepMounted
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <BootstrapDialogTitle
-          id="alert-dialog-slide-title"
-          onClose={() => setOpenDialogCreate(false)}
-        >
-          <Typography variant="subtitle1" component={"b"}>
-            เพิ่มรายการอุปกรณ์
-          </Typography>
-        </BootstrapDialogTitle>
-        <DialogContent dividers>
-          <Formik
-            innerRef={formRefProduct}
-            validate={(values) => {
-              let errors: any = {};
-
-              if (!values.equipment_detail_title)
-                errors.equipment_detail_title = "กรอกชื่อรายการ";
-
-              if (values.equipment_detail_category === "empty")
-                errors.equipment_detail_category = "เลือกหมวดหมู่";
-
-              if (values.equipment_detail_material_type === "empty")
-                errors.equipment_detail_material_type = "เลือกชนิดวัสดุ";
-
-              if (
-                !values.equipment_detail_qty ||
-                values.equipment_detail_qty <= 0
-              )
-                errors.equipment_detail_qty = "กรอกจำนวน";
-
-              if (
-                !values.equipment_detail_price ||
-                values.equipment_detail_price <= 0
-              )
-                errors.equipment_detail_price = "กรอกราคาต่อหน่วย";
-
-              return errors;
-            }}
-            initialValues={initialValues}
-            onSubmit={(values, { setSubmitting }) => {
-              dispatch(
-                addEquipmentCart({
-                  id: Date.now().toString(),
-                  equipment_detail_title: values.equipment_detail_title,
-                  equipment_detail_category: values.equipment_detail_category,
-                  equipment_detail_category_name:
-                    values.equipment_detail_category_name,
-                  equipment_detail_material_type:
-                    values.equipment_detail_material_type,
-                  equipment_detail_qty: values.equipment_detail_qty,
-                  equipment_detail_price: values.equipment_detail_price,
-                  equipment_detail_price_total:
-                    values.equipment_detail_qty * values.equipment_detail_price,
-                  equipment_detail_note: values.equipment_detail_note,
-                })
-              );
-              setSubmitting(false);
-              // รีเซตฟอร์ม
-              resetProductForm();
-              // ปิด ฟอร์ม
-            }}
-          >
-            {(props) => showFormProductCreate(props)}
-          </Formik>
-        </DialogContent>
-        <DialogActions
-          sx={{
-            paddingRight: 24,
-          }}
-        >
-          <Button
-            onClick={() => {
-              setOpenDialogCreate(false);
-              resetProductForm();
-            }}
-            variant="contained"
-            color="error"
-            className="w-[96px] "
-          >
-            <CloseTwoToneIcon /> ปิด
-          </Button>
-
-          <Button
-            variant="contained"
-            color="success"
-            className="w-[128px] "
-            onClick={() => {
-              handleProductSubmit();
-            }}
-          >
-            <DoneTwoToneIcon />
-            ตกลง
-          </Button>
-        </DialogActions>
-      </BootstrapDialog>
     );
   };
 
@@ -1174,13 +798,22 @@ export default function EquipmentCreate() {
     }
   };
 
+  const onConfirm = (msg) => {
+    console.log(msg);
+    setOpenDialogCreate(msg);
+    dispatch(resetEquipmentCartEdit());
+  };
+
   useEffect(() => {
     dispatch(departmentAll());
     dispatch(companyAll());
     dispatch(categoryAll());
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
+
+  // useEffect(() => {
+  //   console.log("reload ...");
+  // }, [equipmentCartReducer.isResultEdit]);
 
   return (
     <Box>
@@ -1332,7 +965,6 @@ export default function EquipmentCreate() {
           </Toolbar>
         </AppBar>
         {/* บันทึกข้อมูลรายการอุปกรณ์ โดยใช้ action  */}
-
         <BoxDataGrid>
           <DataGrid
             rowHeight={28}
@@ -1346,7 +978,7 @@ export default function EquipmentCreate() {
               footer: { total },
             }}
             onStateChange={(state) => {
-              const total = equipmentCartReducer.list
+              const total = equipmentCartReducer.isResult
                 .map((item) => item.equipment_detail_price_total)
                 .reduce((a, b) => a + b, 0);
               // console.log(total);
@@ -1364,7 +996,9 @@ export default function EquipmentCreate() {
                   opacity: 0.5,
                 },
             }}
-            rows={equipmentCartReducer.list ? equipmentCartReducer.list : []}
+            rows={
+              equipmentCartReducer.isResult ? equipmentCartReducer.isResult : []
+            }
             // rows={[]}
             columns={dataColumns}
             pageSize={10}
@@ -1413,7 +1047,8 @@ export default function EquipmentCreate() {
 
       {showDialog()}
 
-      {showDialogCreate()}
+      {/* {showDialogCreate()} */}
+      <EquipmentCartForm show={openDialogCreate} confirm={onConfirm} />
     </Box>
   );
 }
