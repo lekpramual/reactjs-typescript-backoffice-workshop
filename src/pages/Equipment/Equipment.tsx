@@ -214,7 +214,6 @@ export default function Equipment() {
               className="hover:text-[#fce805] w-[30px] h-[26px]"
               size="small"
               onClick={() => {
-                console.log(row);
                 setOpenDialog(true);
               }}
             >
@@ -306,7 +305,6 @@ export default function Equipment() {
                 }
                 getOptionLabel={(option) => `${option.name}`}
                 onChange={(e, value) => {
-                  console.log(value);
                   setFieldValue(
                     "depart",
                     value !== null ? value : initialValues.depart

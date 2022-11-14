@@ -152,7 +152,6 @@ export default function EquipmentCartForm({ show, confirm }: any) {
 
   const resetProductForm = () => {
     if (formRefProduct.current) {
-      console.log("Reset Product form ...");
       formRefProduct.current.resetForm();
     }
   };
@@ -410,10 +409,7 @@ export default function EquipmentCartForm({ show, confirm }: any) {
               : initialValues
           }
           onSubmit={(values, { setSubmitting }) => {
-            console.log(equipmentCartReducer.isResultEdit);
             if (equipmentCartReducer.isResultEdit.length !== 0) {
-              // updateEquipmentCartEdit
-              console.log(values.id);
               dispatch(
                 updateEquipmentCartEdit({
                   id: values.id,

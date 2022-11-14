@@ -52,6 +52,10 @@ const equipmentCartSlice = createSlice({
       state.isResultEdit = [];
     },
 
+    resetEquipmentCart: (state: EquipmentCartState) => {
+      state.isResult = [];
+    },
+
     updateEquipmentCartEdit: (
       state: EquipmentCartState,
       action: PayloadAction<EquipmentCart>
@@ -108,6 +112,7 @@ const equipmentCartSlice = createSlice({
 export const {
   addEquipmentCart,
   addEquipmentCartEdit,
+  resetEquipmentCart,
   resetEquipmentCartEdit,
   updateEquipmentCartEdit,
   deleteEquipmentCart,

@@ -18,7 +18,8 @@ import {
   Breadcrumbs,
   Autocomplete,
 } from "@mui/material";
-
+// @day
+import moment from "moment";
 // @type
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -53,6 +54,9 @@ import { styled } from "@mui/material/styles";
 
 // constats
 import { server } from "@/constants";
+// @alert
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import thLocale from "date-fns/locale/th";
 import { BoxDataGrid } from "@/styles/AppStyle";
@@ -72,10 +76,14 @@ import {
   addEquipmentCartEdit,
   resetEquipmentCartEdit,
   deleteEquipmentCart,
+  resetEquipmentCart,
 } from "@/store/slices/equipmentCartSlice";
 
 // @component cart
 import EquipmentCartForm from "./EquipmentCartForm";
+import { equipmentAdd } from "../../store/slices/equipmentSlice";
+
+const MySwal = withReactContent(Swal);
 
 const localeMap = {
   th: thLocale,
@@ -234,7 +242,6 @@ export default function EquipmentCreate() {
               className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
               size="small"
               onClick={() => {
-                // console.log(row.id);
                 dispatch(addEquipmentCartEdit(row));
                 setOpenDialogCreate(true);
               }}
@@ -254,8 +261,29 @@ export default function EquipmentCreate() {
               className="hover:text-[#fce805] w-[30px] h-[26px]"
               size="small"
               onClick={() => {
-                setEquipmentCart(row);
-                setOpenDialog(true);
+                //setEquipmentCart(row);
+                //console.log(row);
+                Swal.fire({
+                  title: "คุณต้องการลบ ใช่ หรือ ไม่?",
+                  text: `คุณไม่สามารถกู้คืนรายการ ${row.equipment_detail_title} ที่ถูกลบได้.! `,
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "ใช่, ต้องการลบ!",
+                  cancelButtonText: "ไม่, ยกเลิก!",
+                  reverseButtons: true,
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    dispatch(deleteEquipmentCart(row.id));
+                    // MySwal.fire({
+                    //   icon: "success",
+                    //   title: "ลบข้อมูลเรียบร้อย",
+                    //   showConfirmButton: false,
+                    //   timer: 1500,
+                    // });
+                  }
+                });
               }}
             >
               <DeleteTwoToneIcon fontSize="inherit" />
@@ -268,7 +296,7 @@ export default function EquipmentCreate() {
 
   const initialEquipmentValues: any = {
     equipment_depart: {
-      label: "เลือกหน่วยงานที่บันทึก",
+      label: "--เลือกหน่วยงานที่บันทึก--",
       value: 0,
     }, // หน่วยงาน *
     equipment_no_txt: "", // เลขที่บันทึก
@@ -309,8 +337,9 @@ export default function EquipmentCreate() {
 
   const resetForm = () => {
     if (formRef.current) {
-      // formRef.current.resetForm();
-      window.location.reload();
+      formRef.current.resetForm(initialEquipmentValues);
+      // window.location.reload();
+      // formik.resetForm(initialEquipmentValues);
     }
   };
 
@@ -325,6 +354,20 @@ export default function EquipmentCreate() {
       return departs;
     }
   }
+
+  const reverseArrayInPlace = (productObj) => {
+    return productObj.map((item) => {
+      return {
+        equipment_detail_title: `${item.equipment_detail_title}`,
+        equipment_detail_category: `${item.equipment_detail_category}`,
+        equipment_detail_material_type: `${item.equipment_detail_material_type}`,
+        equipment_detail_qty: `${item.equipment_detail_qty}`,
+        equipment_detail_price: `${item.equipment_detail_price}`,
+        equipment_detail_price_total: `${item.equipment_detail_price_total}`,
+        equipment_detail_note: `${item.equipment_detail_note}`,
+      };
+    });
+  };
 
   const showFormCreate = ({
     handleSubmit,
@@ -367,8 +410,6 @@ export default function EquipmentCreate() {
                 getOptionLabel={(option) => `${option.label}`}
                 onChange={(e, value, reason) => {
                   if (reason === "clear") {
-                    console.log("clear ..." + value);
-
                     // setFieldValue("equipment_depart", [
                     //   {
                     //     label: "เลือกหน่วยงานที่บันทึก",
@@ -388,6 +429,7 @@ export default function EquipmentCreate() {
                   label: "--เลือกหน่วยงานที่บันทึก--",
                   value: 0,
                 }}
+                value={values.equipment_depart}
                 renderInput={(params) => (
                   <Field
                     required
@@ -683,7 +725,6 @@ export default function EquipmentCreate() {
                 name="image"
                 onChange={(e) => {
                   e.preventDefault();
-                  console.log("click ...");
                   // setFieldValue("file", e.target.files[0]); // for upload
                   // setFieldValue(
                   //   "file_obj",
@@ -799,7 +840,6 @@ export default function EquipmentCreate() {
   };
 
   const onConfirm = (msg) => {
-    console.log(msg);
     setOpenDialogCreate(msg);
     dispatch(resetEquipmentCartEdit());
   };
@@ -812,7 +852,6 @@ export default function EquipmentCreate() {
   }, [dispatch]);
 
   // useEffect(() => {
-  //   console.log("reload ...");
   // }, [equipmentCartReducer.isResultEdit]);
 
   return (
@@ -911,7 +950,54 @@ export default function EquipmentCreate() {
           }}
           initialValues={initialEquipmentValues}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
+            let formData = new FormData();
+            if (equipmentCartReducer.isResult.length !== 0) {
+              const newArrayProduct = reverseArrayInPlace(
+                equipmentCartReducer.isResult
+              );
+              formData.append("equipment_no_txt", values.equipment_no_txt);
+              formData.append(
+                "equipment_detail",
+                JSON.stringify(newArrayProduct)
+              );
+              formData.append(
+                "equipment_depart",
+                values.equipment_depart.value
+              );
+              formData.append("equipment_title", values.equipment_title);
+              formData.append("equipment_member", values.equipment_member);
+              formData.append(
+                "equipment_member_get",
+                values.equipment_member_get
+              );
+              formData.append(
+                "equipment_date",
+                moment(values.equipment_date).format("YYYY-MM-DD")
+              );
+              formData.append(
+                "equipment_date_get",
+                moment(values.equipment_date_get).format("YYYY-MM-DD")
+              );
+
+              formData.append("equipment_company", values.equipment_company);
+              formData.append("equipment_file", values.file);
+              formData.append("equipment_type", values.equipment_type);
+              formData.append("equipment_note", values.equipment_note);
+
+              dispatch(
+                equipmentAdd({ formData: formData, navigate: navigate })
+              );
+              dispatch(resetEquipmentCart());
+              resetForm();
+            } else {
+              let message = "กรุณาทำการเพิ่มรายการอุปกรณ์";
+              MySwal.fire({
+                icon: "warning",
+                title: message,
+                showConfirmButton: false,
+              });
+            }
+
             setSubmitting(false);
           }}
         >
@@ -981,7 +1067,6 @@ export default function EquipmentCreate() {
               const total = equipmentCartReducer.isResult
                 .map((item) => item.equipment_detail_price_total)
                 .reduce((a, b) => a + b, 0);
-              // console.log(total);
               setTotal(total);
             }}
             sx={{

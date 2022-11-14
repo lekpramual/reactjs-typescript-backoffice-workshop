@@ -17,8 +17,6 @@ function PrivateDefaultLayout() {
     setMobileOpen(!mobileOpen);
   };
 
-  // console.log(isSmUp);
-
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
