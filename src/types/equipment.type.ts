@@ -16,6 +16,7 @@ interface EquipmentDetail {
   equipment_updated_at: string;
   dept_name: string;
   company_name: string;
+  equipment_status: string;
 }
 
 export interface EquipmentResult {

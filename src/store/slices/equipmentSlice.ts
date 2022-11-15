@@ -223,6 +223,42 @@ export const equipmentSearchById = createAsyncThunk(
   }
 );
 
+// ลบข้อมูล จากไอดี
+export const equipmentDeleteById = createAsyncThunk(
+  "equipment/deletehbyId",
+  async ({ search }: { search: string }, thunkAPI) => {
+    try {
+      let id = search;
+      const { data: res } = await axios.delete(
+        `${server.BACKOFFICE_URL_V1}/equipment?id=${id}`,
+        header_get
+      );
+      let data = res;
+      if (data.result === OK) {
+        // console.log(data.data);
+        // navigate("/phone");
+        return data.data;
+      } else {
+        // console.log("Error Else :", data);
+        return thunkAPI.rejectWithValue({
+          message: "Failed to fetch phone.",
+        });
+      }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
 const wait = (ms: number) =>
   new Promise<void>((resolve) => {
     MySwal.fire({
@@ -334,6 +370,21 @@ const equipmentSlice = createSlice({
       state.errorMessage = action.payload as string;
     });
     builder.addCase(equipmentSearchByIdV2.pending, (state, action) => {
+      state.isFetching = true;
+    });
+    builder.addCase(equipmentDeleteById.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      // state.isResult = action.payload;
+      return state;
+    });
+    builder.addCase(equipmentDeleteById.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.isResult = [];
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(equipmentDeleteById.pending, (state, action) => {
       state.isFetching = true;
     });
   },

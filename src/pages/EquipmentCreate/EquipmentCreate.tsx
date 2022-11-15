@@ -242,6 +242,7 @@ export default function EquipmentCreate() {
               className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
               size="small"
               onClick={() => {
+                console.log(row);
                 dispatch(addEquipmentCartEdit(row));
                 setOpenDialogCreate(true);
               }}

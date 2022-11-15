@@ -19,12 +19,15 @@ import {
 
 // @redux
 import { useSelector, useDispatch } from "react-redux";
-
+// @alert
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 // @seletor
 import {
   equipmentSelector,
   equipmentAll,
   equipmentSearch,
+  equipmentDeleteById,
 } from "@/store/slices/equipmentSlice";
 import {
   departmentSelector,
@@ -64,6 +67,8 @@ export interface DialogTitleProps {
   children?: React.ReactNode;
   onClose: () => void;
 }
+
+const MySwal = withReactContent(Swal);
 
 export default function Equipment() {
   const navigate = useNavigate();
@@ -198,6 +203,7 @@ export default function Equipment() {
               onClick={() => {
                 navigate("/app3/equipment/edit?id=" + row.equipment_id);
               }}
+              disabled={row.equipment_status === "รับเข้า" ? true : false}
             >
               <EditTwoToneIcon fontSize="inherit" />
             </Button>
@@ -213,8 +219,33 @@ export default function Equipment() {
               variant="contained"
               className="hover:text-[#fce805] w-[30px] h-[26px]"
               size="small"
+              disabled={row.equipment_status === "รับเข้า" ? true : false}
               onClick={() => {
-                setOpenDialog(true);
+                Swal.fire({
+                  title: "คุณต้องการลบ ใช่ หรือ ไม่?",
+                  text: `คุณไม่สามารถกู้คืนรายการ ${row.equipment_title} ที่ถูกลบได้.! `,
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "ใช่, ต้องการลบ!",
+                  cancelButtonText: "ไม่, ยกเลิก!",
+                  reverseButtons: true,
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    console.log(row.equipment_id);
+                    // ลบข้อมูล
+                    dispatch(equipmentDeleteById({ search: row.equipment_id }));
+                    // โหลดข้อมูลทั้งหมด
+                    dispatch(equipmentAll());
+                    MySwal.fire({
+                      icon: "success",
+                      title: "ลบข้อมูลเรียบร้อย",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  }
+                });
               }}
             >
               <DeleteTwoToneIcon fontSize="inherit" />
@@ -369,51 +400,6 @@ export default function Equipment() {
     setOpenDialog(false);
   };
 
-  const showDialogRemove = () => {
-    return (
-      <Dialog
-        open={openDialog}
-        keepMounted
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">
-          {/* <img
-            src={`${imageUrl}/images/${
-              selectedProduct.image
-            }?dummy=${Math.random()}`}
-            style={{ width: 100, borderRadius: "5%" }}
-          /> */}
-          <br />
-          ยืนยันการลบ รายการอุปกรณ์ : จอ 42 นิ้ว
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            คุณไม่สามารถกู้คืนอุปกรณ์ที่ถูกลบได้.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setOpenDialog(false)}
-            variant="contained"
-            color="error"
-            className="w-[96px] "
-          >
-            <CloseTwoToneIcon /> ปิด
-          </Button>
-          <Button
-            onClick={handleDeleteConfirm}
-            variant="contained"
-            color="success"
-            className="w-[96px] "
-          >
-            <DoneTwoToneIcon /> ตกลง
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  };
-
   useEffect(() => {
     dispatch(equipmentAll());
     dispatch(departmentAll());
@@ -504,6 +490,7 @@ export default function Equipment() {
             </Grid>
           </Toolbar>
         </AppBar>
+
         <BoxDataGrid>
           <DataGrid
             rowHeight={28}
@@ -536,7 +523,7 @@ export default function Equipment() {
         </BoxDataGrid>
       </Paper>
 
-      {showDialogRemove()}
+      {/* {showDialogRemove()} */}
     </Box>
   );
 }
