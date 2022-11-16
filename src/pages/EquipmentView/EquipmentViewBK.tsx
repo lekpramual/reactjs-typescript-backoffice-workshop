@@ -72,7 +72,6 @@ export default function EquipmentView() {
   let query = useQuery();
   const dispatch = useDispatch<any>();
   const equipmentReducer = useSelector(equipmentSelector);
-  const equipmentDetailReducer = useSelector(equipmentDetailSelector);
 
   const [total, setTotal] = React.useState(0);
 
@@ -163,7 +162,6 @@ export default function EquipmentView() {
   useEffect(() => {
     let id = query.get("id") || "";
     dispatch(equipmentSearchById({ search: id }));
-    dispatch(equipmentDetailAll({ search: id }));
   }, [dispatch, query]);
 
   return (
@@ -219,24 +217,20 @@ export default function EquipmentView() {
           </Button>
         </Grid>
       </Grid>
-      <Paper
-        sx={{
-          maxWidth: "100%",
-          margin: "auto",
-          overflow: "hidden",
-          mb: 2,
-        }}
-        key={"paper-views"}
-      >
-        {equipmentReducer.isResult
-          ? equipmentReducer.isResult.map((data) => {
-              return (
-                <Grid
-                  container
-                  spacing={2}
-                  sx={{ p: 2 }}
-                  key={`grid-content-view-${data.equipment_no}`}
-                >
+
+      {equipmentReducer.isResult
+        ? equipmentReducer.isResult.map((data) => {
+            return (
+              <Paper
+                sx={{
+                  maxWidth: "100%",
+                  margin: "auto",
+                  overflow: "hidden",
+                  mb: 2,
+                }}
+                key={data.equipment_id}
+              >
+                <Grid container spacing={2} sx={{ p: 2 }}>
                   <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
                     <Typography component={"div"} variant={"body1"}>
                       เรื่องที่บันทึก
@@ -379,67 +373,71 @@ export default function EquipmentView() {
                       {data.equipment_note}
                     </Typography>
                   </Grid>
+                  <Grid xs={12}>
+                    <BoxDataGrid>
+                      <DataGrid
+                        rowHeight={26}
+                        headerHeight={26}
+                        autoHeight
+                        components={{
+                          Footer: CustomFooterTotal,
+                          NoRowsOverlay: CustomNoRowsOverlay,
+                        }}
+                        componentsProps={{
+                          footer: { total },
+                        }}
+                        onStateChange={(state) => {
+                          const total = data.equipment_detail
+                            ? data.equipment_detail
+                                .map(
+                                  (item) => item.equipment_detail_price_total
+                                )
+                                .reduce((a, b) => a + b, 0)
+                            : // console.log(total);
+                              0;
+                          setTotal(total);
+                        }}
+                        sx={{
+                          backgroundColor: "white",
+                          height: 250,
+                          width: "100%",
+                          margin: "auto",
+                          overflow: "hidden",
+                          "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
+                            {
+                              color: "#fff",
+                              opacity: 0.5,
+                            },
+                        }}
+                        rows={
+                          data.equipment_detail ? data.equipment_detail : []
+                        }
+                        columns={dataColumns}
+                        pageSize={10}
+                        hideFooterSelectedRowCount
+                        rowsPerPageOptions={[10]}
+                        disableColumnMenu={true}
+                        // loading={equipmentReducer.isFetching}
+                        getRowId={(row) =>
+                          // parseInt(row.kskloginname) + Math.random() * (100 - 1)
+                          row.equipment_detail_id
+                        }
+                        localeText={{
+                          MuiTablePagination: {
+                            labelDisplayedRows: ({ from, to, count }) =>
+                              `${from} ถึง ${to} จาก ${NumberWithCommas(
+                                count
+                              )}`,
+                          },
+                        }}
+                      />
+                    </BoxDataGrid>
+                  </Grid>
                 </Grid>
-              );
-            })
-          : []}
-
-        <Grid xs={12}>
-          <BoxDataGrid>
-            <DataGrid
-              rowHeight={28}
-              headerHeight={28}
-              autoHeight
-              components={{
-                Footer: CustomFooterTotal,
-                NoRowsOverlay: CustomNoRowsOverlay,
-              }}
-              componentsProps={{
-                footer: { total },
-              }}
-              onStateChange={(state) => {
-                const total = equipmentDetailReducer.isResult
-                  ? equipmentDetailReducer.isResult
-                      .map((item) => item.equipment_detail_price_total)
-                      .reduce((a, b) => a + b, 0)
-                  : 0;
-                setTotal(total);
-              }}
-              sx={{
-                backgroundColor: "white",
-                height: 250,
-                width: "100%",
-                margin: "auto",
-                overflow: "hidden",
-                "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-                  {
-                    color: "#fff",
-                    opacity: 0.5,
-                  },
-              }}
-              rows={
-                equipmentDetailReducer.isResult
-                  ? equipmentDetailReducer.isResult
-                  : []
-              }
-              // rows={[]}
-              columns={dataColumns}
-              pageSize={10}
-              hideFooterSelectedRowCount
-              rowsPerPageOptions={[10]}
-              disableColumnMenu={true}
-              loading={equipmentDetailReducer.isFetching}
-              getRowId={(row) => row.equipment_detail_id}
-              localeText={{
-                MuiTablePagination: {
-                  labelDisplayedRows: ({ from, to, count }) =>
-                    `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
-                },
-              }}
-            />
-          </BoxDataGrid>
-        </Grid>
-      </Paper>
+              </Paper>
+            );
+          })
+        : []}
 
       {/* <Grid container spacing={2} alignItems="center" className="mt-1">
         <Grid xs={12} className="text-center">

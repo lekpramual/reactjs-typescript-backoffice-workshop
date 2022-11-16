@@ -85,13 +85,11 @@ import {
   equipmentAdd,
   equipmentSelector,
   equipmentSearchByIdV2,
-  equipmentSearchById,
 } from "@/store/slices/equipmentSlice";
 
 import {
   equipmentDetailSelector,
   equipmentDetailAll,
-  equipmentDetailDeleteById,
 } from "@/store/slices/equipmentDetailSlice";
 
 const MySwal = withReactContent(Swal);
@@ -258,6 +256,7 @@ export default function EquipmentEdit() {
               className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
               size="small"
               onClick={() => {
+                console.log(row);
                 dispatch(addEquipmentCartEdit(row));
                 setOpenDialogCreate(true);
               }}
@@ -291,24 +290,13 @@ export default function EquipmentEdit() {
                   reverseButtons: true,
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    if (equipmentDetailReducer.isResult.length > 1) {
-                      dispatch(equipmentDetailDeleteById({ search: row.id }));
-                      dispatch(
-                        equipmentDetailAll({ search: `${query.get("id")}` })
-                      );
-                      MySwal.fire({
-                        icon: "success",
-                        title: "ลบข้อมูลเรียบร้อย",
-                        showConfirmButton: false,
-                        timer: 1000,
-                      });
-                    } else {
-                      MySwal.fire({
-                        icon: "warning",
-                        title: "ไม่สามารถลบข้อมูลได้กรุณาตรวจสอบ",
-                        showConfirmButton: false,
-                      });
-                    }
+                    dispatch(deleteEquipmentCart(row.id));
+                    // MySwal.fire({
+                    //   icon: "success",
+                    //   title: "ลบข้อมูลเรียบร้อย",
+                    //   showConfirmButton: false,
+                    //   timer: 1500,
+                    // });
                   }
                 });
               }}
@@ -409,6 +397,20 @@ export default function EquipmentEdit() {
       return departs;
     }
   }
+
+  const reverseArrayInPlace = (productObj) => {
+    return productObj.map((item) => {
+      return {
+        equipment_detail_title: `${item.equipment_detail_title}`,
+        equipment_detail_category: `${item.equipment_detail_category}`,
+        equipment_detail_material_type: `${item.equipment_detail_material_type}`,
+        equipment_detail_qty: `${item.equipment_detail_qty}`,
+        equipment_detail_price: `${item.equipment_detail_price}`,
+        equipment_detail_price_total: `${item.equipment_detail_price_total}`,
+        equipment_detail_note: `${item.equipment_detail_note}`,
+      };
+    });
+  };
 
   const showFormCreate = ({
     handleSubmit,
@@ -780,6 +782,15 @@ export default function EquipmentEdit() {
     );
   };
 
+  // ฟังก์ชั่น ยืนยันการลบข้อมูล
+  const handleDeleteConfirm = () => {
+    // ปิด ป๊อปอัพ
+    setOpenDialog(false);
+    // ลบข้อมูล
+    // const id = equipmentCart ? equipmentCart.id : 0;
+    // dispatch(deleteEquipmentCart(id));
+  };
+
   const showPreviewImage = (values) => {
     if (values.file_obj) {
       return (
@@ -827,10 +838,9 @@ export default function EquipmentEdit() {
     dispatch(categoryAll());
     // eslint-disable-next-line react-hooks/exhaustive-deps
     let id = query.get("id") || "";
-    dispatch(equipmentSearchById({ search: id }));
+    dispatch(equipmentSearchByIdV2({ search: id }));
     dispatch(equipmentDetailAll({ search: id }));
   }, [dispatch, query]);
-  useEffect(() => {}, [equipmentDetailReducer.isResult]);
 
   return (
     <Box>
@@ -854,9 +864,9 @@ export default function EquipmentEdit() {
         </Typography>
 
         <Typography color="text.primary" variant="subtitle2">
-          {/* {equipmentReducer.isResult
+          {equipmentReducer.isResult
             ? equipmentReducer.isResult.map((data) => data.equipment_no)
-            : ""} */}
+            : ""}
         </Typography>
       </Breadcrumbs>
 
@@ -901,7 +911,6 @@ export default function EquipmentEdit() {
             </Grid>
           </Toolbar>
         </AppBar>
-
         <Formik
           innerRef={formRef}
           validate={(values) => {
@@ -939,14 +948,14 @@ export default function EquipmentEdit() {
           onSubmit={(values, { setSubmitting }) => {
             let formData = new FormData();
             if (equipmentCartReducer.isResult.length !== 0) {
-              // const newArrayProduct = reverseArrayInPlace(
-              //   equipmentCartReducer.isResult
-              // );
+              const newArrayProduct = reverseArrayInPlace(
+                equipmentCartReducer.isResult
+              );
               formData.append("equipment_no_txt", values.equipment_no_txt);
-              // formData.append(
-              //   "equipment_detail",
-              //   JSON.stringify(newArrayProduct)
-              // );
+              formData.append(
+                "equipment_detail",
+                JSON.stringify(newArrayProduct)
+              );
               formData.append(
                 "equipment_depart",
                 values.equipment_depart.value
@@ -1038,60 +1047,70 @@ export default function EquipmentEdit() {
           </Toolbar>
         </AppBar>
 
-        {/* {JSON.stringify(equipmentDetailReducer.isResult)} */}
-        <BoxDataGrid key={`dataList-EquipmentDetail`}>
-          <DataGrid
-            rowHeight={28}
-            headerHeight={28}
-            autoHeight
-            components={{
-              Footer: CustomFooterTotal,
-              NoRowsOverlay: CustomNoRowsOverlay,
-            }}
-            componentsProps={{
-              footer: { total },
-            }}
-            onStateChange={(state) => {
-              const total = equipmentDetailReducer.isResult
-                ? equipmentDetailReducer.isResult
-                    .map((item) => item.equipment_detail_price_total)
-                    .reduce((a, b) => a + b, 0)
-                : 0;
-              setTotal(total);
-            }}
-            sx={{
-              backgroundColor: "white",
-              height: 250,
-              width: "100%",
-              margin: "auto",
-              overflow: "hidden",
-              "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-                {
-                  color: "#fff",
-                  opacity: 0.5,
-                },
-            }}
-            rows={
-              equipmentDetailReducer.isResult
-                ? equipmentDetailReducer.isResult
-                : []
-            }
-            // rows={[]}
-            columns={dataColumns}
-            pageSize={10}
-            hideFooterSelectedRowCount
-            rowsPerPageOptions={[10]}
-            disableColumnMenu={true}
-            loading={equipmentDetailReducer.isFetching}
-            getRowId={(row) => row.equipment_detail_id}
-            localeText={{
-              MuiTablePagination: {
-                labelDisplayedRows: ({ from, to, count }) =>
-                  `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
-              },
-            }}
-          />
-        </BoxDataGrid>
+        {JSON.stringify(equipmentDetailReducer)}
+        {equipmentDetailReducer.isResult
+          ? equipmentDetailReducer.isResult.map((data) => {
+              return (
+                <BoxDataGrid key={`dataList-${data.id}`}>
+                  <DataGrid
+                    rowHeight={28}
+                    headerHeight={28}
+                    autoHeight
+                    components={{
+                      Footer: CustomFooterTotal,
+                      NoRowsOverlay: CustomNoRowsOverlay,
+                    }}
+                    componentsProps={{
+                      footer: { total },
+                    }}
+                    onStateChange={(state) => {
+                      const total = data.equipment_detail
+                        ? data.equipment_detail
+                            .map((item) => item.equipment_detail_price_total)
+                            .reduce((a, b) => a + b, 0)
+                        : // console.log(total);
+                          0;
+                      setTotal(total);
+                    }}
+                    sx={{
+                      backgroundColor: "white",
+                      height: 250,
+                      width: "100%",
+                      margin: "auto",
+                      overflow: "hidden",
+                      "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
+                        {
+                          color: "#fff",
+                          opacity: 0.5,
+                        },
+                    }}
+                    rows={
+                      equipmentDetailReducer.isResult
+                        ? equipmentDetailReducer.isResult
+                        : []
+                    }
+                    // rows={[]}
+                    columns={dataColumns}
+                    pageSize={10}
+                    hideFooterSelectedRowCount
+                    rowsPerPageOptions={[10]}
+                    disableColumnMenu={true}
+                    // loading={hosxpReducer.isFetching}
+                    getRowId={(row) =>
+                      // parseInt(row.kskloginname) + Math.random() * (100 - 1)
+                      row.equipment_detail_id
+                    }
+                    localeText={{
+                      MuiTablePagination: {
+                        labelDisplayedRows: ({ from, to, count }) =>
+                          `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
+                      },
+                    }}
+                  />
+                </BoxDataGrid>
+              );
+            })
+          : []}
       </Paper>
 
       <Grid container spacing={2} alignItems="center" className="mt-1">

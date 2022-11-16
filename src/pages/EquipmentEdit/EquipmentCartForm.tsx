@@ -36,6 +36,12 @@ import {
   updateEquipmentCartEdit,
 } from "@/store/slices/equipmentCartSlice";
 
+import {
+  equipmentDetailSelector,
+  equipmentDetailAdd,
+  equipmentDetailAll,
+} from "@/store/slices/equipmentDetailSlice";
+
 export interface DialogTitleProps {
   id: string;
   children?: React.ReactNode;
@@ -61,7 +67,11 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
   );
 };
 
-export default function EquipmentCartForm({ show, confirm }: any) {
+export default function EquipmentCartForm({
+  show,
+  confirm,
+  equipment_id,
+}: any) {
   const formRefProduct = useRef<any>();
 
   const dispatch = useDispatch<any>();
@@ -70,6 +80,7 @@ export default function EquipmentCartForm({ show, confirm }: any) {
   const equipmentCartReducer = useSelector(equipmentCartSelector);
 
   const initialValues: any = {
+    equipment_id: equipment_id,
     id: "",
     equipment_detail_title: "", // รายการ
     equipment_detail_category: 0, // หมวดหมู่รหัส *
@@ -86,6 +97,7 @@ export default function EquipmentCartForm({ show, confirm }: any) {
     if (values) {
       // มีการแก้ไข้ข้อมูล
       values.map((res) => {
+        initailObj["equipment_id"] = equipment_id;
         initailObj["id"] = res.equipment_detail_id;
         initailObj["equipment_detail_title"] = res.equipment_detail_title;
         initailObj["equipment_detail_category"] = parseInt(
@@ -94,8 +106,10 @@ export default function EquipmentCartForm({ show, confirm }: any) {
         initailObj["equipment_detail_category_name"] = res.category_name;
         initailObj["equipment_detail_material_type"] =
           res.equipment_detail_material_type;
-        initailObj["equipment_detail_qty"] = res.equipment_detail_qty;
-        initailObj["equipment_detail_price"] = res.equipment_detail_price;
+        initailObj["equipment_detail_qty"] = parseInt(res.equipment_detail_qty);
+        initailObj["equipment_detail_price"] = parseInt(
+          res.equipment_detail_price
+        );
         initailObj["equipment_detail_note"] = res.equipment_detail_note;
         return initailObj;
       });
@@ -370,10 +384,7 @@ export default function EquipmentCartForm({ show, confirm }: any) {
       >
         {/* {JSON.stringify(equipmentCartReducer.isResultEdit)} */}
         <Typography variant="subtitle1" component={"b"}>
-          แก้รายการอุปกรณ์ :{" "}
-          {equipmentCartReducer.isResultEdit
-            ? equipmentCartReducer.isResultEdit.map((data) => data.id)
-            : ""}
+          แก้รายการอุปกรณ์ : {equipment_id}
           {/* {equipmentCartReducer.isResultEdit
             ? equipmentCartReducer.isResultEdit.map(
                 (res) => res.equipment_detail_id
@@ -435,21 +446,45 @@ export default function EquipmentCartForm({ show, confirm }: any) {
               //   })
               // );
             } else {
+              console.log(values);
+              let formData = new FormData();
+              formData.append("equipment_id", values.equipment_id);
+              formData.append(
+                "equipment_detail_title",
+                values.equipment_detail_title
+              );
+              formData.append(
+                "equipment_detail_category",
+                values.equipment_detail_category
+              );
+              formData.append(
+                "equipment_detail_material_type",
+                values.equipment_detail_material_type
+              );
+              formData.append(
+                "equipment_detail_qty",
+                values.equipment_detail_qty
+              );
+              formData.append(
+                "equipment_detail_price",
+                values.equipment_detail_price
+              );
+
+              const equipment_detail_price_total =
+                values.equipment_detail_qty * values.equipment_detail_price;
+              console.log(equipment_detail_price_total);
+              formData.append(
+                "equipment_detail_price_total",
+                `${equipment_detail_price_total}`
+              );
+              formData.append(
+                "equipment_detail_note",
+                values.equipment_detail_note
+              );
+              dispatch(equipmentDetailAdd({ formData: formData }));
+              dispatch(equipmentDetailAll({ search: equipment_id }));
               // dispatch(
-              //   addEquipmentCart({
-              //     id: Date.now().toString(),
-              //     equipment_detail_title: values.equipment_detail_title,
-              //     equipment_detail_category: values.equipment_detail_category,
-              //     equipment_detail_category_name:
-              //       values.equipment_detail_category_name,
-              //     equipment_detail_material_type:
-              //       values.equipment_detail_material_type,
-              //     equipment_detail_qty: values.equipment_detail_qty,
-              //     equipment_detail_price: values.equipment_detail_price,
-              //     equipment_detail_price_total:
-              //       values.equipment_detail_qty * values.equipment_detail_price,
-              //     equipment_detail_note: values.equipment_detail_note,
-              //   })
+              //   equipmentDetailAdd({})
               // );
             }
 

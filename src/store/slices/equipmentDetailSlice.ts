@@ -31,52 +31,84 @@ const header_get = {
   },
 };
 
-// เพิ่มข้อมูล
-export const equipmentAdd = createAsyncThunk(
-  "equipment/add",
-  async (
-    { formData, navigate }: { formData: any; navigate: any },
-    thunkAPI
-  ) => {
+// เพิ่มข้อมูลรายละเอียดใบรับอุปกรณ์
+export const equipmentDetailAdd = createAsyncThunk(
+  "equipmentdetail/add",
+  async ({ formData }: { formData: any }, thunkAPI) => {
     try {
       const { data: res } = await axios.post(
-        `${server.BACKOFFICE_URL_V1}/equipment`,
+        `${server.BACKOFFICE_URL_V1}/equipmentdetail`,
         formData,
         header_get
       );
-
       let data = res;
-
-      MySwal.fire({
-        title: "<p>กำลังประมวลผล ...</p>",
-        didOpen: () => {
-          MySwal.showLoading();
-          if (data.result === OK) {
-            setTimeout(() => {
-              MySwal.hideLoading();
-              const message = "บันทึกรับอุปกรณ์ สำเร็จ";
-              MySwal.fire({
-                icon: "success",
-                title: message,
-                showConfirmButton: false,
-                timer: 1500,
-              });
-              return data.data;
-            }, 1000);
-          } else {
-            setTimeout(() => {
-              MySwal.hideLoading();
-              let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
-              MySwal.fire({
-                icon: "warning",
-                title: message,
-                showConfirmButton: false,
-              });
-              return thunkAPI.rejectWithValue(data.message);
-            }, 1000);
-          }
-        },
-      });
+      if (data.result === OK) {
+        const message = "บันทึกรับอุปกรณ์ สำเร็จ";
+        MySwal.fire({
+          icon: "success",
+          title: message,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        return data.data;
+        // setTimeout(() => {
+        //   const message = "บันทึกรับอุปกรณ์ สำเร็จ";
+        //   MySwal.fire({
+        //     icon: "success",
+        //     title: message,
+        //     showConfirmButton: false,
+        //     timer: 1000,
+        //   });
+        //   return data.data;
+        // }, 1000);
+      } else {
+        let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
+        MySwal.fire({
+          icon: "warning",
+          title: message,
+          showConfirmButton: false,
+        });
+        return thunkAPI.rejectWithValue(data.message);
+        // setTimeout(() => {
+        //   let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
+        //   MySwal.fire({
+        //     icon: "warning",
+        //     title: message,
+        //     showConfirmButton: false,
+        //   });
+        //   return thunkAPI.rejectWithValue(data.message);
+        // }, 1000);
+      }
+      //   MySwal.fire({
+      //     title: "<p>กำลังประมวลผล ...</p>",
+      //     didOpen: () => {
+      //       MySwal.showLoading();
+      //       if (data.result === OK) {
+      //         setTimeout(() => {
+      //           MySwal.hideLoading();
+      //           const message = "บันทึกรับอุปกรณ์ สำเร็จ";
+      //           MySwal.fire({
+      //             icon: "success",
+      //             title: message,
+      //             showConfirmButton: false,
+      //             timer: 1000,
+      //           });
+      //           return data.data;
+      //         }, 1000);
+      //       } else {
+      //         setTimeout(() => {
+      //           MySwal.hideLoading();
+      //           let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
+      //           MySwal.fire({
+      //             icon: "warning",
+      //             title: message,
+      //             showConfirmButton: false,
+      //           });
+      //           return thunkAPI.rejectWithValue(data.message);
+      //         }, 1000);
+      //       }
+      //     },
+      //   });
       // if (data.result === OK) {
       //   // console.log(data.data);
       //   // navigate("/phone");
@@ -102,19 +134,20 @@ export const equipmentAdd = createAsyncThunk(
   }
 );
 
-// โหลดข้อมูลทั้งหมด
-export const equipmentAll = createAsyncThunk(
-  "equipment/all",
-  async (_, thunkAPI) => {
+// โหลดข้อมูลทั้งหมด รายละเอียดใบรับอุปกรณ์
+export const equipmentDetailAll = createAsyncThunk(
+  "equipmentdetail/all",
+  async ({ search }: { search: string }, thunkAPI) => {
     try {
+      let id = search;
       const response = await axios.get<EquipmentResult>(
-        `${server.BACKOFFICE_URL_V1}/equipments`,
+        `${server.BACKOFFICE_URL_V1}/equipmentdetails?id=${id}`,
         header_get
       );
       let data = await response.data;
       if (data.result === OK) {
         // console.log(data.data);
-        await wait(1 * 1000);
+        // await wait(1 * 1000);
         return data.data;
       } else {
         console.log("Error Else :", data.message);
@@ -139,7 +172,7 @@ export const equipmentAll = createAsyncThunk(
 );
 
 // ค้นหาข้อมูล
-export const equipmentSearch = createAsyncThunk(
+export const equipmentDetailSearch = createAsyncThunk(
   "equipment/search",
   async (
     { search, navigate }: { search: EquipmentSearch; navigate: any },
@@ -188,7 +221,7 @@ export const equipmentSearch = createAsyncThunk(
 );
 
 // ค้นหาข้อมูล จากไอดี
-export const equipmentSearchById = createAsyncThunk(
+export const equipmentDetailSearchById = createAsyncThunk(
   "equipment/searchbyId",
   async ({ search }: { search: string }, thunkAPI) => {
     try {
@@ -224,13 +257,13 @@ export const equipmentSearchById = createAsyncThunk(
 );
 
 // ลบข้อมูล จากไอดี
-export const equipmentDeleteById = createAsyncThunk(
-  "equipment/deletehbyId",
-  async ({ search }: { search: string }, thunkAPI) => {
+export const equipmentDetailDeleteById = createAsyncThunk(
+  "equipmentdetail/deletehbyId",
+  async ({ search }: { search: any }, thunkAPI) => {
     try {
       let id = search;
       const { data: res } = await axios.delete(
-        `${server.BACKOFFICE_URL_V1}/equipment?id=${id}`,
+        `${server.BACKOFFICE_URL_V1}/equipmentdetail?id=${id}`,
         header_get
       );
       let data = res;
@@ -284,7 +317,7 @@ export const equipmentSearchByIdV2 = createAsyncThunk(
       );
       let data = res;
       if (data.result === OK) {
-        // await wait(1 * 1000);
+        await wait(1 * 1000);
         return data.data;
       } else {
         // console.log("Error Else :", data);
@@ -308,88 +341,90 @@ export const equipmentSearchByIdV2 = createAsyncThunk(
   }
 );
 
-const equipmentSlice = createSlice({
-  name: "equipment",
+const equipmentDetailSlice = createSlice({
+  name: "equipmentdetail",
   initialState: initialValues,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(equipmentAdd.fulfilled, (state, action) => {
+    builder.addCase(equipmentDetailAdd.fulfilled, (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
-      state.isResult = action.payload;
+      //   state.isResult = action.payload;
       return state;
     });
-    builder.addCase(equipmentAdd.rejected, (state, action) => {
+    builder.addCase(equipmentDetailAdd.rejected, (state, action) => {
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = action.payload as string;
     });
-    builder.addCase(equipmentAdd.pending, (state, _action) => {
-      state.isFetching = true;
-    });
-    builder.addCase(equipmentAll.fulfilled, (state, action) => {
-      state.isFetching = false;
-      state.isSuccess = true;
-      state.isResult = action.payload;
-      return state;
-    });
-    builder.addCase(equipmentAll.rejected, (state, action) => {
-      state.isFetching = false;
-      state.isError = true;
-      state.errorMessage = action.payload as string;
-    });
-    builder.addCase(equipmentAll.pending, (state, action) => {
+    builder.addCase(equipmentDetailAdd.pending, (state, _action) => {
       state.isFetching = true;
     });
 
-    builder.addCase(equipmentSearch.fulfilled, (state, action) => {
+    builder.addCase(equipmentDetailAll.fulfilled, (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
       state.isResult = action.payload;
       return state;
     });
-    builder.addCase(equipmentSearch.rejected, (state, action) => {
+    builder.addCase(equipmentDetailAll.rejected, (state, action) => {
       state.isFetching = false;
       state.isError = true;
-      state.isResult = [];
       state.errorMessage = action.payload as string;
     });
-    builder.addCase(equipmentSearch.pending, (state, action) => {
+    builder.addCase(equipmentDetailAll.pending, (state, action) => {
       state.isFetching = true;
     });
-    builder.addCase(equipmentSearchById.fulfilled, (state, action) => {
+
+    builder.addCase(equipmentDetailSearch.fulfilled, (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
       state.isResult = action.payload;
       return state;
     });
-    builder.addCase(equipmentSearchById.rejected, (state, action) => {
+    builder.addCase(equipmentDetailSearch.rejected, (state, action) => {
       state.isFetching = false;
       state.isError = true;
       state.isResult = [];
       state.errorMessage = action.payload as string;
     });
-    builder.addCase(equipmentSearchById.pending, (state, action) => {
+    builder.addCase(equipmentDetailSearch.pending, (state, action) => {
       state.isFetching = true;
     });
-    builder.addCase(equipmentDeleteById.fulfilled, (state, action) => {
+    builder.addCase(equipmentSearchByIdV2.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      state.isResult = action.payload;
+      return state;
+    });
+    builder.addCase(equipmentSearchByIdV2.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.isResult = [];
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(equipmentSearchByIdV2.pending, (state, _action) => {
+      state.isFetching = true;
+    });
+    builder.addCase(equipmentDetailDeleteById.fulfilled, (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
       // state.isResult = action.payload;
       return state;
     });
-    builder.addCase(equipmentDeleteById.rejected, (state, action) => {
+    builder.addCase(equipmentDetailDeleteById.rejected, (state, action) => {
       state.isFetching = false;
       state.isError = true;
       state.isResult = [];
       state.errorMessage = action.payload as string;
     });
-    builder.addCase(equipmentDeleteById.pending, (state, action) => {
+    builder.addCase(equipmentDetailDeleteById.pending, (state, action) => {
       state.isFetching = true;
     });
   },
 });
 
 // export const {} = loginSlice.actions;
-export const equipmentSelector = (store: RootState) => store.equipmentReducer;
-export default equipmentSlice.reducer;
+export const equipmentDetailSelector = (store: RootState) =>
+  store.equipmentDetailReducer;
+export default equipmentDetailSlice.reducer;
