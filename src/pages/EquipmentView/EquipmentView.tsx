@@ -27,7 +27,6 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   equipmentSelector,
   equipmentSearchById,
-  equipmentSearchByIdV2,
 } from "@/store/slices/equipmentSlice";
 
 import {

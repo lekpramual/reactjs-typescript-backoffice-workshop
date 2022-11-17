@@ -7,11 +7,6 @@ import { TextField } from "formik-material-ui";
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   FormControl,
   InputLabel,
   OutlinedInput,
@@ -42,8 +37,6 @@ import Tooltip from "@mui/material/Tooltip";
 
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
-import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
-import DoneTwoToneIcon from "@mui/icons-material/DoneTwoTone";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -72,20 +65,17 @@ import {
 import { companySelector, companyAll } from "@/store/slices/companySlice";
 import { categoryAll } from "@/store/slices/categorySlice";
 import {
-  equipmentCartSelector,
   addEquipmentCartEdit,
   resetEquipmentCartEdit,
-  deleteEquipmentCart,
   resetEquipmentCart,
 } from "@/store/slices/equipmentCartSlice";
 
 // @component cart
 import EquipmentCartForm from "./EquipmentCartForm";
 import {
-  equipmentAdd,
   equipmentSelector,
-  equipmentSearchByIdV2,
   equipmentSearchById,
+  equipmentUpdateById,
 } from "@/store/slices/equipmentSlice";
 
 import {
@@ -138,19 +128,17 @@ function useQuery() {
 
 export default function EquipmentEdit() {
   const formRef = useRef<any>();
-
   const navigate = useNavigate();
   const query = useQuery();
   const dispatch = useDispatch<any>();
   const [total, setTotal] = React.useState(0);
-  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+
   const [openDialogCreate, setOpenDialogCreate] =
     React.useState<boolean>(false);
 
   const departmentReducer = useSelector(departmentSelector);
   const companyReducer = useSelector(companySelector);
   const equipmentReducer = useSelector(equipmentSelector);
-  const equipmentCartReducer = useSelector(equipmentCartSelector);
   const equipmentDetailReducer = useSelector(equipmentDetailSelector);
 
   const dataColumns = [
@@ -323,6 +311,7 @@ export default function EquipmentEdit() {
 
   const initialEquipmentValues: any = {
     id: "",
+    equipment_no: "",
     equipment_depart: {
       label: "--เลือกหน่วยงานที่บันทึก--",
       value: 0,
@@ -346,6 +335,7 @@ export default function EquipmentEdit() {
       // มีการแก้ไข้ข้อมูล
       values.map((res) => {
         initailObj["id"] = res.equipment_id;
+        initailObj["equipment_no"] = res.equipment_no;
         initailObj["equipment_depart"] = {
           label: res.dept_name,
           value: res.equipment_depart,
@@ -854,9 +844,9 @@ export default function EquipmentEdit() {
         </Typography>
 
         <Typography color="text.primary" variant="subtitle2">
-          {/* {equipmentReducer.isResult
+          {equipmentReducer.isResult
             ? equipmentReducer.isResult.map((data) => data.equipment_no)
-            : ""} */}
+            : ""}
         </Typography>
       </Breadcrumbs>
 
@@ -938,11 +928,12 @@ export default function EquipmentEdit() {
           }
           onSubmit={(values, { setSubmitting }) => {
             let formData = new FormData();
-            if (equipmentCartReducer.isResult.length !== 0) {
+            if (equipmentDetailReducer.isResult.length !== 0) {
               // const newArrayProduct = reverseArrayInPlace(
               //   equipmentCartReducer.isResult
               // );
               formData.append("equipment_no_txt", values.equipment_no_txt);
+              formData.append("equipment_no", values.equipment_no);
               // formData.append(
               //   "equipment_detail",
               //   JSON.stringify(newArrayProduct)
@@ -967,13 +958,22 @@ export default function EquipmentEdit() {
               );
 
               formData.append("equipment_company", values.equipment_company);
-              formData.append("equipment_file", values.file);
+              // formData.append("equipment_file", values.file);
+              if (values.file) {
+                formData.append("equipment_file", values.file);
+              } else {
+                formData.append("equipment_file", values.equipment_file);
+              }
+
               formData.append("equipment_type", values.equipment_type);
               formData.append("equipment_note", values.equipment_note);
 
-              dispatch(
-                equipmentAdd({ formData: formData, navigate: navigate })
-              );
+              let id = query.get("id") || "";
+              // ปรับปรุงข้อมูล
+              dispatch(equipmentUpdateById({ formData: formData, id: id }));
+              // โหลดข้อมูลใหม่
+              dispatch(equipmentSearchById({ search: id }));
+              // รีเซตค่า
               dispatch(resetEquipmentCart());
               resetForm();
             } else {
@@ -1100,7 +1100,9 @@ export default function EquipmentEdit() {
             variant="contained"
             color="error"
             className="w-[128px] "
-            onClick={() => resetForm()}
+            onClick={() => {
+              navigate(-1);
+            }}
           >
             <RestartAltTwoToneIcon />
             ยกเลิก

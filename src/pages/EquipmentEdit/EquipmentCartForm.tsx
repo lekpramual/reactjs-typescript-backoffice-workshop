@@ -30,16 +30,12 @@ import { BootstrapDialog } from "@/styles/AppStyle";
 import { useSelector, useDispatch } from "react-redux";
 
 import { categorySelector, categoryAll } from "@/store/slices/categorySlice";
-import {
-  equipmentCartSelector,
-  addEquipmentCart,
-  updateEquipmentCartEdit,
-} from "@/store/slices/equipmentCartSlice";
+import { equipmentCartSelector } from "@/store/slices/equipmentCartSlice";
 
 import {
-  equipmentDetailSelector,
   equipmentDetailAdd,
   equipmentDetailAll,
+  equipmentDetailUpdate,
 } from "@/store/slices/equipmentDetailSlice";
 
 export interface DialogTitleProps {
@@ -429,24 +425,6 @@ export default function EquipmentCartForm({
           }
           onSubmit={(values, { setSubmitting }) => {
             if (equipmentCartReducer.isResultEdit.length !== 0) {
-              // dispatch(
-              //   updateEquipmentCartEdit({
-              //     id: values.id,
-              //     equipment_detail_title: values.equipment_detail_title,
-              //     equipment_detail_category: values.equipment_detail_category,
-              //     equipment_detail_category_name:
-              //       values.equipment_detail_category_name,
-              //     equipment_detail_material_type:
-              //       values.equipment_detail_material_type,
-              //     equipment_detail_qty: values.equipment_detail_qty,
-              //     equipment_detail_price: values.equipment_detail_price,
-              //     equipment_detail_price_total:
-              //       values.equipment_detail_qty * values.equipment_detail_price,
-              //     equipment_detail_note: values.equipment_detail_note,
-              //   })
-              // );
-            } else {
-              console.log(values);
               let formData = new FormData();
               formData.append("equipment_id", values.equipment_id);
               formData.append(
@@ -469,10 +447,46 @@ export default function EquipmentCartForm({
                 "equipment_detail_price",
                 values.equipment_detail_price
               );
-
               const equipment_detail_price_total =
                 values.equipment_detail_qty * values.equipment_detail_price;
-              console.log(equipment_detail_price_total);
+              const id = values.id;
+
+              formData.append(
+                "equipment_detail_price_total",
+                `${equipment_detail_price_total}`
+              );
+              formData.append(
+                "equipment_detail_note",
+                values.equipment_detail_note
+              );
+              dispatch(equipmentDetailUpdate({ formData: formData, id: id }));
+              dispatch(equipmentDetailAll({ search: equipment_id }));
+            } else {
+              let formData = new FormData();
+              formData.append("equipment_id", values.equipment_id);
+              formData.append(
+                "equipment_detail_title",
+                values.equipment_detail_title
+              );
+              formData.append(
+                "equipment_detail_category",
+                values.equipment_detail_category
+              );
+              formData.append(
+                "equipment_detail_material_type",
+                values.equipment_detail_material_type
+              );
+              formData.append(
+                "equipment_detail_qty",
+                values.equipment_detail_qty
+              );
+              formData.append(
+                "equipment_detail_price",
+                values.equipment_detail_price
+              );
+              const equipment_detail_price_total =
+                values.equipment_detail_qty * values.equipment_detail_price;
+
               formData.append(
                 "equipment_detail_price_total",
                 `${equipment_detail_price_total}`

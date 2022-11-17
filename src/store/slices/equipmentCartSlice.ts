@@ -1,6 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // @store PayloadAction
 import { RootState } from "@/store";
+
+// @alert
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
 // We can safely reuse
 // types created earlier:
 type equipmentCartId = string;
@@ -44,7 +51,6 @@ const equipmentCartSlice = createSlice({
       state: EquipmentCartState,
       action: PayloadAction<EquipmentCart>
     ) => {
-      console.log(action);
       state.isResultEdit.push(action.payload);
     },
 
@@ -63,7 +69,6 @@ const equipmentCartSlice = createSlice({
       const index = state.isResult.findIndex(
         ({ id }) => id === action.payload.id
       );
-
       state.isResult[index].equipment_detail_title =
         action.payload.equipment_detail_title;
 
@@ -88,6 +93,14 @@ const equipmentCartSlice = createSlice({
 
       state.isResult[index].equipment_detail_note =
         action.payload.equipment_detail_note;
+
+      const message = "แก้ไขรับอุปกรณ์ สำเร็จ";
+      MySwal.fire({
+        icon: "success",
+        title: message,
+        showConfirmButton: false,
+        timer: 1000,
+      });
     },
     addEquipmentCart: (
       state: EquipmentCartState,

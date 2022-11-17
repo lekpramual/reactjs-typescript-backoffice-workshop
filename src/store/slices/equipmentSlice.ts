@@ -102,6 +102,50 @@ export const equipmentAdd = createAsyncThunk(
   }
 );
 
+export const equipmentUpdateById = createAsyncThunk(
+  "equipment/update",
+  async ({ formData, id }: { formData: any; id: any }, thunkAPI) => {
+    try {
+      const { data: res } = await axios.put(
+        `${server.BACKOFFICE_URL_V1}/equipment?id=${id}`,
+        formData,
+        header_get
+      );
+
+      let data = res;
+
+      if (data.result === OK) {
+        const message = "แก้ไขรับอุปกรณ์ สำเร็จ";
+        MySwal.fire({
+          icon: "success",
+          title: message,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        return data.data;
+      } else {
+        let message = "บันทึกรับอุปกรณ์ ผิดพลาด";
+        MySwal.fire({
+          icon: "warning",
+          title: message,
+          showConfirmButton: false,
+        });
+        return thunkAPI.rejectWithValue(data.message);
+      }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
 // โหลดข้อมูลทั้งหมด
 export const equipmentAll = createAsyncThunk(
   "equipment/all",
@@ -325,6 +369,21 @@ const equipmentSlice = createSlice({
       state.errorMessage = action.payload as string;
     });
     builder.addCase(equipmentAdd.pending, (state, _action) => {
+      state.isFetching = true;
+    });
+
+    builder.addCase(equipmentUpdateById.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      //   state.isResult = action.payload;
+      return state;
+    });
+    builder.addCase(equipmentUpdateById.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(equipmentUpdateById.pending, (state, _action) => {
       state.isFetching = true;
     });
     builder.addCase(equipmentAll.fulfilled, (state, action) => {

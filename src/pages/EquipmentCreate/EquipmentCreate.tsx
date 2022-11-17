@@ -7,11 +7,6 @@ import { TextField } from "formik-material-ui";
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   FormControl,
   InputLabel,
   OutlinedInput,
@@ -42,8 +37,6 @@ import Tooltip from "@mui/material/Tooltip";
 
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
-import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
-import DoneTwoToneIcon from "@mui/icons-material/DoneTwoTone";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -126,7 +119,6 @@ export default function EquipmentCreate() {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const [total, setTotal] = React.useState(0);
-  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [openDialogCreate, setOpenDialogCreate] =
     React.useState<boolean>(false);
 
@@ -134,8 +126,6 @@ export default function EquipmentCreate() {
   const companyReducer = useSelector(companySelector);
 
   const equipmentCartReducer = useSelector(equipmentCartSelector);
-
-  const [equipmentCart, setEquipmentCart] = React.useState<any>([]);
 
   const dataColumns = [
     {
@@ -277,12 +267,12 @@ export default function EquipmentCreate() {
                 }).then((result) => {
                   if (result.isConfirmed) {
                     dispatch(deleteEquipmentCart(row.id));
-                    // MySwal.fire({
-                    //   icon: "success",
-                    //   title: "ลบข้อมูลเรียบร้อย",
-                    //   showConfirmButton: false,
-                    //   timer: 1500,
-                    // });
+                    MySwal.fire({
+                      icon: "success",
+                      title: "ลบข้อมูลเรียบร้อย",
+                      showConfirmButton: false,
+                      timer: 1000,
+                    });
                   }
                 });
               }}
@@ -740,70 +730,6 @@ export default function EquipmentCreate() {
     );
   };
 
-  // ฟังก์ชั่น ยืนยันการลบข้อมูล
-  const handleDeleteConfirm = () => {
-    // ปิด ป๊อปอัพ
-    setOpenDialog(false);
-    // ลบข้อมูล
-    // const id = equipmentCart ? equipmentCart.id : 0;
-    // dispatch(deleteEquipmentCart(id));
-  };
-
-  const showDialog = () => {
-    return (
-      <Dialog
-        open={openDialog}
-        keepMounted
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">
-          {/* <img
-            src={`${imageUrl}/images/${
-              selectedProduct.image
-            }?dummy=${Math.random()}`}
-            style={{ width: 100, borderRadius: "5%" }}
-          /> */}
-          <br />
-          ยืนยันการลบ อุปกรณ์รายการ :{" "}
-          {equipmentCart ? equipmentCart.equipment_detail_title : ""}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            คุณไม่สามารถกู้คืนรายการ{" "}
-            {equipmentCart ? equipmentCart.equipment_detail_title : ""}{" "}
-            ที่ถูกลบได้.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setOpenDialog(false);
-            }}
-            variant="contained"
-            color="error"
-            className="w-[96px] "
-          >
-            <CloseTwoToneIcon /> ปิด
-          </Button>
-          <Button
-            onClick={() => {
-              handleDeleteConfirm();
-              dispatch(
-                deleteEquipmentCart(equipmentCart ? equipmentCart.id : "")
-              );
-            }}
-            variant="contained"
-            color="success"
-            className="w-[96px] "
-          >
-            <DoneTwoToneIcon /> ตกลง
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  };
-
   const showPreviewImage = (values) => {
     if (values.file_obj) {
       return (
@@ -1130,9 +1056,6 @@ export default function EquipmentCreate() {
           </Button>
         </Grid>
       </Grid>
-
-      {showDialog()}
-
       {/* {showDialogCreate()} */}
       <EquipmentCartForm show={openDialogCreate} confirm={onConfirm} />
     </Box>

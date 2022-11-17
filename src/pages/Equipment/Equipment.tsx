@@ -6,11 +6,6 @@ import { Formik, Form, Field } from "formik";
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   FormControl,
   InputLabel,
   OutlinedInput,
@@ -52,8 +47,6 @@ import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
 import NoteAltTwoToneIcon from "@mui/icons-material/NoteAltTwoTone";
 import SearchIcon from "@mui/icons-material/Search";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
-import DoneTwoToneIcon from "@mui/icons-material/DoneTwoTone";
 // @styles
 import { BoxDataGrid } from "@/styles/AppStyle";
 // @utils
@@ -76,15 +69,13 @@ export default function Equipment() {
   const equipmentReducer = useSelector(equipmentSelector);
   const departmentReducer = useSelector(departmentSelector);
 
-  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
-
   // คอลัมข้อมูลการแสดง
   const dataColumns = [
     {
       headerName: "เรื่องที่บันทึก",
       field: "equipment_title",
-      flex: 1,
-      minWidth: 256,
+      // flex: 1,
+      width: 428,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value }: any) => (
@@ -96,8 +87,8 @@ export default function Equipment() {
     {
       headerName: "หน่วยงาน",
       field: "dept_name",
-      flex: 1,
-      minWidth: 256,
+      // flex: 1,
+      width: 428,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value }: any) => (
@@ -191,65 +182,102 @@ export default function Equipment() {
           </Tooltip>
 
           <Tooltip title="แก้ไขข้อมูล">
-            <Button
-              sx={{
-                minWidth: "30px",
-              }}
-              type="submit"
-              color="success"
-              variant="contained"
-              className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
-              size="small"
-              onClick={() => {
-                navigate("/app3/equipment/edit?id=" + row.equipment_id);
-              }}
-              disabled={row.equipment_status === "รับเข้า" ? true : false}
-            >
-              <EditTwoToneIcon fontSize="inherit" />
-            </Button>
+            {row.equipment_status === "รับเข้า" ? (
+              <span>
+                <Button
+                  sx={{
+                    minWidth: "30px",
+                  }}
+                  type="submit"
+                  color="success"
+                  variant="contained"
+                  className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
+                  size="small"
+                  disabled
+                >
+                  <EditTwoToneIcon fontSize="inherit" />
+                </Button>{" "}
+              </span>
+            ) : (
+              <Button
+                sx={{
+                  minWidth: "30px",
+                }}
+                type="submit"
+                color="success"
+                variant="contained"
+                className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
+                size="small"
+                onClick={() => {
+                  navigate("/app3/equipment/edit?id=" + row.equipment_id);
+                }}
+              >
+                <EditTwoToneIcon fontSize="inherit" />
+              </Button>
+            )}
           </Tooltip>
 
           <Tooltip title="ยกเลิกข้อมูล">
-            <Button
-              sx={{
-                minWidth: "30px",
-              }}
-              type="submit"
-              color="error"
-              variant="contained"
-              className="hover:text-[#fce805] w-[30px] h-[26px]"
-              size="small"
-              disabled={row.equipment_status === "รับเข้า" ? true : false}
-              onClick={() => {
-                Swal.fire({
-                  title: "คุณต้องการลบ ใช่ หรือ ไม่?",
-                  text: `คุณไม่สามารถกู้คืนรายการ ${row.equipment_title} ที่ถูกลบได้.! `,
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "ใช่, ต้องการลบ!",
-                  cancelButtonText: "ไม่, ยกเลิก!",
-                  reverseButtons: true,
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    console.log(row.equipment_id);
-                    // ลบข้อมูล
-                    dispatch(equipmentDeleteById({ search: row.equipment_id }));
-                    // โหลดข้อมูลทั้งหมด
-                    dispatch(equipmentAll());
-                    MySwal.fire({
-                      icon: "success",
-                      title: "ลบข้อมูลเรียบร้อย",
-                      showConfirmButton: false,
-                      timer: 1500,
-                    });
-                  }
-                });
-              }}
-            >
-              <DeleteTwoToneIcon fontSize="inherit" />
-            </Button>
+            {row.equipment_status === "รับเข้า" ? (
+              <span>
+                <Button
+                  sx={{
+                    minWidth: "30px",
+                  }}
+                  type="submit"
+                  color="error"
+                  variant="contained"
+                  className="hover:text-[#fce805] w-[30px] h-[26px]"
+                  size="small"
+                  disabled
+                >
+                  <DeleteTwoToneIcon fontSize="inherit" />
+                </Button>
+              </span>
+            ) : (
+              <Button
+                sx={{
+                  minWidth: "30px",
+                }}
+                type="submit"
+                color="error"
+                variant="contained"
+                className="hover:text-[#fce805] w-[30px] h-[26px]"
+                size="small"
+                disabled={row.equipment_status === "รับเข้า" ? true : false}
+                onClick={() => {
+                  Swal.fire({
+                    title: "คุณต้องการลบ ใช่ หรือ ไม่?",
+                    text: `คุณไม่สามารถกู้คืนรายการ ${row.equipment_title} ที่ถูกลบได้.! `,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "ใช่, ต้องการลบ!",
+                    cancelButtonText: "ไม่, ยกเลิก!",
+                    reverseButtons: true,
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      console.log(row.equipment_id);
+                      // ลบข้อมูล
+                      dispatch(
+                        equipmentDeleteById({ search: row.equipment_id })
+                      );
+                      // โหลดข้อมูลทั้งหมด
+                      dispatch(equipmentAll());
+                      MySwal.fire({
+                        icon: "success",
+                        title: "ลบข้อมูลเรียบร้อย",
+                        showConfirmButton: false,
+                        timer: 1500,
+                      });
+                    }
+                  });
+                }}
+              >
+                <DeleteTwoToneIcon fontSize="inherit" />
+              </Button>
+            )}
           </Tooltip>
         </Stack>
       ),
@@ -392,12 +420,6 @@ export default function Equipment() {
         </Grid>
       </Form>
     );
-  };
-
-  // ฟังก์ชั่น ยืนยันการลบข้อมูล
-  const handleDeleteConfirm = () => {
-    // ปิด ป๊อปอัพ
-    setOpenDialog(false);
   };
 
   useEffect(() => {

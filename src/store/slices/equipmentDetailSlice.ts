@@ -62,7 +62,110 @@ export const equipmentDetailAdd = createAsyncThunk(
         //   return data.data;
         // }, 1000);
       } else {
-        let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
+        let message = "บันทึกรับอุปกรณ์ ผิดพลาด";
+        MySwal.fire({
+          icon: "warning",
+          title: message,
+          showConfirmButton: false,
+        });
+        return thunkAPI.rejectWithValue(data.message);
+        // setTimeout(() => {
+        //   let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
+        //   MySwal.fire({
+        //     icon: "warning",
+        //     title: message,
+        //     showConfirmButton: false,
+        //   });
+        //   return thunkAPI.rejectWithValue(data.message);
+        // }, 1000);
+      }
+      //   MySwal.fire({
+      //     title: "<p>กำลังประมวลผล ...</p>",
+      //     didOpen: () => {
+      //       MySwal.showLoading();
+      //       if (data.result === OK) {
+      //         setTimeout(() => {
+      //           MySwal.hideLoading();
+      //           const message = "บันทึกรับอุปกรณ์ สำเร็จ";
+      //           MySwal.fire({
+      //             icon: "success",
+      //             title: message,
+      //             showConfirmButton: false,
+      //             timer: 1000,
+      //           });
+      //           return data.data;
+      //         }, 1000);
+      //       } else {
+      //         setTimeout(() => {
+      //           MySwal.hideLoading();
+      //           let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
+      //           MySwal.fire({
+      //             icon: "warning",
+      //             title: message,
+      //             showConfirmButton: false,
+      //           });
+      //           return thunkAPI.rejectWithValue(data.message);
+      //         }, 1000);
+      //       }
+      //     },
+      //   });
+      // if (data.result === OK) {
+      //   // console.log(data.data);
+      //   // navigate("/phone");
+      //   await wait(1 * 1000);
+      //   return data.data;
+      // } else {
+      //   // console.log("Error Else :", data);
+      //   return thunkAPI.rejectWithValue({
+      //     message: "Failed to fetch phone.",
+      //   });
+      // }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
+// แก้ไขข้อมูลรายละเอียดใบรับอุปกรณ์
+export const equipmentDetailUpdate = createAsyncThunk(
+  "equipmentdetail/update",
+  async ({ formData, id }: { formData: any; id: number }, thunkAPI) => {
+    try {
+      const { data: res } = await axios.put(
+        `${server.BACKOFFICE_URL_V1}/equipmentdetail?id=${id}`,
+        formData,
+        header_get
+      );
+      let data = res;
+      if (data.result === OK) {
+        const message = "แก้ไขรับอุปกรณ์ สำเร็จ";
+        MySwal.fire({
+          icon: "success",
+          title: message,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        return data.data;
+        // setTimeout(() => {
+        //   const message = "บันทึกรับอุปกรณ์ สำเร็จ";
+        //   MySwal.fire({
+        //     icon: "success",
+        //     title: message,
+        //     showConfirmButton: false,
+        //     timer: 1000,
+        //   });
+        //   return data.data;
+        // }, 1000);
+      } else {
+        let message = "บันทึกรับอุปกรณ์ ผิดพลาด";
         MySwal.fire({
           icon: "warning",
           title: message,
@@ -358,6 +461,20 @@ const equipmentDetailSlice = createSlice({
       state.errorMessage = action.payload as string;
     });
     builder.addCase(equipmentDetailAdd.pending, (state, _action) => {
+      state.isFetching = true;
+    });
+    builder.addCase(equipmentDetailUpdate.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      //   state.isResult = action.payload;
+      return state;
+    });
+    builder.addCase(equipmentDetailUpdate.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(equipmentDetailUpdate.pending, (state, _action) => {
       state.isFetching = true;
     });
 
