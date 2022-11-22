@@ -11,8 +11,9 @@ import {
   InputLabel,
   OutlinedInput,
   Breadcrumbs,
-  Autocomplete,
 } from "@mui/material";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+
 // @day
 import moment from "moment";
 // @type
@@ -125,6 +126,14 @@ function useQuery() {
   const { search } = useLocation();
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
+
+interface FilmOptionType {
+  inputValue?: string;
+  label: string;
+  value?: number;
+}
+
+const filter = createFilterOptions<FilmOptionType>();
 
 export default function EquipmentEdit() {
   const formRef = useRef<any>();
@@ -382,7 +391,7 @@ export default function EquipmentEdit() {
 
   const resetForm = () => {
     if (formRef.current) {
-      formRef.current.resetForm(initialEquipmentValues);
+      formRef.current.resetForm();
       // window.location.reload();
       // formik.resetForm(initialEquipmentValues);
     }
@@ -399,6 +408,8 @@ export default function EquipmentEdit() {
       return departs;
     }
   }
+
+  const departOption = optionNewDeparts();
 
   const showFormCreate = ({
     handleSubmit,
@@ -430,37 +441,62 @@ export default function EquipmentEdit() {
               }
             >
               <Autocomplete
+                value={values.equipment_depart}
                 noOptionsText={"ไม่มีข้อมูล"}
-                disableListWrap
-                disableClearable={true}
-                size="small"
-                options={optionNewDeparts()}
-                isOptionEqualToValue={(option: any, value: any) =>
-                  option.value === value.value
-                }
-                getOptionLabel={(option) => `${option.label}`}
-                onChange={(e, value, reason) => {
-                  if (reason === "clear") {
-                    // setFieldValue("equipment_depart", [
-                    //   {
-                    //     label: "เลือกหน่วยงานที่บันทึก",
-                    //     value: 0,
-                    //   },
-                    // ]);
+                onChange={(event, newValue) => {
+                  if (typeof newValue === "string") {
+                    console.log("if");
+                    // timeout to avoid instant validation of the dialog's form.
+                    // setTimeout(() => {
+                    //   toggleOpen(true);
+                    //   setDialogValue({
+                    //     title: newValue,
+                    //     year: "",
+                    //   });
+                    // });
+                  } else if (newValue && newValue.inputValue) {
+                    console.log("else if");
+                    // toggleOpen(true);
+                    // setDialogValue({
+                    //   title: newValue.inputValue,
+                    //   year: "",
+                    // });
                   } else {
-                    setFieldValue(
-                      "equipment_depart",
-                      value !== null
-                        ? value
-                        : initialEquipmentValues.equipment_depart
-                    );
+                    setFieldValue("equipment_depart", newValue);
                   }
                 }}
-                defaultValue={{
-                  label: "--เลือกหน่วยงานที่บันทึก--",
-                  value: 0,
+                filterOptions={(options, params) => {
+                  // const filtered = options.filter(row => row.label === params.inputValue)
+                  const filtered = filter(options, params);
+                  // if (params.inputValue !== "") {
+                  //   filtered.push({
+                  //     inputValue: params.inputValue,
+                  //     title: `Add "${params.inputValue}"`,
+                  //   });
+                  // }
+                  return filtered;
                 }}
-                value={values.equipment_depart}
+                id="free-solo-dialog-demo"
+                options={departOption}
+                getOptionLabel={(option) => {
+                  // e.g value selected with enter, right from the input
+                  if (typeof option === "string") {
+                    return option;
+                  }
+                  if (option.inputValue) {
+                    return option.inputValue;
+                  }
+                  return option.label;
+                }}
+                isOptionEqualToValue={(option: any, value: any) =>
+                  option.value === value.value && option.label === value.label
+                }
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+                renderOption={(props, option) => (
+                  <li {...props}>{option.label}</li>
+                )}
                 renderInput={(params) => (
                   <Field
                     required
@@ -468,7 +504,6 @@ export default function EquipmentEdit() {
                     {...params}
                     name="equipment_depart"
                     id="equipment_depart"
-                    // margin="normal"
                     label={"หน่วยงานที่บันทึก"}
                     component={TextField}
                     size="small"
@@ -900,8 +935,15 @@ export default function EquipmentEdit() {
           validate={(values) => {
             let errors: any = {};
 
-            if (values.equipment_depart.value === 0)
+            if (values.equipment_depart === null) errors.equipment_depart = " ";
+
+            if (!values.equipment_depart.value) {
               errors.equipment_depart = " ";
+            }
+
+            if (values.equipment_depart.value === 0) {
+              errors.equipment_depart = " ";
+            }
 
             if (!values.equipment_no_txt)
               errors.equipment_no_txt = "กรอกเลขที่บันทึก";

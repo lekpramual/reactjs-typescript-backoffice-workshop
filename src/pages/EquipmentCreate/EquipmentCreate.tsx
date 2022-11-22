@@ -11,8 +11,9 @@ import {
   InputLabel,
   OutlinedInput,
   Breadcrumbs,
-  Autocomplete,
 } from "@mui/material";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+
 // @day
 import moment from "moment";
 // @type
@@ -112,6 +113,14 @@ function CustomFooterTotal(props: CustomFooterTotalProps) {
     </Box>
   );
 }
+
+interface FilmOptionType {
+  inputValue?: string;
+  label: string;
+  value?: number;
+}
+
+const filter = createFilterOptions<FilmOptionType>();
 
 export default function EquipmentCreate() {
   const formRef = useRef<any>();
@@ -286,11 +295,11 @@ export default function EquipmentCreate() {
   ];
 
   const initialEquipmentValues: any = {
-    // equipment_depart: {
-    //   label: "--เลือกหน่วยงานที่บันทึก--",
-    //   value: 0,
-    // },
-    equipment_depart: { name: "--เลือกหน่วยงานที่บันทึก--", id: 0, state: 0 }, // หน่วยงาน *
+    equipment_depart: {
+      label: "--เลือกหน่วยงานที่บันทึก--",
+      value: 0,
+    },
+    //equipment_depart: null, // หน่วยงาน *
     equipment_no_txt: "", // เลขที่บันทึก
     equipment_type: "empty", // ประเภทการซื้อ *
     equipment_title: "", // เรื่องที่บันทึก
@@ -329,21 +338,17 @@ export default function EquipmentCreate() {
 
   const resetForm = () => {
     if (formRef.current) {
-      // formRef.current.resetForm(initialEquipmentValues);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      formRef.current.resetForm();
     }
   };
 
   function optionNewDeparts() {
-    const departs = [{ name: "--เลือกหน่วยงานที่บันทึก--", id: 0, state: 0 }];
+    const departs = [{ label: "--เลือกหน่วยงานที่บันทึก--", value: 0 }];
     if (departmentReducer.isResult) {
       departmentReducer.isResult.map((i, index) => {
         return departs.push({
-          name: `(${i.CCID}) - ${i.dept_name}`,
-          id: index + 1,
-          state: i.dept_id,
+          label: `(${i.CCID}) - ${i.dept_name}`,
+          value: i.dept_id,
         });
       });
       return departs;
@@ -396,37 +401,71 @@ export default function EquipmentCreate() {
                 errors.equipment_depart && touched.equipment_depart && true
               }
             >
-              {JSON.stringify(values.equipment_depart)}
               <Autocomplete
+                value={values.equipment_depart}
                 noOptionsText={"ไม่มีข้อมูล"}
-                disableListWrap
-                size="small"
+                onChange={(event, newValue) => {
+                  if (typeof newValue === "string") {
+                    console.log("if");
+                    // timeout to avoid instant validation of the dialog's form.
+                    // setTimeout(() => {
+                    //   toggleOpen(true);
+                    //   setDialogValue({
+                    //     title: newValue,
+                    //     year: "",
+                    //   });
+                    // });
+                  } else if (newValue && newValue.inputValue) {
+                    console.log("else if");
+                    // toggleOpen(true);
+                    // setDialogValue({
+                    //   title: newValue.inputValue,
+                    //   year: "",
+                    // });
+                  } else {
+                    setFieldValue("equipment_depart", newValue);
+                  }
+                }}
+                filterOptions={(options, params) => {
+                  // const filtered = options.filter(row => row.label === params.inputValue)
+                  const filtered = filter(options, params);
+                  // if (params.inputValue !== "") {
+                  //   filtered.push({
+                  //     inputValue: params.inputValue,
+                  //     title: `Add "${params.inputValue}"`,
+                  //   });
+                  // }
+                  return filtered;
+                }}
+                id="free-solo-dialog-demo"
                 options={departOption}
+                getOptionLabel={(option) => {
+                  // e.g value selected with enter, right from the input
+                  if (typeof option === "string") {
+                    return option;
+                  }
+                  if (option.inputValue) {
+                    return option.inputValue;
+                  }
+                  return option.label;
+                }}
                 isOptionEqualToValue={(option: any, value: any) =>
-                  option.state === value.state && option.id === value.id
+                  option.value === value.value && option.label === value.label
                 }
-                getOptionLabel={(option) => `${option.name}`}
-                onChange={(e, value) => {
-                  setFieldValue(
-                    "equipment_depart",
-                    value !== null
-                      ? value
-                      : initialEquipmentValues.equipment_depart
-                  );
-                }}
-                defaultValue={{
-                  name: "--เลือกหน่วยงานที่บันทึก--",
-                  id: 0,
-                  state: 0,
-                }}
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+                renderOption={(props, option) => (
+                  <li {...props}>{option.label}</li>
+                )}
                 renderInput={(params) => (
                   <Field
+                    required
                     sx={{ input: { marginTop: "-3px" } }}
                     {...params}
                     name="equipment_depart"
                     id="equipment_depart"
-                    // margin="normal"
-                    label={"หน่วยงาน"}
+                    label={"หน่วยงานที่บันทึก"}
                     component={TextField}
                     size="small"
                     InputLabelProps={{
@@ -848,12 +887,21 @@ export default function EquipmentCreate() {
             </Grid>
           </Toolbar>
         </AppBar>
+
         <Formik
           innerRef={formRef}
           validate={(values) => {
             let errors: any = {};
 
-            if (values.equipment_depart.id === 0) errors.equipment_depart = " ";
+            if (values.equipment_depart === null) errors.equipment_depart = " ";
+
+            if (!values.equipment_depart.value) {
+              errors.equipment_depart = " ";
+            }
+
+            if (values.equipment_depart.value === 0) {
+              errors.equipment_depart = " ";
+            }
 
             if (!values.equipment_no_txt)
               errors.equipment_no_txt = "กรอกเลขที่บันทึก";
@@ -876,7 +924,6 @@ export default function EquipmentCreate() {
           }}
           initialValues={initialEquipmentValues}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
             let formData = new FormData();
             if (equipmentCartReducer.isResult.length !== 0) {
               const newArrayProduct = reverseArrayInPlace(
@@ -889,7 +936,7 @@ export default function EquipmentCreate() {
               );
               formData.append(
                 "equipment_depart",
-                values.equipment_depart.state
+                values.equipment_depart.value
               );
               formData.append("equipment_title", values.equipment_title);
               formData.append("equipment_member", values.equipment_member);

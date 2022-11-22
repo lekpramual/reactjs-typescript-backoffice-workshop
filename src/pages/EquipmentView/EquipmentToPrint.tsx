@@ -1,6 +1,5 @@
 import React from "react";
 // @mui
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import Table from "@mui/material/Table";
@@ -9,18 +8,13 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 
 // @constats
 import { server } from "@/constants";
-
+// @utils
+import { NumberWithCommas } from "@/utils";
 // @day
 import moment from "moment";
-
-// @styles
-import { BoxDataGrid } from "@/styles/AppStyle";
-import { NumberWithCommas, CustomNoRowsOverlay } from "@/utils";
-import { DataGrid } from "@mui/x-data-grid";
 
 type MyProps = {
   // using `interface` is also ok
@@ -28,9 +22,6 @@ type MyProps = {
   dataEquipmentDetail: any;
 };
 
-function ccyFormat(num: number) {
-  return `${num.toFixed(2)}`;
-}
 class EquipmentToPrint extends React.Component<MyProps> {
   state = {
     total: 0,
@@ -236,10 +227,10 @@ class EquipmentToPrint extends React.Component<MyProps> {
                       {row.equipment_detail_qty}
                     </TableCell>
                     <TableCell align="right">
-                      {row.equipment_detail_price}
+                      {NumberWithCommas(row.equipment_detail_price | 0)}
                     </TableCell>
                     <TableCell align="right">
-                      {ccyFormat(row.equipment_detail_price_total)}
+                      {NumberWithCommas(row.equipment_detail_price_total | 0)}
                     </TableCell>
                   </TableRow>
                 );
@@ -247,7 +238,9 @@ class EquipmentToPrint extends React.Component<MyProps> {
               <TableRow>
                 <TableCell rowSpan={3} />
                 <TableCell colSpan={2}>รวม</TableCell>
-                <TableCell align="right">{ccyFormat(total)}</TableCell>
+                <TableCell align="right">
+                  {NumberWithCommas(total | 0)}
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
