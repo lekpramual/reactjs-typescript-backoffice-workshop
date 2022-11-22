@@ -286,10 +286,11 @@ export default function EquipmentCreate() {
   ];
 
   const initialEquipmentValues: any = {
-    equipment_depart: {
-      label: "--เลือกหน่วยงานที่บันทึก--",
-      value: 0,
-    }, // หน่วยงาน *
+    // equipment_depart: {
+    //   label: "--เลือกหน่วยงานที่บันทึก--",
+    //   value: 0,
+    // },
+    equipment_depart: { name: "--เลือกหน่วยงานที่บันทึก--", id: 0, state: 0 }, // หน่วยงาน *
     equipment_no_txt: "", // เลขที่บันทึก
     equipment_type: "empty", // ประเภทการซื้อ *
     equipment_title: "", // เรื่องที่บันทึก
@@ -328,17 +329,22 @@ export default function EquipmentCreate() {
 
   const resetForm = () => {
     if (formRef.current) {
-      formRef.current.resetForm(initialEquipmentValues);
-      // window.location.reload();
-      // formik.resetForm(initialEquipmentValues);
+      // formRef.current.resetForm(initialEquipmentValues);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
   };
 
   function optionNewDeparts() {
-    const departs = [{ label: "--เลือกหน่วยงานที่บันทึก--", value: 0 }];
+    const departs = [{ name: "--เลือกหน่วยงานที่บันทึก--", id: 0, state: 0 }];
     if (departmentReducer.isResult) {
-      departmentReducer.isResult.map((i) => {
-        return departs.push({ value: i.dept_id, label: i.dept_name });
+      departmentReducer.isResult.map((i, index) => {
+        return departs.push({
+          name: `(${i.CCID}) - ${i.dept_name}`,
+          id: index + 1,
+          state: i.dept_id,
+        });
       });
       return departs;
     } else {
@@ -360,6 +366,7 @@ export default function EquipmentCreate() {
     });
   };
 
+  const departOption = optionNewDeparts();
   const showFormCreate = ({
     handleSubmit,
     handleChange,
@@ -389,47 +396,37 @@ export default function EquipmentCreate() {
                 errors.equipment_depart && touched.equipment_depart && true
               }
             >
+              {JSON.stringify(values.equipment_depart)}
               <Autocomplete
                 noOptionsText={"ไม่มีข้อมูล"}
                 disableListWrap
-                disableClearable={true}
                 size="small"
-                options={optionNewDeparts()}
+                options={departOption}
                 isOptionEqualToValue={(option: any, value: any) =>
-                  option.value === value.value
+                  option.state === value.state && option.id === value.id
                 }
-                getOptionLabel={(option) => `${option.label}`}
-                onChange={(e, value, reason) => {
-                  if (reason === "clear") {
-                    // setFieldValue("equipment_depart", [
-                    //   {
-                    //     label: "เลือกหน่วยงานที่บันทึก",
-                    //     value: 0,
-                    //   },
-                    // ]);
-                  } else {
-                    setFieldValue(
-                      "equipment_depart",
-                      value !== null
-                        ? value
-                        : initialEquipmentValues.equipment_depart
-                    );
-                  }
+                getOptionLabel={(option) => `${option.name}`}
+                onChange={(e, value) => {
+                  setFieldValue(
+                    "equipment_depart",
+                    value !== null
+                      ? value
+                      : initialEquipmentValues.equipment_depart
+                  );
                 }}
                 defaultValue={{
-                  label: "--เลือกหน่วยงานที่บันทึก--",
-                  value: 0,
+                  name: "--เลือกหน่วยงานที่บันทึก--",
+                  id: 0,
+                  state: 0,
                 }}
-                value={values.equipment_depart}
                 renderInput={(params) => (
                   <Field
-                    required
                     sx={{ input: { marginTop: "-3px" } }}
                     {...params}
                     name="equipment_depart"
                     id="equipment_depart"
                     // margin="normal"
-                    label={"หน่วยงานที่บันทึก"}
+                    label={"หน่วยงาน"}
                     component={TextField}
                     size="small"
                     InputLabelProps={{
@@ -485,6 +482,9 @@ export default function EquipmentCreate() {
                 </MenuItem>
                 <MenuItem value={"ซื้อนอกแผน"} key="ซื้อนอกแผน">
                   ซื้อนอกแผน
+                </MenuItem>
+                <MenuItem value={"ซื้อทดแทน"} key="ซื้อทดแทน">
+                  ซื้อทดแทน
                 </MenuItem>
               </Field>
             </FormControl>
@@ -853,8 +853,7 @@ export default function EquipmentCreate() {
           validate={(values) => {
             let errors: any = {};
 
-            if (values.equipment_depart.value === 0)
-              errors.equipment_depart = " ";
+            if (values.equipment_depart.id === 0) errors.equipment_depart = " ";
 
             if (!values.equipment_no_txt)
               errors.equipment_no_txt = "กรอกเลขที่บันทึก";
@@ -877,6 +876,7 @@ export default function EquipmentCreate() {
           }}
           initialValues={initialEquipmentValues}
           onSubmit={(values, { setSubmitting }) => {
+            console.log(values);
             let formData = new FormData();
             if (equipmentCartReducer.isResult.length !== 0) {
               const newArrayProduct = reverseArrayInPlace(
@@ -889,7 +889,7 @@ export default function EquipmentCreate() {
               );
               formData.append(
                 "equipment_depart",
-                values.equipment_depart.value
+                values.equipment_depart.state
               );
               formData.append("equipment_title", values.equipment_title);
               formData.append("equipment_member", values.equipment_member);

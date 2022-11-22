@@ -1,17 +1,10 @@
 import React from "react";
 // @mui
-import { styled } from "@mui/material/styles";
+import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 
-// @constats
+// constats
 import { server } from "@/constants";
 
 // @day
@@ -28,13 +21,44 @@ type MyProps = {
   dataEquipmentDetail: any;
 };
 
-function ccyFormat(num: number) {
-  return `${num.toFixed(2)}`;
+interface CustomFooterTotalProps {
+  total: number;
 }
+
+export interface DialogTitleProps {
+  id: string;
+  children?: React.ReactNode;
+  onClose: () => void;
+}
+
+function CustomFooterTotal(props: CustomFooterTotalProps) {
+  return (
+    <Box
+      sx={{
+        padding: "10px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "right",
+      }}
+    >
+      <Typography variant="subtitle2" component={"b"}>
+        รวม : {NumberWithCommas(props.total)}
+      </Typography>
+    </Box>
+  );
+}
+
 class EquipmentToPrint extends React.Component<MyProps> {
   state = {
     total: 0,
   };
+
+  //   add = (totalNumber) => {
+  //     this.setState({
+  //       total: totalNumber,
+  //     });
+  //   };
+
   getTotal = () => {
     const { dataEquipmentDetail } = this.props;
     const totalEquipmentDetail = dataEquipmentDetail
@@ -48,7 +72,97 @@ class EquipmentToPrint extends React.Component<MyProps> {
   render() {
     const { dataEquipment, dataEquipmentDetail } = this.props;
     const total = this.getTotal();
-
+    const dataColumns = [
+      {
+        headerName: "ชื่อรายการ",
+        field: "equipment_detail_title",
+        flex: 1,
+        // maxWidth: 356,
+        // minWidth: 256,
+        headerClassName: "bg-[#36474f] text-[#fff] text-[14px]",
+        sortable: false,
+        renderCell: ({ value }: any) => (
+          <Typography variant="body1" className="text-[14px]">
+            {value}
+          </Typography>
+        ),
+      },
+      {
+        headerName: "หมวดหมู่",
+        field: "category_name",
+        flex: 1,
+        // maxWidth: 124,
+        // minWidth: 124,
+        headerClassName: "bg-[#36474f] text-[#fff] text-[14px] w-[15%]",
+        sortable: false,
+        renderCell: ({ value }: any) => (
+          <Typography variant="body1" className="text-[14px]">
+            {value}
+          </Typography>
+        ),
+      },
+      {
+        headerName: "ชนิดวัสดุ/ครุภัณฑ์",
+        field: "equipment_detail_material_type",
+        flex: 1,
+        // maxWidth: 156,
+        // minWidth: 124,
+        headerClassName: "bg-[#36474f] text-[#fff] text-[14px] w-[25%]",
+        sortable: false,
+        renderCell: ({ value }: any) => (
+          <Typography variant="body1" className="text-[14px]">
+            {value}
+          </Typography>
+        ),
+      },
+      {
+        headerName: "จำนวน",
+        field: "equipment_detail_qty",
+        type: "number",
+        flex: 1,
+        // maxWidth: 96,
+        // width: 96,
+        align: "center" as "center",
+        headerAlign: "center" as "center",
+        headerClassName: "bg-[#36474f] text-[#fff] text-[14px] w-[10%]",
+        sortable: false,
+        renderCell: ({ value }: any) => (
+          <Typography variant="body1" className="text-[14px]">
+            {NumberWithCommas(value)}
+          </Typography>
+        ),
+      },
+      {
+        headerName: "ราคา/หน่วย",
+        field: "equipment_detail_price",
+        flex: 1,
+        maxWidth: 96,
+        // minWidth: 56,
+        // width: 96,
+        headerClassName: "bg-[#36474f] text-[#fff] text-[14px] w-[10%]",
+        sortable: false,
+        renderCell: ({ value }: any) => (
+          <Typography variant="body1" className="text-[14px]">
+            {NumberWithCommas(value)}
+          </Typography>
+        ),
+      },
+      {
+        headerName: "ราคารวม",
+        field: "equipment_detail_price_total",
+        flex: 1,
+        maxWidth: 96,
+        // minWidth: 56,
+        // width: 96,
+        headerClassName: "bg-[#36474f] text-[#fff] text-[14px] w-[10%]",
+        sortable: false,
+        renderCell: ({ value }: any) => (
+          <Typography variant="body1" className="text-[14px]">
+            {NumberWithCommas(value)}
+          </Typography>
+        ),
+      },
+    ];
     // const dataTotal = this.getTotal(dataEquipmentDetail);
     return (
       <div style={{ width: "100%" }} className="w-full">
@@ -205,53 +319,49 @@ class EquipmentToPrint extends React.Component<MyProps> {
             </Grid>
           );
         })}
-
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 700 }}
-            size="small"
-            aria-label="spanning table"
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" colSpan={3}>
-                  รายละเอียด
-                </TableCell>
-                <TableCell align="right">ราคา</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>ชื่อรายการ</TableCell>
-                <TableCell align="right">จำนวน.</TableCell>
-                <TableCell align="right">ราคา/หน่วย</TableCell>
-                <TableCell align="right">ราคารวม</TableCell>
-              </TableRow>
-            </TableHead>
-            {/* {JSON.stringify(dataEquipmentDetail)} */}
-            <TableBody>
-              {dataEquipmentDetail.map((row) => {
-                return (
-                  <TableRow key={row.equipment_detail_title}>
-                    <TableCell>{row.equipment_detail_title}</TableCell>
-                    <TableCell align="right">
-                      {row.equipment_detail_qty}
-                    </TableCell>
-                    <TableCell align="right">
-                      {row.equipment_detail_price}
-                    </TableCell>
-                    <TableCell align="right">
-                      {ccyFormat(row.equipment_detail_price_total)}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              <TableRow>
-                <TableCell rowSpan={3} />
-                <TableCell colSpan={2}>รวม</TableCell>
-                <TableCell align="right">{ccyFormat(total)}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Grid xs={12}>
+          <BoxDataGrid>
+            <DataGrid
+              rowHeight={28}
+              headerHeight={28}
+              autoHeight
+              components={{
+                Footer: CustomFooterTotal,
+                NoRowsOverlay: CustomNoRowsOverlay,
+              }}
+              componentsProps={{
+                footer: { total },
+              }}
+              sx={{
+                backgroundColor: "white",
+                height: 250,
+                width: "100%",
+                margin: "auto",
+                overflow: "hidden",
+                "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
+                  {
+                    color: "#fff",
+                    opacity: 0.5,
+                  },
+              }}
+              rows={dataEquipmentDetail ? dataEquipmentDetail : []}
+              // rows={[]}
+              columns={dataColumns}
+              pageSize={10}
+              hideFooterSelectedRowCount
+              rowsPerPageOptions={[10]}
+              disableColumnMenu={true}
+              //   loading={dataEquipmentDetail.isFetching}
+              getRowId={(row) => row.equipment_detail_id}
+              localeText={{
+                MuiTablePagination: {
+                  labelDisplayedRows: ({ from, to, count }) =>
+                    `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
+                },
+              }}
+            />
+          </BoxDataGrid>
+        </Grid>
       </div>
     );
   }

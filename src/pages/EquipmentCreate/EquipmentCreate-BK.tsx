@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // @form
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
@@ -65,24 +65,16 @@ import {
 import { companySelector, companyAll } from "@/store/slices/companySlice";
 import { categoryAll } from "@/store/slices/categorySlice";
 import {
+  equipmentCartSelector,
   addEquipmentCartEdit,
   resetEquipmentCartEdit,
+  deleteEquipmentCart,
   resetEquipmentCart,
 } from "@/store/slices/equipmentCartSlice";
 
 // @component cart
 import EquipmentCartForm from "./EquipmentCartForm";
-import {
-  equipmentSelector,
-  equipmentSearchById,
-  equipmentUpdateById,
-} from "@/store/slices/equipmentSlice";
-
-import {
-  equipmentDetailSelector,
-  equipmentDetailAll,
-  equipmentDetailDeleteById,
-} from "@/store/slices/equipmentDetailSlice";
+import { equipmentAdd } from "../../store/slices/equipmentSlice";
 
 const MySwal = withReactContent(Swal);
 
@@ -121,25 +113,19 @@ function CustomFooterTotal(props: CustomFooterTotalProps) {
   );
 }
 
-function useQuery() {
-  const { search } = useLocation();
-  return React.useMemo(() => new URLSearchParams(search), [search]);
-}
-
-export default function EquipmentEdit() {
+export default function EquipmentCreate() {
   const formRef = useRef<any>();
+
   const navigate = useNavigate();
-  const query = useQuery();
   const dispatch = useDispatch<any>();
   const [total, setTotal] = React.useState(0);
-
   const [openDialogCreate, setOpenDialogCreate] =
     React.useState<boolean>(false);
 
   const departmentReducer = useSelector(departmentSelector);
   const companyReducer = useSelector(companySelector);
-  const equipmentReducer = useSelector(equipmentSelector);
-  const equipmentDetailReducer = useSelector(equipmentDetailSelector);
+
+  const equipmentCartReducer = useSelector(equipmentCartSelector);
 
   const dataColumns = [
     {
@@ -157,7 +143,7 @@ export default function EquipmentEdit() {
     },
     {
       headerName: "หมวดหมู่",
-      field: "category_name",
+      field: "equipment_detail_category_name",
       flex: 1,
       minWidth: 156,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -246,6 +232,7 @@ export default function EquipmentEdit() {
               className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
               size="small"
               onClick={() => {
+                console.log(row);
                 dispatch(addEquipmentCartEdit(row));
                 setOpenDialogCreate(true);
               }}
@@ -279,24 +266,13 @@ export default function EquipmentEdit() {
                   reverseButtons: true,
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    if (equipmentDetailReducer.isResult.length > 1) {
-                      dispatch(equipmentDetailDeleteById({ search: row.id }));
-                      dispatch(
-                        equipmentDetailAll({ search: `${query.get("id")}` })
-                      );
-                      MySwal.fire({
-                        icon: "success",
-                        title: "ลบข้อมูลเรียบร้อย",
-                        showConfirmButton: false,
-                        timer: 1000,
-                      });
-                    } else {
-                      MySwal.fire({
-                        icon: "warning",
-                        title: "ไม่สามารถลบข้อมูลได้กรุณาตรวจสอบ",
-                        showConfirmButton: false,
-                      });
-                    }
+                    dispatch(deleteEquipmentCart(row.id));
+                    MySwal.fire({
+                      icon: "success",
+                      title: "ลบข้อมูลเรียบร้อย",
+                      showConfirmButton: false,
+                      timer: 1000,
+                    });
                   }
                 });
               }}
@@ -310,8 +286,6 @@ export default function EquipmentEdit() {
   ];
 
   const initialEquipmentValues: any = {
-    id: "",
-    equipment_no: "",
     equipment_depart: {
       label: "--เลือกหน่วยงานที่บันทึก--",
       value: 0,
@@ -326,34 +300,6 @@ export default function EquipmentEdit() {
     equipment_company: "empty", // ซื้อจากบริษัท *
     equipment_note: "", // รายละเอียด *
     equipment_file: "-", // ไฟล์อัปโหลด *
-  };
-
-  const initialEquipmentEditValues = (values) => {
-    // ตั้งค่าข้อมูลพื้นฐาน ฟอร์ม
-    let initailObj = initialEquipmentValues;
-    if (values) {
-      // มีการแก้ไข้ข้อมูล
-      values.map((res) => {
-        initailObj["id"] = res.equipment_id;
-        initailObj["equipment_no"] = res.equipment_no;
-        initailObj["equipment_depart"] = {
-          label: res.dept_name,
-          value: res.equipment_depart,
-        };
-        initailObj["equipment_no_txt"] = res.equipment_no_txt;
-        initailObj["equipment_type"] = res.equipment_type;
-        initailObj["equipment_title"] = res.equipment_title;
-        initailObj["equipment_member"] = res.equipment_member;
-        initailObj["equipment_member_get"] = res.equipment_member_get;
-        initailObj["equipment_date"] = res.equipment_date;
-        initailObj["equipment_date_get"] = res.equipment_date_get;
-        initailObj["equipment_company"] = res.equipment_company;
-        initailObj["equipment_note"] = res.equipment_note;
-        initailObj["equipment_file"] = res.equipment_file;
-        return initailObj;
-      });
-    }
-    return initailObj;
   };
 
   const CustomizedSelectForFormik = ({ children, form, field, label }: any) => {
@@ -400,6 +346,20 @@ export default function EquipmentEdit() {
     }
   }
 
+  const reverseArrayInPlace = (productObj) => {
+    return productObj.map((item) => {
+      return {
+        equipment_detail_title: `${item.equipment_detail_title}`,
+        equipment_detail_category: `${item.equipment_detail_category}`,
+        equipment_detail_material_type: `${item.equipment_detail_material_type}`,
+        equipment_detail_qty: `${item.equipment_detail_qty}`,
+        equipment_detail_price: `${item.equipment_detail_price}`,
+        equipment_detail_price_total: `${item.equipment_detail_price_total}`,
+        equipment_detail_note: `${item.equipment_detail_note}`,
+      };
+    });
+  };
+
   const showFormCreate = ({
     handleSubmit,
     handleChange,
@@ -431,8 +391,8 @@ export default function EquipmentEdit() {
             >
               <Autocomplete
                 noOptionsText={"ไม่มีข้อมูล"}
-                disableListWrap
-                disableClearable={true}
+                // disableListWrap
+                // disableClearable={true}
                 size="small"
                 options={optionNewDeparts()}
                 isOptionEqualToValue={(option: any, value: any) =>
@@ -440,26 +400,17 @@ export default function EquipmentEdit() {
                 }
                 getOptionLabel={(option) => `${option.label}`}
                 onChange={(e, value, reason) => {
-                  if (reason === "clear") {
-                    // setFieldValue("equipment_depart", [
-                    //   {
-                    //     label: "เลือกหน่วยงานที่บันทึก",
-                    //     value: 0,
-                    //   },
-                    // ]);
-                  } else {
-                    setFieldValue(
-                      "equipment_depart",
-                      value !== null
-                        ? value
-                        : initialEquipmentValues.equipment_depart
-                    );
-                  }
+                  setFieldValue(
+                    "equipment_depart",
+                    value !== null
+                      ? value
+                      : initialEquipmentValues.equipment_depart
+                  );
                 }}
-                defaultValue={{
-                  label: "--เลือกหน่วยงานที่บันทึก--",
-                  value: 0,
-                }}
+                // defaultValue={{
+                //   label: "--เลือกหน่วยงานที่บันทึก--",
+                //   value: 0,
+                // }}
                 value={values.equipment_depart}
                 renderInput={(params) => (
                   <Field
@@ -819,11 +770,10 @@ export default function EquipmentEdit() {
     dispatch(companyAll());
     dispatch(categoryAll());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    let id = query.get("id") || "";
-    dispatch(equipmentSearchById({ search: id }));
-    dispatch(equipmentDetailAll({ search: id }));
-  }, [dispatch, query]);
-  useEffect(() => {}, [equipmentDetailReducer.isResult]);
+  }, [dispatch]);
+
+  // useEffect(() => {
+  // }, [equipmentCartReducer.isResultEdit]);
 
   return (
     <Box>
@@ -847,9 +797,7 @@ export default function EquipmentEdit() {
         </Typography>
 
         <Typography color="text.primary" variant="subtitle2">
-          {equipmentReducer.isResult
-            ? equipmentReducer.isResult.map((data) => data.equipment_no)
-            : ""}
+          เพิ่มรายการอุปกรณ์
         </Typography>
       </Breadcrumbs>
 
@@ -894,7 +842,6 @@ export default function EquipmentEdit() {
             </Grid>
           </Toolbar>
         </AppBar>
-
         <Formik
           innerRef={formRef}
           validate={(values) => {
@@ -922,25 +869,18 @@ export default function EquipmentEdit() {
               errors.equipment_company = "เลือกซื้ิอจากบริษัท";
             return errors;
           }}
-          // initialValues={initialEquipmentValues}
-          enableReinitialize
-          initialValues={
-            equipmentReducer.isResult
-              ? initialEquipmentEditValues(equipmentReducer.isResult)
-              : initialEquipmentValues
-          }
+          initialValues={initialEquipmentValues}
           onSubmit={(values, { setSubmitting }) => {
             let formData = new FormData();
-            if (equipmentDetailReducer.isResult.length !== 0) {
-              // const newArrayProduct = reverseArrayInPlace(
-              //   equipmentCartReducer.isResult
-              // );
+            if (equipmentCartReducer.isResult.length !== 0) {
+              const newArrayProduct = reverseArrayInPlace(
+                equipmentCartReducer.isResult
+              );
               formData.append("equipment_no_txt", values.equipment_no_txt);
-              formData.append("equipment_no", values.equipment_no);
-              // formData.append(
-              //   "equipment_detail",
-              //   JSON.stringify(newArrayProduct)
-              // );
+              formData.append(
+                "equipment_detail",
+                JSON.stringify(newArrayProduct)
+              );
               formData.append(
                 "equipment_depart",
                 values.equipment_depart.value
@@ -961,22 +901,13 @@ export default function EquipmentEdit() {
               );
 
               formData.append("equipment_company", values.equipment_company);
-              // formData.append("equipment_file", values.file);
-              if (values.file) {
-                formData.append("equipment_file", values.file);
-              } else {
-                formData.append("equipment_file", values.equipment_file);
-              }
-
+              formData.append("equipment_file", values.file);
               formData.append("equipment_type", values.equipment_type);
               formData.append("equipment_note", values.equipment_note);
 
-              let id = query.get("id") || "";
-              // ปรับปรุงข้อมูล
-              dispatch(equipmentUpdateById({ formData: formData, id: id }));
-              // โหลดข้อมูลใหม่
-              dispatch(equipmentSearchById({ search: id }));
-              // รีเซตค่า
+              dispatch(
+                equipmentAdd({ formData: formData, navigate: navigate })
+              );
               dispatch(resetEquipmentCart());
               resetForm();
             } else {
@@ -1040,9 +971,8 @@ export default function EquipmentEdit() {
             </Grid>
           </Toolbar>
         </AppBar>
-
-        {/* {JSON.stringify(equipmentDetailReducer.isResult)} */}
-        <BoxDataGrid key={`dataList-EquipmentDetail`}>
+        {/* บันทึกข้อมูลรายการอุปกรณ์ โดยใช้ action  */}
+        <BoxDataGrid>
           <DataGrid
             rowHeight={28}
             headerHeight={28}
@@ -1055,11 +985,9 @@ export default function EquipmentEdit() {
               footer: { total },
             }}
             onStateChange={(state) => {
-              const total = equipmentDetailReducer.isResult
-                ? equipmentDetailReducer.isResult
-                    .map((item) => item.equipment_detail_price_total)
-                    .reduce((a, b) => a + b, 0)
-                : 0;
+              const total = equipmentCartReducer.isResult
+                .map((item) => item.equipment_detail_price_total)
+                .reduce((a, b) => a + b, 0);
               setTotal(total);
             }}
             sx={{
@@ -1075,9 +1003,7 @@ export default function EquipmentEdit() {
                 },
             }}
             rows={
-              equipmentDetailReducer.isResult
-                ? equipmentDetailReducer.isResult
-                : []
+              equipmentCartReducer.isResult ? equipmentCartReducer.isResult : []
             }
             // rows={[]}
             columns={dataColumns}
@@ -1085,8 +1011,11 @@ export default function EquipmentEdit() {
             hideFooterSelectedRowCount
             rowsPerPageOptions={[10]}
             disableColumnMenu={true}
-            loading={equipmentDetailReducer.isFetching}
-            getRowId={(row) => row.equipment_detail_id}
+            // loading={hosxpReducer.isFetching}
+            getRowId={(row) =>
+              // parseInt(row.kskloginname) + Math.random() * (100 - 1)
+              row.id
+            }
             localeText={{
               MuiTablePagination: {
                 labelDisplayedRows: ({ from, to, count }) =>
@@ -1103,9 +1032,7 @@ export default function EquipmentEdit() {
             variant="contained"
             color="error"
             className="w-[128px] "
-            onClick={() => {
-              navigate(-1);
-            }}
+            onClick={() => resetForm()}
           >
             <RestartAltTwoToneIcon />
             ยกเลิก
@@ -1123,15 +1050,8 @@ export default function EquipmentEdit() {
           </Button>
         </Grid>
       </Grid>
-
-      {/* {showDialog()} */}
-
       {/* {showDialogCreate()} */}
-      <EquipmentCartForm
-        show={openDialogCreate}
-        confirm={onConfirm}
-        equipment_id={query.get("id")}
-      />
+      <EquipmentCartForm show={openDialogCreate} confirm={onConfirm} />
     </Box>
   );
 }
