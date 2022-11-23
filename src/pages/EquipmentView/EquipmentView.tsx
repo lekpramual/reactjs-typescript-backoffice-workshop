@@ -87,8 +87,8 @@ export default function EquipmentView() {
                 // display: { xs: "none", md: "block" },
               }}
             >
-              {equipmentReducer.isResult
-                ? equipmentReducer.isResult.map((data) => data.equipment_no)
+              {equipmentReducer.isResultEdit
+                ? equipmentReducer.isResultEdit.map((data) => data.equipment_no)
                 : ""}
             </Typography>
           </Breadcrumbs>
@@ -121,7 +121,7 @@ export default function EquipmentView() {
         <EquipmentToPrint
           ref={componentRef}
           dataEquipment={
-            equipmentReducer.isResult ? equipmentReducer.isResult : []
+            equipmentReducer.isResultEdit ? equipmentReducer.isResultEdit : []
           }
           dataEquipmentDetail={
             equipmentDetailReducer.isResult

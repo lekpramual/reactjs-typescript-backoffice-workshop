@@ -211,24 +211,6 @@ export function usePrivateRouteDemo() {
         },
 
         {
-          id: "ตรวจรับอุปกรณ์",
-          icon: (
-            <Box
-              sx={{
-                ...iconCategory,
-              }}
-            >
-              <NoteAltTwoToneIcon
-                sx={{
-                  fontSize: 28,
-                }}
-              />
-            </Box>
-          ),
-          path: "/app3/equipmentin",
-          show: true,
-        },
-        {
           id: "รายการอุปกรณ์",
           icon: (
             <Box
@@ -318,6 +300,7 @@ export function usePrivateRouteDemo() {
           path: "/app3/equipment/edit",
           show: false,
         },
+
         {
           id: "ดูรายการอุปกรณ์",
           icon: (
@@ -355,6 +338,48 @@ export function usePrivateRouteDemo() {
         //   path: "/app3/move",
         //   show: true,
         // },
+      ],
+    },
+    {
+      id: "ตรวจรับ",
+      children: [
+        {
+          id: "ตรวจรับอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <NoteAltTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/approved",
+          show: true,
+        },
+
+        {
+          id: "ตรวจรับรายการอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <NoteAltTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/approved/edit",
+          show: false,
+        },
       ],
     },
   ];

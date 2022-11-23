@@ -14,17 +14,12 @@ import {
 } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 
-// @day
-import moment from "moment";
 // @type
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
 // @icons
-import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
-import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
-import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
 import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTone";
 
 import AppBar from "@mui/material/AppBar";
@@ -32,12 +27,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-
-import Tooltip from "@mui/material/Tooltip";
 
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import CheckBoxTwoToneIcon from "@mui/icons-material/CheckBoxTwoTone";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -55,7 +47,7 @@ import withReactContent from "sweetalert2-react-content";
 import thLocale from "date-fns/locale/th";
 import { BoxDataGrid } from "@/styles/AppStyle";
 import { NumberWithCommas, CustomNoRowsOverlay } from "@/utils";
-import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 // @redux
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -65,24 +57,16 @@ import {
 
 import { companySelector, companyAll } from "@/store/slices/companySlice";
 import { categoryAll } from "@/store/slices/categorySlice";
-import {
-  addEquipmentCartEdit,
-  resetEquipmentCartEdit,
-  resetEquipmentCart,
-} from "@/store/slices/equipmentCartSlice";
 
-// @component cart
-import EquipmentCartForm from "./EquipmentCartForm";
 import {
+  equipmentApproved,
   equipmentSelector,
   equipmentSearchById,
-  equipmentUpdateById,
 } from "@/store/slices/equipmentSlice";
 
 import {
   equipmentDetailSelector,
   equipmentDetailAll,
-  equipmentDetailDeleteById,
 } from "@/store/slices/equipmentDetailSlice";
 
 const MySwal = withReactContent(Swal);
@@ -135,15 +119,12 @@ interface FilmOptionType {
 
 const filter = createFilterOptions<FilmOptionType>();
 
-export default function EquipmentEdit() {
+export default function ApprovedEdit() {
   const formRef = useRef<any>();
   const navigate = useNavigate();
   const query = useQuery();
   const dispatch = useDispatch<any>();
   const [total, setTotal] = React.useState(0);
-
-  const [openDialogCreate, setOpenDialogCreate] =
-    React.useState<boolean>(false);
 
   const departmentReducer = useSelector(departmentSelector);
   const companyReducer = useSelector(companySelector);
@@ -232,90 +213,6 @@ export default function EquipmentEdit() {
         </Typography>
       ),
     },
-    {
-      headerName: "จัดการ",
-      field: ".",
-      flex: 1,
-      minWidth: 96,
-      sortable: false,
-      align: "center" as "center",
-      headerAlign: "center" as "center",
-      headerClassName:
-        "text-center bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      renderCell: ({ row }: GridRenderCellParams<string>) => (
-        <Stack direction="row" className="text-center">
-          <Tooltip title="แก้ไขข้อมูล">
-            <Button
-              sx={{
-                minWidth: "30px",
-              }}
-              type="submit"
-              color="success"
-              variant="contained"
-              className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
-              size="small"
-              onClick={() => {
-                dispatch(addEquipmentCartEdit(row));
-                setOpenDialogCreate(true);
-              }}
-            >
-              <EditTwoToneIcon fontSize="inherit" />
-            </Button>
-          </Tooltip>
-
-          <Tooltip title="ยกเลิกข้อมูล">
-            <Button
-              sx={{
-                minWidth: "30px",
-              }}
-              type="submit"
-              color="error"
-              variant="contained"
-              className="hover:text-[#fce805] w-[30px] h-[26px]"
-              size="small"
-              onClick={() => {
-                //setEquipmentCart(row);
-                //console.log(row);
-                Swal.fire({
-                  title: "คุณต้องการลบ ใช่ หรือ ไม่?",
-                  text: `คุณไม่สามารถกู้คืนรายการ ${row.equipment_detail_title} ที่ถูกลบได้.! `,
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "ใช่, ต้องการลบ!",
-                  cancelButtonText: "ไม่, ยกเลิก!",
-                  reverseButtons: true,
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    if (equipmentDetailReducer.isResult.length > 1) {
-                      dispatch(equipmentDetailDeleteById({ search: row.id }));
-                      dispatch(
-                        equipmentDetailAll({ search: `${query.get("id")}` })
-                      );
-                      MySwal.fire({
-                        icon: "success",
-                        title: "ลบข้อมูลเรียบร้อย",
-                        showConfirmButton: false,
-                        timer: 1000,
-                      });
-                    } else {
-                      MySwal.fire({
-                        icon: "warning",
-                        title: "ไม่สามารถลบข้อมูลได้กรุณาตรวจสอบ",
-                        showConfirmButton: false,
-                      });
-                    }
-                  }
-                });
-              }}
-            >
-              <DeleteTwoToneIcon fontSize="inherit" />
-            </Button>
-          </Tooltip>
-        </Stack>
-      ),
-    },
   ];
 
   const initialEquipmentValues: any = {
@@ -381,20 +278,6 @@ export default function EquipmentEdit() {
         {children}
       </Select>
     );
-  };
-
-  const handleSubmit = () => {
-    if (formRef.current) {
-      formRef.current.handleSubmit();
-    }
-  };
-
-  const resetForm = () => {
-    if (formRef.current) {
-      formRef.current.resetForm();
-      // window.location.reload();
-      // formik.resetForm(initialEquipmentValues);
-    }
   };
 
   function optionNewDeparts() {
@@ -497,6 +380,7 @@ export default function EquipmentEdit() {
                 renderOption={(props, option) => (
                   <li {...props}>{option.label}</li>
                 )}
+                disabled
                 renderInput={(params) => (
                   <Field
                     required
@@ -526,6 +410,7 @@ export default function EquipmentEdit() {
             >
               <InputLabel htmlFor="equipment_no_txt">เลขที่บันทึก</InputLabel>
               <Field
+                disabled
                 as={OutlinedInput}
                 id="equipment_no_txt"
                 name="equipment_no_txt"
@@ -540,6 +425,7 @@ export default function EquipmentEdit() {
           </Grid>
           <Grid item lg={6} md={6} xs={6}>
             <FormControl
+              disabled
               fullWidth
               size="small"
               required
@@ -547,6 +433,7 @@ export default function EquipmentEdit() {
             >
               <InputLabel id="equipment_type">ประเภทการซื้อ</InputLabel>
               <Field
+                disabled
                 name="equipment_type"
                 id="equipment_type"
                 label="ประเภทการซื้อ"
@@ -576,6 +463,7 @@ export default function EquipmentEdit() {
             >
               <InputLabel htmlFor="equipment_title">เรื่องที่บันทึก</InputLabel>
               <Field
+                disabled
                 as={OutlinedInput}
                 id="equipment_title"
                 name="equipment_title"
@@ -599,6 +487,7 @@ export default function EquipmentEdit() {
             >
               <InputLabel id="equipment_member">ผู้บันทึกข้อความ</InputLabel>
               <Field
+                disabled
                 as={OutlinedInput}
                 id="equipment_member"
                 name="equipment_member"
@@ -613,6 +502,7 @@ export default function EquipmentEdit() {
           </Grid>
           <Grid item lg={6} md={6} xs={6}>
             <FormControl
+              disabled
               fullWidth
               size="small"
               required
@@ -624,6 +514,7 @@ export default function EquipmentEdit() {
             >
               <InputLabel id="equipment_member_get">ผู้รับสินค้า</InputLabel>
               <Field
+                disabled
                 as={OutlinedInput}
                 id="equipment_member_get"
                 name="equipment_member_get"
@@ -644,6 +535,7 @@ export default function EquipmentEdit() {
                 adapterLocale={localeMap["th"]}
               >
                 <DatePicker
+                  disabled
                   label="วันที่บันทึกข้อความ"
                   inputFormat="dd/MM/yyyy"
                   value={values.equipment_date}
@@ -669,6 +561,7 @@ export default function EquipmentEdit() {
                 adapterLocale={localeMap["th"]}
               >
                 <DatePicker
+                  disabled
                   label="วันที่รับสินค้า"
                   inputFormat="dd/MM/yyyy"
                   value={values.equipment_date_get}
@@ -689,6 +582,7 @@ export default function EquipmentEdit() {
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
             <FormControl
+              disabled
               fullWidth
               size="small"
               required
@@ -725,6 +619,7 @@ export default function EquipmentEdit() {
             <FormControl fullWidth size="small">
               <InputLabel htmlFor="equipment_note">รายละเอียด</InputLabel>
               <Field
+                disabled
                 as={OutlinedInput}
                 id="equipment_note"
                 name="equipment_note"
@@ -739,7 +634,12 @@ export default function EquipmentEdit() {
           </Grid>
           <Grid item lg={12} md={12} xs={12} sx={{ mb: 1 }}>
             <Box sx={{ flexDirection: "row" }}>
-              <Button variant="contained" component="label" size="small">
+              <Button
+                variant="contained"
+                component="label"
+                size="small"
+                disabled
+              >
                 <AttachFileTwoToneIcon /> แนบไฟล์
                 <Input
                   hidden
@@ -844,11 +744,6 @@ export default function EquipmentEdit() {
     }
   };
 
-  const onConfirm = (msg) => {
-    setOpenDialogCreate(msg);
-    dispatch(resetEquipmentCartEdit());
-  };
-
   useEffect(() => {
     dispatch(departmentAll());
     dispatch(companyAll());
@@ -876,9 +771,9 @@ export default function EquipmentEdit() {
           color="text.primary"
           variant="subtitle2"
           component={Link}
-          to="/app3/equipment"
+          to="/app3/approved"
         >
-          รายการอุปกรณ์
+          ตรวจรับอุปกรณ์
         </Typography>
 
         <Typography color="text.primary" variant="subtitle2">
@@ -972,64 +867,6 @@ export default function EquipmentEdit() {
               : initialEquipmentValues
           }
           onSubmit={(values, { setSubmitting }) => {
-            let formData = new FormData();
-            if (equipmentDetailReducer.isResult.length !== 0) {
-              // const newArrayProduct = reverseArrayInPlace(
-              //   equipmentCartReducer.isResult
-              // );
-              formData.append("equipment_no_txt", values.equipment_no_txt);
-              formData.append("equipment_no", values.equipment_no);
-              // formData.append(
-              //   "equipment_detail",
-              //   JSON.stringify(newArrayProduct)
-              // );
-              formData.append(
-                "equipment_depart",
-                values.equipment_depart.value
-              );
-              formData.append("equipment_title", values.equipment_title);
-              formData.append("equipment_member", values.equipment_member);
-              formData.append(
-                "equipment_member_get",
-                values.equipment_member_get
-              );
-              formData.append(
-                "equipment_date",
-                moment(values.equipment_date).format("YYYY-MM-DD")
-              );
-              formData.append(
-                "equipment_date_get",
-                moment(values.equipment_date_get).format("YYYY-MM-DD")
-              );
-
-              formData.append("equipment_company", values.equipment_company);
-              // formData.append("equipment_file", values.file);
-              if (values.file) {
-                formData.append("equipment_file", values.file);
-              } else {
-                formData.append("equipment_file", values.equipment_file);
-              }
-
-              formData.append("equipment_type", values.equipment_type);
-              formData.append("equipment_note", values.equipment_note);
-
-              let id = query.get("id") || "";
-              // ปรับปรุงข้อมูล
-              dispatch(equipmentUpdateById({ formData: formData, id: id }));
-              // โหลดข้อมูลใหม่
-              dispatch(equipmentSearchById({ search: id }));
-              // รีเซตค่า
-              dispatch(resetEquipmentCart());
-              resetForm();
-            } else {
-              let message = "กรุณาทำการเพิ่มรายการอุปกรณ์";
-              MySwal.fire({
-                icon: "warning",
-                title: message,
-                showConfirmButton: false,
-              });
-            }
-
             setSubmitting(false);
           }}
         >
@@ -1056,34 +893,18 @@ export default function EquipmentEdit() {
                 <Typography
                   variant="subtitle2"
                   component="div"
-                  sx={{
-                    display: "flex",
-                    alignContent: "center",
-                  }}
+                  // sx={{
+                  //   display: "flex",
+                  //   alignContent: "center",
+                  // }}
                 >
                   <AppRegistrationTwoToneIcon /> รายการอุปกรณ์
                 </Typography>
-              </Grid>
-              <Grid item>
-                <Button
-                  size="small"
-                  variant="contained"
-                  sx={{ mr: 1, mb: 1 }}
-                  color="success"
-                  className="w-[96px]"
-                  onClick={() => {
-                    setOpenDialogCreate(true);
-                  }}
-                >
-                  <AddTwoToneIcon />
-                  เพิ่ม
-                </Button>
               </Grid>
             </Grid>
           </Toolbar>
         </AppBar>
 
-        {/* {JSON.stringify(equipmentDetailReducer.isResult)} */}
         <BoxDataGrid key={`dataList-EquipmentDetail`}>
           <DataGrid
             rowHeight={28}
@@ -1139,41 +960,102 @@ export default function EquipmentEdit() {
         </BoxDataGrid>
       </Paper>
 
-      <Grid container spacing={2} alignItems="center" className="mt-1">
-        <Grid xs={6} className="text-right" item>
-          <Button
-            variant="contained"
-            color="error"
-            className="w-[128px] "
-            onClick={() => {
-              navigate(-1);
-            }}
-          >
-            <RestartAltTwoToneIcon />
-            ยกเลิก
-          </Button>
-        </Grid>
-        <Grid xs={6} item>
-          <Button
-            variant="contained"
-            color="success"
-            className="w-[128px] "
-            onClick={() => handleSubmit()}
-          >
-            <SaveTwoToneIcon />
-            บันทึก
-          </Button>
+      <Grid container spacing={2} alignItems="center" className="mt-2">
+        <Grid xs={12} className="text-center">
+          {equipmentReducer.isResultEdit ? (
+            equipmentReducer.isResultEdit.map((data) => {
+              if (data.equipment_status === "รับเข้า") {
+                return (
+                  <span>
+                    <Button
+                      sx={{
+                        minWidth: "30px",
+                      }}
+                      variant="contained"
+                      className="w-[256px] bg-green-500 hover:bg-green-600"
+                      disabled
+                    >
+                      <CheckBoxTwoToneIcon /> ตรวจรับรายการอุปกรณ์เรียบร้อย
+                    </Button>
+                  </span>
+                );
+              } else {
+                return (
+                  <Button
+                    variant="contained"
+                    className="w-[256px] bg-green-500 hover:bg-green-600"
+                    onClick={() => {
+                      const equipment_no: any = data.equipment_no
+                        ? data.equipment_no
+                        : null;
+                      const equipment_id: any = data.equipment_id
+                        ? data.equipment_id
+                        : null;
+                      const equipment_depart: any = data.equipment_depart
+                        ? data.equipment_depart
+                        : null;
+                      Swal.fire({
+                        title: "ตรวจรับอุปกรณ์ ใช่ หรือ ไม่?",
+                        text: `คุณต้องการยืนยันตรวจรับอุปกรณ์ : ${equipment_no}`,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "ใช่, ต้องการ!",
+                        cancelButtonText: "ไม่, ยกเลิก!",
+                        reverseButtons: true,
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          if (
+                            equipment_id === null &&
+                            equipment_depart === null
+                          ) {
+                            MySwal.fire({
+                              icon: "warning",
+                              title: "ไม่สามารถตรวจรับอุปกรณ์ได้กรุณาตรวจสอบ",
+                              showConfirmButton: false,
+                            });
+                          } else {
+                            let formData = new FormData();
+                            const newArrayProduct =
+                              equipmentDetailReducer.isResult
+                                ? equipmentDetailReducer.isResult
+                                : [];
+                            formData.append(
+                              "equipment_detail",
+                              JSON.stringify(newArrayProduct)
+                            );
+                            formData.append(
+                              "equipment_depart",
+                              equipment_depart
+                            );
+                            formData.append("equipment_id", equipment_id);
+                            dispatch(
+                              equipmentApproved({
+                                formData: formData,
+                                navigate: navigate,
+                              })
+                            );
+
+                            dispatch(
+                              equipmentSearchById({ search: equipment_id })
+                            );
+                            // dispatch(equipmentDetailAll({ search: equipment_id }));
+                          }
+                        }
+                      });
+                    }}
+                  >
+                    <CheckBoxTwoToneIcon /> ตรวจรับรายการอุปกรณ์
+                  </Button>
+                );
+              }
+            })
+          ) : (
+            <></>
+          )}
         </Grid>
       </Grid>
-
-      {/* {showDialog()} */}
-
-      {/* {showDialogCreate()} */}
-      <EquipmentCartForm
-        show={openDialogCreate}
-        confirm={onConfirm}
-        equipment_id={query.get("id")}
-      />
     </Box>
   );
 }

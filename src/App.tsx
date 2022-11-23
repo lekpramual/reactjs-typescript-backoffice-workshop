@@ -20,6 +20,8 @@ import SignInSide from "@/pages/SignInSide";
 import EquipmentCreate from "@/pages/EquipmentCreate";
 import EquipmentEdit from "@/pages/EquipmentEdit";
 import EquipmentView from "@/pages/EquipmentView";
+import Approved from "@/pages/Approved";
+import ApprovedEdit from "@/pages/ApprovedEdit";
 // @theme
 import theme from "@/styles/MuiTheme";
 import Product from "./pages/Product";
@@ -82,6 +84,10 @@ export default function App() {
             />
             <Route path="/app3/equipment/edit" element={<EquipmentEdit />} />
             <Route path="/app3/equipment/view" element={<EquipmentView />} />
+
+            <Route path="/app3/approved" element={<Approved />} />
+            <Route path="/app3/approved/edit" element={<ApprovedEdit />} />
+            <Route path="/app3/approved/view" element={<EquipmentView />} />
 
             <Route path="/app3/product" element={<Product />} />
             <Route path="/app3/product/view" element={<ProductView />} />

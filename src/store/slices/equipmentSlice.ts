@@ -15,11 +15,12 @@ import axios from "axios";
 
 const MySwal = withReactContent(Swal);
 
-const initialValues: reducerState = {
+const initialValues: any = {
   isFetching: false,
   isSuccess: false,
   isError: false,
   isResult: [],
+  isResultEdit: [],
   errorMessage: "",
 };
 
@@ -67,6 +68,77 @@ export const equipmentAdd = createAsyncThunk(
             setTimeout(() => {
               MySwal.hideLoading();
               let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
+              MySwal.fire({
+                icon: "warning",
+                title: message,
+                showConfirmButton: false,
+              });
+              return thunkAPI.rejectWithValue(data.message);
+            }, 1000);
+          }
+        },
+      });
+      // if (data.result === OK) {
+      //   // console.log(data.data);
+      //   // navigate("/phone");
+      //   await wait(1 * 1000);
+      //   return data.data;
+      // } else {
+      //   // console.log("Error Else :", data);
+      //   return thunkAPI.rejectWithValue({
+      //     message: "Failed to fetch phone.",
+      //   });
+      // }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
+// ตรวจรับอุปกรณ์
+export const equipmentApproved = createAsyncThunk(
+  "equipment/approved",
+  async (
+    { formData, navigate }: { formData: any; navigate: any },
+    thunkAPI
+  ) => {
+    try {
+      const { data: res } = await axios.post(
+        `${server.BACKOFFICE_URL_V1}/equipment_approved`,
+        formData,
+        header_get
+      );
+
+      let data = res;
+
+      MySwal.fire({
+        title: "<p>กำลังประมวลผล ...</p>",
+        didOpen: () => {
+          MySwal.showLoading();
+          if (data.result === OK) {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              const message = "ตรวจรับอุปกรณ์ สำเร็จ";
+              MySwal.fire({
+                icon: "success",
+                title: message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              return data.data;
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              let message = "ไม่สามารถตรวจรับอุปกรณ์ได้กรุณาตรวจสอบ";
               MySwal.fire({
                 icon: "warning",
                 title: message,
@@ -190,18 +262,16 @@ export const equipmentSearch = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      let no = search.no;
-      let title = search.title;
-      let depart = search.depart["state"];
+      let no = search.no || null;
+      let title = search.title || null;
+      let depart =
+        search.depart !== null && search.depart["value"] !== 0
+          ? search.depart["value"]
+          : null;
 
-      const { data: res } = await axios.get(
-        `${server.BACKOFFICE_URL_V1}/equipments?q=""${
-          no !== "" && `&no=${no}`
-        }${title !== "" && `&title=${title}`}${
-          depart !== "" && `&depart=${depart}`
-        }`,
-        header_get
-      );
+      const urlSearch = `${server.BACKOFFICE_URL_V1}/equipments?no=${no}&title=${title}&depart=${depart}`;
+
+      const { data: res } = await axios.get(urlSearch, header_get);
 
       let data = res;
 
@@ -372,6 +442,21 @@ const equipmentSlice = createSlice({
       state.isFetching = true;
     });
 
+    builder.addCase(equipmentApproved.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      state.isResult = action.payload;
+      return state;
+    });
+    builder.addCase(equipmentApproved.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(equipmentApproved.pending, (state, _action) => {
+      state.isFetching = true;
+    });
+
     builder.addCase(equipmentUpdateById.fulfilled, (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
@@ -419,13 +504,13 @@ const equipmentSlice = createSlice({
     builder.addCase(equipmentSearchById.fulfilled, (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
-      state.isResult = action.payload;
+      state.isResultEdit = action.payload;
       return state;
     });
     builder.addCase(equipmentSearchById.rejected, (state, action) => {
       state.isFetching = false;
       state.isError = true;
-      state.isResult = [];
+      state.isResultEdit = [];
       state.errorMessage = action.payload as string;
     });
     builder.addCase(equipmentSearchById.pending, (state, action) => {
