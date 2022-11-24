@@ -12,6 +12,7 @@ import DirectionsCarTwoToneIcon from "@mui/icons-material/DirectionsCarTwoTone";
 import NoteAltTwoToneIcon from "@mui/icons-material/NoteAltTwoTone";
 import NoteAddTwoToneIcon from "@mui/icons-material/NoteAddTwoTone";
 // import MoveDownTwoToneIcon from "@mui/icons-material/MoveDownTwoTone";
+import ContentPasteGoTwoToneIcon from "@mui/icons-material/ContentPasteGoTwoTone";
 import InventoryTwoToneIcon from "@mui/icons-material/InventoryTwoTone";
 
 export function usePrivateRouteDemo() {
@@ -189,7 +190,7 @@ export function usePrivateRouteDemo() {
       ],
     },
     {
-      id: "อุปกรณ์",
+      id: "ใบเบิก",
       children: [
         {
           id: "บันทึกรับอุปกรณ์",
@@ -208,61 +209,6 @@ export function usePrivateRouteDemo() {
           ),
           path: "/app3/equipment",
           show: true,
-        },
-
-        {
-          id: "รายการอุปกรณ์",
-          icon: (
-            <Box
-              sx={{
-                ...iconCategory,
-              }}
-            >
-              <InventoryTwoToneIcon
-                sx={{
-                  fontSize: 28,
-                }}
-              />
-            </Box>
-          ),
-          path: "/app3/product",
-          show: true,
-        },
-        {
-          id: "ดูรายการอุปกรณ์",
-          icon: (
-            <Box
-              sx={{
-                ...iconCategory,
-              }}
-            >
-              <InventoryTwoToneIcon
-                sx={{
-                  fontSize: 28,
-                }}
-              />
-            </Box>
-          ),
-          path: "/app3/product/view",
-          show: false,
-        },
-        {
-          id: "แก้ไขรายการอุปกรณ์",
-          icon: (
-            <Box
-              sx={{
-                ...iconCategory,
-              }}
-            >
-              <InventoryTwoToneIcon
-                sx={{
-                  fontSize: 28,
-                }}
-              />
-            </Box>
-          ),
-          path: "/app3/product/edit",
-          show: false,
         },
         {
           id: "เพิ่มอุปกรณ์",
@@ -298,25 +244,6 @@ export function usePrivateRouteDemo() {
             </Box>
           ),
           path: "/app3/equipment/edit",
-          show: false,
-        },
-
-        {
-          id: "ดูรายการอุปกรณ์",
-          icon: (
-            <Box
-              sx={{
-                ...iconCategory,
-              }}
-            >
-              <NoteAltTwoToneIcon
-                sx={{
-                  fontSize: 28,
-                }}
-              />
-            </Box>
-          ),
-          path: "/app3/equipment/view",
           show: false,
         },
 
@@ -380,6 +307,125 @@ export function usePrivateRouteDemo() {
           path: "/app3/approved/edit",
           show: false,
         },
+      ],
+    },
+    {
+      id: "โอน-ย้าย",
+      children: [
+        {
+          id: "โอนย้ายอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <ContentPasteGoTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/transfer",
+          show: true,
+        },
+      ],
+    },
+    {
+      id: "อุปกรณ์",
+      children: [
+        {
+          id: "รายการอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <InventoryTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/product",
+          show: true,
+        },
+        {
+          id: "ดูรายการอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <InventoryTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/product/view",
+          show: false,
+        },
+        {
+          id: "แก้ไขรายการอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <InventoryTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/product/edit",
+          show: false,
+        },
+        {
+          id: "ดูรายการอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <NoteAltTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/equipment/view",
+          show: false,
+        },
+
+        // {
+        //   id: "โอนย้ายอุปกรณ์",
+        //   icon: (
+        //     <Box
+        //       sx={{
+        //         ...iconCategory,
+        //       }}
+        //     >
+        //       <MoveDownTwoToneIcon
+        //         sx={{
+        //           fontSize: 28,
+        //         }}
+        //       />
+        //     </Box>
+        //   ),
+        //   path: "/app3/move",
+        //   show: true,
+        // },
       ],
     },
   ];

@@ -904,7 +904,7 @@ export default function ApprovedEdit() {
             </Grid>
           </Toolbar>
         </AppBar>
-
+        {JSON.stringify(equipmentDetailReducer.isResult)}
         <BoxDataGrid key={`dataList-EquipmentDetail`}>
           <DataGrid
             rowHeight={28}

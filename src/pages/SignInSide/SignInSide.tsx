@@ -49,7 +49,7 @@ const SignInSide: React.FC<any> = () => {
           />
         </FormControl>
 
-        <FormControl required fullWidth>
+        <FormControl required fullWidth sx={{ mt: 6 }}>
           <Field
             required
             size="small"
