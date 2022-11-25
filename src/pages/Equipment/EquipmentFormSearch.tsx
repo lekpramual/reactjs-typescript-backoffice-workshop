@@ -94,7 +94,7 @@ export default function EquipmentFormSearch() {
                 }
                 label="เลขที่บันทึก"
                 size="small"
-                placeholder="รอ. 0032.102/93"
+                placeholder="ตัวอย่าง รอ. 0032.102/93"
               />
             </FormControl>
           </Grid>
@@ -112,7 +112,7 @@ export default function EquipmentFormSearch() {
                 }
                 label="เรื่องที่บันทึก"
                 size="small"
-                placeholder="สำหรับสำนักงาน จอขนาด 21.5 นิ้ว"
+                placeholder="ตัวอย่าง สำหรับสำนักงาน จอขนาด 21.5 นิ้ว"
               />
             </FormControl>
           </Grid>

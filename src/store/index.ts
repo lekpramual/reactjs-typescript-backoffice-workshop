@@ -12,6 +12,7 @@ import departmentReducer from "@/store/slices/departmentSlice";
 import categoryReducer from "@/store/slices/categorySlice";
 import equipmentCartReducer from "@/store/slices/equipmentCartSlice";
 import equipmentDetailReducer from "@/store/slices/equipmentDetailSlice";
+import productReducer from "@/store/slices/productSlice";
 
 const reducer = {
   loginReducer,
@@ -25,6 +26,7 @@ const reducer = {
   categoryReducer,
   equipmentCartReducer,
   equipmentDetailReducer,
+  productReducer,
 };
 
 export const store = configureStore({

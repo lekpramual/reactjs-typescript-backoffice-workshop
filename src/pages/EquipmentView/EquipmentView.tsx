@@ -86,11 +86,7 @@ export default function EquipmentView() {
                 textAlign: "center",
                 // display: { xs: "none", md: "block" },
               }}
-            >
-              {equipmentReducer.isResultEdit
-                ? equipmentReducer.isResultEdit.map((data) => data.equipment_no)
-                : ""}
-            </Typography>
+            ></Typography>
           </Breadcrumbs>
         </Grid>
         <Grid xs={4} className="text-right">

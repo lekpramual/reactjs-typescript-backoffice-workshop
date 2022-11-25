@@ -44,7 +44,7 @@ export function CustomNoRowsOverlay() {
           </g>
         </g>
       </svg>
-      <Box sx={{ mt: 1 }}>ไม่มีข้อมูล</Box>
+      <Box sx={{ mt: 1, mb: 2 }}>ไม่มีข้อมูล</Box>
     </StyledGridOverlay>
   );
 }

@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@/store";
 import { encode } from "base-64";
 // @type
-import { EquipmentResult, EquipmentSearch, reducerState } from "@/types";
+import { EquipmentResult, EquipmentSearch, reducerStateNew } from "@/types";
 // @alert
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -15,12 +15,13 @@ import axios from "axios";
 
 const MySwal = withReactContent(Swal);
 
-const initialValues: any = {
+const initialValues: reducerStateNew = {
   isFetching: false,
   isSuccess: false,
   isError: false,
   isResult: [],
   isResultEdit: [],
+  isResultView: [],
   errorMessage: "",
 };
 
@@ -504,13 +505,13 @@ const equipmentSlice = createSlice({
     builder.addCase(equipmentSearchById.fulfilled, (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
-      state.isResultEdit = action.payload;
+      state.isResultView = action.payload;
       return state;
     });
     builder.addCase(equipmentSearchById.rejected, (state, action) => {
       state.isFetching = false;
       state.isError = true;
-      state.isResultEdit = [];
+      state.isResultView = [];
       state.errorMessage = action.payload as string;
     });
     builder.addCase(equipmentSearchById.pending, (state, action) => {

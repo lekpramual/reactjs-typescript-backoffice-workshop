@@ -1,21 +1,7 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// @form
-import { Formik, Form, Field } from "formik";
 // @mui
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  Breadcrumbs,
-  Button,
-} from "@mui/material";
-
-// @type
-import { PhoneSearch } from "@/types";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
+import { Box, Breadcrumbs, Button } from "@mui/material";
 
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -24,18 +10,24 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
+// @icons
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
 import NoteAltTwoToneIcon from "@mui/icons-material/NoteAltTwoTone";
-import SearchIcon from "@mui/icons-material/Search";
-import RefreshIcon from "@mui/icons-material/Refresh";
 
+// @icons
+import ToggleOffTwoToneIcon from "@mui/icons-material/ToggleOffTwoTone";
+import ToggleOnTwoToneIcon from "@mui/icons-material/ToggleOnTwoTone";
+// @redux
+import { useSelector } from "react-redux";
 // @styles
 import { BoxDataGrid } from "@/styles/AppStyle";
 // @utils
 import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+// @seletor
+import { productSelector } from "@/store/slices/productSlice";
+import ProductFormSearch from "./ProductFormSearch";
 
 export interface DialogTitleProps {
   id: string;
@@ -45,46 +37,19 @@ export interface DialogTitleProps {
 
 export default function Product() {
   const navigate = useNavigate();
-
-  // คอลัมข้อมูลการแสดง
-  const dataValue = [
-    {
-      id: 1,
-      name: "INV65090001",
-      name1: "รอ 0032.102/97",
-      depName: "C65080001",
-      numberNo: "7440-001-0001/1308",
-      dateCreated: "ศูนย์คอมพิวเตอร์/-",
-      typeName: "คอมพิวเตอร์",
-      companyName: "เครื่องคอมพิวเตอร์ สำหรับสำนักงาน จอขนาด 21.5 นิ้ว",
-      status: 1,
-      statusName: "ใช้การได้",
-    },
-    {
-      id: 2,
-      name: "INV65090001",
-      name1: "รอ 0032.102/97",
-      depName: "C65080002",
-      numberNo: "-",
-      dateCreated: "ศูนย์คอมพิวเตอร์/-",
-      typeName: "คอมพิวเตอร์",
-      companyName: "เครื่องคอมพิวเตอร์ สำหรับสำนักงาน จอขนาด 21.5 นิ้ว",
-      status: 2,
-      statusName: "ยกเลิกใช้งาน",
-    },
-  ];
+  const productReducer = useSelector(productSelector);
 
   const dataColumns = [
     {
       headerName: "เลขที่ใบรับ",
-      field: "name",
+      field: "equipment_no",
       flex: 1,
       minWidth: 128,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
-      renderCell: ({ value }: any) => (
+      renderCell: ({ value, row }: any) => (
         <Link
-          to={`/app3/equipment/view?id=${value}`}
+          to={`/app3/equipment/view?id=${row.product_equipment}`}
           className="text-cyan-500 hover:text-cyan-600"
         >
           {value}
@@ -93,14 +58,14 @@ export default function Product() {
     },
     {
       headerName: "เลขทะเบียน",
-      field: "depName",
+      field: "product_no",
       flex: 1,
       minWidth: 124,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
-      renderCell: ({ value }: any) => (
+      renderCell: ({ value, row }: any) => (
         <Link
-          to={`/app3/product/view?id=${value}`}
+          to={`/app3/product/view?id=${row.product_id}`}
           className="text-cyan-500 hover:text-cyan-600"
         >
           {value}
@@ -109,7 +74,7 @@ export default function Product() {
     },
     {
       headerName: "เลขที่บันทึก",
-      field: "name1",
+      field: "equipment_no_txt",
       flex: 1,
       minWidth: 128,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -121,21 +86,8 @@ export default function Product() {
       ),
     },
     {
-      headerName: "เลขครุภัณฑ์",
-      field: "numberNo",
-      flex: 1,
-      minWidth: 164,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
-      sortable: true,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {value}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "ประเภทพัสดุ",
-      field: "typeName",
+      headerName: "หมวดหมู่",
+      field: "category_name",
       flex: 1,
       minWidth: 128,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -148,7 +100,7 @@ export default function Product() {
     },
     {
       headerName: "รายการอุปกรณ์",
-      field: "companyName",
+      field: "product_title",
       flex: 1,
       minWidth: 364,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -161,7 +113,7 @@ export default function Product() {
     },
     {
       headerName: "หน่วยงาน",
-      field: "dateCreated",
+      field: "dept_name",
       flex: 1,
       minWidth: 256,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -174,21 +126,26 @@ export default function Product() {
     },
     {
       headerName: "สถานะ",
-      field: "statusName",
-      flex: 1,
-      minWidth: 128,
+      field: "product_status",
+      // flex: 1,
+      width: 96,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value, row }: any) => (
         <Typography
           variant="body1"
           className={
-            row.status === 1
+            row.product_status === "เปิดใช้งาน"
               ? "text-[14px] text-green-500"
               : "text-[14px] text-red-500"
           }
         >
-          {value}
+          {/* {value} */}
+          {row.product_status === "เปิดใช้งาน" ? (
+            <ToggleOnTwoToneIcon />
+          ) : (
+            <ToggleOffTwoToneIcon />
+          )}
         </Typography>
       ),
     },
@@ -204,171 +161,64 @@ export default function Product() {
       renderCell: ({ row }: GridRenderCellParams<string>) => (
         <Stack direction="row" className="text-center">
           <Tooltip title="ดูข้อมูล">
-            <IconButton
-              aria-label="view"
+            <Button
+              sx={{
+                minWidth: "30px",
+              }}
+              type="submit"
+              color="info"
+              variant="contained"
+              className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
               size="small"
               onClick={() => {
-                navigate("/app3/product/view?id=" + row.depName);
+                navigate("/app3/product/view?id=" + row.product_id);
               }}
             >
               <VisibilityTwoToneIcon fontSize="inherit" />
-            </IconButton>
+            </Button>
           </Tooltip>
-
-          <Tooltip title="แก้ไขข้อมูล">
-            <IconButton
-              aria-label="edit"
-              size="small"
-              onClick={() => {
-                console.log(row.id);
-                // navigate("/stock/edit/" + row.id);
-                navigate("/app3/product/edit?id=" + row.depName);
-              }}
-            >
-              <EditTwoToneIcon fontSize="inherit" />
-            </IconButton>
-          </Tooltip>
+          {row.product_status === "เปิดใช้งาน" ? (
+            <Tooltip title="แก้ไขข้อมูล">
+              <Button
+                sx={{
+                  minWidth: "30px",
+                }}
+                type="submit"
+                color="success"
+                variant="contained"
+                className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
+                size="small"
+                onClick={() => {
+                  navigate("/app3/product/edit?id=" + row.product_id);
+                }}
+              >
+                <EditTwoToneIcon fontSize="inherit" />
+              </Button>
+            </Tooltip>
+          ) : (
+            <Tooltip title="ปิดการใช้งาน">
+              <span>
+                <Button
+                  sx={{
+                    minWidth: "30px",
+                  }}
+                  type="submit"
+                  color="success"
+                  variant="contained"
+                  className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
+                  size="small"
+                  disabled
+                >
+                  <EditTwoToneIcon fontSize="inherit" />
+                </Button>
+              </span>
+            </Tooltip>
+          )}
         </Stack>
       ),
     },
   ];
-
-  const initialValues: PhoneSearch = {
-    keyword: "",
-    type: 0,
-    disposition: "ALL",
-    dstchannel: "ALL",
-    start: new Date(),
-    end: new Date(),
-  };
-
-  const CustomizedSelectForFormik = ({ children, form, field, label }: any) => {
-    const { name, value } = field;
-    const { setFieldValue } = form;
-    return (
-      <Select
-        label={label}
-        name={name}
-        value={value}
-        onChange={(e) => {
-          setFieldValue(name, e.target.value);
-        }}
-      >
-        {children}
-      </Select>
-    );
-  };
-
-  const showFormSearch = ({
-    handleSubmit,
-    handleChange,
-    isSubmitting,
-    setFieldValue,
-    resetForm,
-    values,
-  }: any) => {
-    return (
-      <Form noValidate>
-        <Grid container spacing={2} sx={{ pt: "6px", width: "100%" }}>
-          <Grid xs={12} sm={6} md={3}>
-            <FormControl fullWidth sx={{ m: 1 }}>
-              <InputLabel htmlFor="outlined-adornment-keyword">
-                เลขที่ใบรับ
-              </InputLabel>
-              <Field
-                as={OutlinedInput}
-                id="keyword"
-                name="keyword"
-                startAdornment={
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
-                }
-                label="เลขที่ใบรับ"
-                size="small"
-                placeholder="กรอก เลขที่ใบรับ"
-              />
-            </FormControl>
-          </Grid>
-          <Grid xs={12} sm={6} md={3.5}>
-            <FormControl fullWidth sx={{ m: 1 }}>
-              <InputLabel htmlFor="outlined-adornment-keyword">
-                เลขทะเบียนครุภัณฑ์
-              </InputLabel>
-              <Field
-                as={OutlinedInput}
-                id="keyword"
-                name="keyword"
-                startAdornment={
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
-                }
-                label="เลขทะเบียนครุภัณฑ์"
-                size="small"
-                placeholder="กรอก เลขทะเบียนครุภัณฑ์"
-              />
-            </FormControl>
-          </Grid>
-          <Grid xs={12} sm={6} md={3.5}>
-            <FormControl fullWidth sx={{ m: 1 }} size="small">
-              <InputLabel id="select-small-type">ประเภทพัสดุ</InputLabel>
-              <Field
-                name="type"
-                id="type"
-                label="หน่วยงาน"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>ทั้งหมด</MenuItem>
-                <MenuItem value={1}>เครื่องคอมพิวเตอร์</MenuItem>
-                <MenuItem value={2}>ปริ้นเตอร์</MenuItem>
-                <MenuItem value={3}>ปริ้นเตอร์</MenuItem>
-                <MenuItem value={4}>ทีวี</MenuItem>
-                <MenuItem value={5}>อื่นๅ</MenuItem>
-              </Field>
-            </FormControl>
-          </Grid>
-          <Grid xs={12} sm={6} md={2}>
-            <FormControl fullWidth sx={{ m: 1 }} size="small">
-              <Stack direction="row" className="text-center ">
-                <Button
-                  size="small"
-                  type="submit"
-                  variant="contained"
-                  fullWidth
-                  className="bg-[#36474f] text-[#fff] hover:text-[#fce805] mr-1 "
-                >
-                  <SearchIcon /> ค้นหา
-                </Button>
-
-                <Tooltip title="โหลดข้อมูล">
-                  <IconButton
-                    onClick={() => {
-                      resetForm();
-                    }}
-                    size="small"
-                    className="bg-[#36474f] text-[#fff] hover:text-[#fce805]"
-                  >
-                    <RefreshIcon color="inherit" />
-                  </IconButton>
-                </Tooltip>
-              </Stack>
-            </FormControl>
-          </Grid>
-          {/* <Grid xs={12} md={4}>
-                  <FormControl fullWidth sx={{ m: 1 }} size="small">
-                    <InputLabel id="select-small-type">หน่วยงาน</InputLabel>
-                    <Field
-                      name="type"
-                      id="type"
-                      label="หน่วยงาน"
-                      component={CustomizedSelectForFormik}
-                    >
-                      <MenuItem value={0}>ทั้งหมด</MenuItem>
-                      <MenuItem value={1}>ศูนย์คอมพิวเตอร์</MenuItem>
-                    </Field>
-                  </FormControl>
-                </Grid> */}
-        </Grid>
-      </Form>
-    );
-  };
+  useEffect(() => {}, [productReducer.isResult]);
 
   return (
     <Box>
@@ -391,7 +241,8 @@ export default function Product() {
         // 936 "100%"
         sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: "8px" }}
       >
-        <Formik
+        <ProductFormSearch />
+        {/* <Formik
           validate={(values) => {
             let errors: any = {};
 
@@ -399,14 +250,11 @@ export default function Product() {
           }}
           initialValues={initialValues}
           onSubmit={(values, { setSubmitting }) => {
-            // moment(valuse.end).format("MM/dd/yyyy");
-            // dispatch(loginUser({ user: values, navigate: navigate }));
-            // dispatch(phoneSearch({ phone: values, navigate: navigate }));
             setSubmitting(false);
           }}
         >
           {(props) => showFormSearch(props)}
-        </Formik>
+        </Formik> */}
       </Paper>
 
       <Paper
@@ -440,35 +288,28 @@ export default function Product() {
             </Grid>
           </Toolbar>
         </AppBar>
+        {/* {JSON.stringify(productReducer.isResult)} */}
         <BoxDataGrid>
           <DataGrid
-            rowHeight={36}
-            headerHeight={36}
+            rowHeight={28}
+            headerHeight={28}
             components={{
               NoRowsOverlay: CustomNoRowsOverlay,
             }}
             sx={{
-              backgroundColor: "white",
-              margin: "auto",
-              overflow: "hidden",
-              minHeight: 450,
-              "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
-                {
-                  color: "#fff",
-                  opacity: 0.5,
-                },
+              minHeight: 505,
             }}
-            rows={dataValue ? dataValue : []}
+            rows={productReducer.isResult ? productReducer.isResult : []}
             // rows={[]}
             columns={dataColumns}
-            pageSize={20}
+            pageSize={15}
             hideFooterSelectedRowCount
-            rowsPerPageOptions={[20]}
+            rowsPerPageOptions={[15]}
             disableColumnMenu={true}
             // loading={hosxpReducer.isFetching}
             getRowId={(row) =>
               // parseInt(row.kskloginname) + Math.random() * (100 - 1)
-              row.id
+              row.product_id
             }
             localeText={{
               MuiTablePagination: {

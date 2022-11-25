@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 // @form
 import { Formik, Form, Field } from "formik";
@@ -11,21 +11,24 @@ import {
   AppBar,
   Tabs,
   Tab,
+  Radio,
   Card,
+  Switch,
   CardContent,
   CardActionArea,
   CardActions,
   CardMedia,
   FormControl,
+  FormControlLabel,
   InputLabel,
   OutlinedInput,
+  FormGroup,
+  FormLabel,
+  RadioGroup,
 } from "@mui/material";
-// @type
-import { PhoneSearch } from "@/types";
 
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
-import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
@@ -38,6 +41,20 @@ import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTo
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 
 import Barcode from "react-barcode";
+
+// @redux
+import { useSelector, useDispatch } from "react-redux";
+
+// @utils
+import { CustomNoRowsOverlay } from "@/utils";
+
+// @seletor
+import {
+  productSelector,
+  productSearchById,
+} from "@/store/slices/productSlice";
+
+import { categorySelector, categoryAll } from "@/store/slices/categorySlice";
 
 export interface DialogTitleProps {
   id: string;
@@ -90,21 +107,48 @@ function useBarcode(txtBarcode) {
 
 export default function ProductEdit() {
   const navigate = useNavigate();
+
   let query = useQuery();
+  let id = query.get("id") || "";
   // let barcode = useBarcode();
+  const dispatch = useDispatch<any>();
+  const productReducer = useSelector(productSelector);
+  const categoryReducer = useSelector(categorySelector);
+
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const initialValues: PhoneSearch = {
-    keyword: "-",
-    type: 0,
-    disposition: "ALL",
-    dstchannel: "ALL",
-    start: new Date(),
-    end: new Date(),
+  const initialProductValues: any = {
+    product_no: "", // เลขทะเบียน
+    product_title: "", // ชื่ออุปกรณ์
+    product_note: "", // รายละเอียดเพิ่มเติม
+    product_inventory_number: "", // เลขครุภัณฑ์
+    product_status: true, // สถานะ
+    product_category: 0, // ประเภทอุปกรณ์
+    product_depart: "", // หน่วยงาน
+    product_depart_name: "", // ชื่อหน่วยงาน
+  };
+
+  const initialProductEditValues = (values) => {
+    // ตั้งค่าข้อมูลพื้นฐาน ฟอร์ม
+    let initailObj = initialProductValues;
+    if (values) {
+      // มีการแก้ไข้ข้อมูล
+      initailObj["product_no"] = values.product_no;
+      initailObj["product_title"] = values.product_title;
+      initailObj["product_inventory_number"] = values.product_inventory_number;
+      initailObj["product_status"] =
+        values.product_status === "เปิดใช้งาน" ? true : false;
+      initailObj["product_category"] = values.product_category;
+      initailObj["product_depart"] = values.product_depart;
+      initailObj["product_depart_name"] = values.dept_name;
+      initailObj["product_note"] = values.product_note;
+      return initailObj;
+    }
+    return initailObj;
   };
 
   const CustomizedSelectForFormik = ({ children, form, field, label }: any) => {
@@ -121,6 +165,44 @@ export default function ProductEdit() {
       >
         {children}
       </Select>
+    );
+  };
+
+  const renderOptions = (options) => {
+    return options.map((option) => (
+      <FormControlLabel
+        key={option.category_id}
+        value={option.category_id}
+        control={<Radio color="success" />}
+        label={option.category_name}
+      />
+    ));
+  };
+
+  const FormikRadioGroup = ({
+    field,
+    form: { touched, errors },
+    name,
+    options,
+    children,
+    ...props
+  }) => {
+    const fieldName = name || field.name;
+
+    return (
+      <React.Fragment>
+        <RadioGroup row {...field} {...props} name={fieldName}>
+          {/* Here you either map over the props and render radios from them,
+           or just render the children if you're using the function as a child*/}
+          {options ? renderOptions(options) : children}
+        </RadioGroup>
+
+        {touched[fieldName] && errors[fieldName] && (
+          <span style={{ color: "red", fontFamily: "sans-serif" }}>
+            {errors[fieldName]}
+          </span>
+        )}
+      </React.Fragment>
     );
   };
 
@@ -145,11 +227,11 @@ export default function ProductEdit() {
         >
           <Grid xs={6}>
             <FormControl fullWidth size="small">
-              <InputLabel htmlFor="billnumber">ชื่ออุปกรณ์</InputLabel>
+              <InputLabel htmlFor="product_title">ชื่ออุปกรณ์</InputLabel>
               <Field
                 as={OutlinedInput}
-                id="keyword"
-                name="keyword"
+                id="product_title"
+                name="product_title"
                 label="ชื่ออุปกรณ์"
                 size="small"
                 startAdornment={
@@ -158,51 +240,92 @@ export default function ProductEdit() {
               />
             </FormControl>
           </Grid>
+          {/* <Grid xs={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel htmlFor="product_no">เลขทะเบียน</InputLabel>
+              <Field
+                disabled
+                as={OutlinedInput}
+                id="product_no"
+                name="product_no"
+                label="เลขทะเบียน"
+                size="small"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+              />
+            </FormControl>
+          </Grid> */}
 
           <Grid xs={6}>
             <FormControl fullWidth size="small">
-              <InputLabel id="select-small-type">สถานะ</InputLabel>
+              <InputLabel htmlFor="product_inventory_number">
+                เลขทะเบียนครุภัณฑ์
+              </InputLabel>
               <Field
-                name="type"
-                id="type"
-                label="ซื้ิอจาก"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>ใช้งานได้</MenuItem>
-                <MenuItem value={1}>ยกเลิกใช้งาน</MenuItem>
-              </Field>
+                as={OutlinedInput}
+                id="product_inventory_number"
+                name="product_inventory_number"
+                label="เลขทะเบียนครุภัณฑ์"
+                size="small"
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+              />
             </FormControl>
           </Grid>
 
-          <Grid xs={6}>
+          <Grid xs={12}>
             <FormControl fullWidth size="small">
-              <InputLabel id="select-small-type">ประเภทพัสดุ</InputLabel>
               <Field
-                name="type"
-                id="type"
-                label="ประเภทการซื้อ"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>คอมพิวเตอร์</MenuItem>
-              </Field>
+                name="product_category"
+                options={
+                  categoryReducer.isResult ? categoryReducer.isResult : []
+                }
+                component={FormikRadioGroup}
+              />
             </FormControl>
           </Grid>
-
-          <Grid xs={6}>
+          <Grid xs={12}>
+            <FormControl fullWidth size="small">
+              <FormGroup aria-label="position" row>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      name="product_status"
+                      checked={values.product_status}
+                      onChange={(event) => {
+                        setFieldValue("product_status", event.target.checked);
+                      }}
+                      inputProps={{ "aria-label": "controlled" }}
+                      color={"success"}
+                    />
+                  }
+                  label={"สถานะ"}
+                  // labelPlacement="top"
+                />
+              </FormGroup>
+            </FormControl>
+          </Grid>
+          {/* <Grid xs={6}>
             <FormControl fullWidth size="small">
               <InputLabel id="select-small-type">
                 หน่วยงานที่รับผิดชอบ
               </InputLabel>
               <Field
-                name="type"
-                id="type"
+                disabled
+                as={OutlinedInput}
+                id="product_depart_name"
+                name="product_depart_name"
+                size="small"
                 label="หน่วยงานที่รับผิดชอบ"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>ศุนย์คอมพิวเตอร์</MenuItem>
-              </Field>
+                startAdornment={
+                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+                }
+                placeholder="หน่วยงานที่รับผิดชอบ"
+              />
             </FormControl>
-          </Grid>
+          </Grid> */}
 
           <Grid xs={12}>
             <FormControl fullWidth size="small">
@@ -211,8 +334,8 @@ export default function ProductEdit() {
               </InputLabel>
               <Field
                 as={OutlinedInput}
-                id="keyword"
-                name="keyword"
+                id="product_note"
+                name="product_note"
                 size="small"
                 label="รายละเอียดเพิ่มเติม"
                 startAdornment={
@@ -227,163 +350,168 @@ export default function ProductEdit() {
     );
   };
 
-  const showFormProductEdit = ({
-    handleSubmit,
-    handleChange,
-    isSubmitting,
-    setFieldValue,
-    resetForm,
-    values,
-  }: any) => {
-    return (
-      <Form noValidate>
-        <Grid
-          container
-          spacing={2}
-          alignItems="center"
-          sx={{
-            pt: "16px",
-            px: "16px",
-          }}
-        >
-          <Grid xs={6}>
-            <FormControl fullWidth size="small">
-              <InputLabel htmlFor="billnumber">เลขครุภัณฑ์พัสดุ</InputLabel>
-              <Field
-                as={OutlinedInput}
-                id="keyword"
-                name="keyword"
-                label="เลขครุภัณฑ์พัสดุ"
-                size="small"
-                startAdornment={
-                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
-                }
-              />
-            </FormControl>
-          </Grid>
-          <Grid xs={6}>
-            <FormControl fullWidth size="small">
-              <InputLabel htmlFor="billnumber">รายการ</InputLabel>
-              <Field
-                as={OutlinedInput}
-                id="keyword"
-                name="keyword"
-                label="รายการ"
-                size="small"
-                startAdornment={
-                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
-                }
-              />
-            </FormControl>
-          </Grid>
+  // const showFormProductEdit = ({
+  //   handleSubmit,
+  //   handleChange,
+  //   isSubmitting,
+  //   setFieldValue,
+  //   resetForm,
+  //   values,
+  // }: any) => {
+  //   return (
+  //     <Form noValidate>
+  //       <Grid
+  //         container
+  //         spacing={2}
+  //         alignItems="center"
+  //         sx={{
+  //           pt: "16px",
+  //           px: "16px",
+  //         }}
+  //       >
+  //         <Grid xs={6}>
+  //           <FormControl fullWidth size="small">
+  //             <InputLabel htmlFor="billnumber">เลขครุภัณฑ์พัสดุ</InputLabel>
+  //             <Field
+  //               as={OutlinedInput}
+  //               id="keyword"
+  //               name="keyword"
+  //               label="เลขครุภัณฑ์พัสดุ"
+  //               size="small"
+  //               startAdornment={
+  //                 <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+  //               }
+  //             />
+  //           </FormControl>
+  //         </Grid>
+  //         <Grid xs={6}>
+  //           <FormControl fullWidth size="small">
+  //             <InputLabel htmlFor="billnumber">รายการ</InputLabel>
+  //             <Field
+  //               as={OutlinedInput}
+  //               id="keyword"
+  //               name="keyword"
+  //               label="รายการ"
+  //               size="small"
+  //               startAdornment={
+  //                 <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+  //               }
+  //             />
+  //           </FormControl>
+  //         </Grid>
 
-          <Grid xs={6}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="select-small-type">ยี่ห้อ</InputLabel>
-              <Field
-                name="type"
-                id="type"
-                label="ยี่ห้อ"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>Lenovo</MenuItem>
-              </Field>
-            </FormControl>
-          </Grid>
-          <Grid xs={6}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="select-small-type">สเปก</InputLabel>
-              <Field
-                name="type"
-                id="type"
-                label="สเปก"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>I 5</MenuItem>
-              </Field>
-            </FormControl>
-          </Grid>
+  //         <Grid xs={6}>
+  //           <FormControl fullWidth size="small">
+  //             <InputLabel id="select-small-type">ยี่ห้อ</InputLabel>
+  //             <Field
+  //               name="type"
+  //               id="type"
+  //               label="ยี่ห้อ"
+  //               component={CustomizedSelectForFormik}
+  //             >
+  //               <MenuItem value={0}>Lenovo</MenuItem>
+  //             </Field>
+  //           </FormControl>
+  //         </Grid>
+  //         <Grid xs={6}>
+  //           <FormControl fullWidth size="small">
+  //             <InputLabel id="select-small-type">สเปก</InputLabel>
+  //             <Field
+  //               name="type"
+  //               id="type"
+  //               label="สเปก"
+  //               component={CustomizedSelectForFormik}
+  //             >
+  //               <MenuItem value={0}>I 5</MenuItem>
+  //             </Field>
+  //           </FormControl>
+  //         </Grid>
 
-          <Grid xs={6}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="select-small-type">แรม</InputLabel>
-              <Field
-                name="type"
-                id="type"
-                label="แรม"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>DDR4</MenuItem>
-              </Field>
-            </FormControl>
-          </Grid>
-          <Grid xs={6}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="select-small-type">ความจุแรม</InputLabel>
-              <Field
-                name="type"
-                id="type"
-                label="ความจุแรม"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>2 GB</MenuItem>
-              </Field>
-            </FormControl>
-          </Grid>
+  //         <Grid xs={6}>
+  //           <FormControl fullWidth size="small">
+  //             <InputLabel id="select-small-type">แรม</InputLabel>
+  //             <Field
+  //               name="type"
+  //               id="type"
+  //               label="แรม"
+  //               component={CustomizedSelectForFormik}
+  //             >
+  //               <MenuItem value={0}>DDR4</MenuItem>
+  //             </Field>
+  //           </FormControl>
+  //         </Grid>
+  //         <Grid xs={6}>
+  //           <FormControl fullWidth size="small">
+  //             <InputLabel id="select-small-type">ความจุแรม</InputLabel>
+  //             <Field
+  //               name="type"
+  //               id="type"
+  //               label="ความจุแรม"
+  //               component={CustomizedSelectForFormik}
+  //             >
+  //               <MenuItem value={0}>2 GB</MenuItem>
+  //             </Field>
+  //           </FormControl>
+  //         </Grid>
 
-          <Grid xs={6}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="select-small-type">ฮาร์ดดิสก์</InputLabel>
-              <Field
-                name="type"
-                id="type"
-                label="ฮาร์ดดิสก์"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>SSD</MenuItem>
-              </Field>
-            </FormControl>
-          </Grid>
-          <Grid xs={6}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="select-small-type">ความจุฮาร์ดดิสก์</InputLabel>
-              <Field
-                name="type"
-                id="type"
-                label="ความจุฮาร์ดดิสก์"
-                component={CustomizedSelectForFormik}
-              >
-                <MenuItem value={0}>250 GB</MenuItem>
-              </Field>
-            </FormControl>
-          </Grid>
-          <Grid
-            xs={12}
-            sx={{
-              mb: 2,
-            }}
-          >
-            <FormControl fullWidth size="small">
-              <InputLabel htmlFor="outlined-adornment-keyword">
-                รายละเอียดเพิ่มเติม
-              </InputLabel>
-              <Field
-                as={OutlinedInput}
-                id="keyword"
-                name="keyword"
-                size="small"
-                label="รายละเอียดเพิ่มเติม"
-                startAdornment={
-                  <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
-                }
-                placeholder="รายละเอียดเพิ่มเติม"
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-      </Form>
-    );
-  };
+  //         <Grid xs={6}>
+  //           <FormControl fullWidth size="small">
+  //             <InputLabel id="select-small-type">ฮาร์ดดิสก์</InputLabel>
+  //             <Field
+  //               name="type"
+  //               id="type"
+  //               label="ฮาร์ดดิสก์"
+  //               component={CustomizedSelectForFormik}
+  //             >
+  //               <MenuItem value={0}>SSD</MenuItem>
+  //             </Field>
+  //           </FormControl>
+  //         </Grid>
+  //         <Grid xs={6}>
+  //           <FormControl fullWidth size="small">
+  //             <InputLabel id="select-small-type">ความจุฮาร์ดดิสก์</InputLabel>
+  //             <Field
+  //               name="type"
+  //               id="type"
+  //               label="ความจุฮาร์ดดิสก์"
+  //               component={CustomizedSelectForFormik}
+  //             >
+  //               <MenuItem value={0}>250 GB</MenuItem>
+  //             </Field>
+  //           </FormControl>
+  //         </Grid>
+  //         <Grid
+  //           xs={12}
+  //           sx={{
+  //             mb: 2,
+  //           }}
+  //         >
+  //           <FormControl fullWidth size="small">
+  //             <InputLabel htmlFor="outlined-adornment-keyword">
+  //               รายละเอียดเพิ่มเติม
+  //             </InputLabel>
+  //             <Field
+  //               as={OutlinedInput}
+  //               id="keyword"
+  //               name="keyword"
+  //               size="small"
+  //               label="รายละเอียดเพิ่มเติม"
+  //               startAdornment={
+  //                 <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
+  //               }
+  //               placeholder="รายละเอียดเพิ่มเติม"
+  //             />
+  //           </FormControl>
+  //         </Grid>
+  //       </Grid>
+  //     </Form>
+  //   );
+  // };
+
+  useEffect(() => {
+    dispatch(categoryAll());
+    dispatch(productSearchById({ search: id }));
+  }, [dispatch, id]);
 
   return (
     <Box>
@@ -409,7 +537,9 @@ export default function ProductEdit() {
             </Typography>
 
             <Typography color="text.primary" variant="subtitle2">
-              ดูรายการอุปกรณ์ : {query.get("id")}
+              {productReducer.isResultView
+                ? productReducer.isResultView.product_no
+                : ""}
             </Typography>
           </Breadcrumbs>
         </Grid>
@@ -464,7 +594,10 @@ export default function ProductEdit() {
               </Grid>
               <Grid xs={6} className="text-right">
                 <Typography variant="subtitle2" component="span">
-                  เลขทะเบียนครุภัณฑ์ : {query.get("id")}
+                  หน่วยงานที่รับผิดชอบ :{" "}
+                  {productReducer.isResultView
+                    ? productReducer.isResultView.dept_name
+                    : ""}
                 </Typography>
               </Grid>
             </Grid>
@@ -474,10 +607,14 @@ export default function ProductEdit() {
         <Formik
           validate={(values) => {
             let errors: any = {};
-
             return errors;
           }}
-          initialValues={initialValues}
+          enableReinitialize
+          initialValues={
+            productReducer.isResultView
+              ? initialProductEditValues(productReducer.isResultView)
+              : initialProductValues
+          }
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(false);
           }}
@@ -536,6 +673,109 @@ export default function ProductEdit() {
                   width: "100%",
                 }}
               >
+                <Grid xs={6}>
+                  <Typography
+                    variant="subtitle2"
+                    component="span"
+                    sx={{
+                      display: "flex",
+                      alignContent: "center",
+                    }}
+                  >
+                    <AppRegistrationTwoToneIcon /> รายละเอียดอุปกรณ์
+                  </Typography>
+                </Grid>
+                {/* <Grid xs={6} className="text-right">
+                  <Typography variant="subtitle2" component="span">
+                    เลขครุภัณฑ์พัสดุ: 7440-001-0001/1308
+                  </Typography>
+                </Grid> */}
+              </Grid>
+            </Toolbar>
+          </AppBar>
+
+          <Grid
+            xs={4}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {CustomNoRowsOverlay()}
+          </Grid>
+        </Paper>
+        <Paper
+          sx={{
+            maxWidth: "100%",
+            margin: "auto",
+            overflow: "hidden",
+            mb: 1,
+            mt: 1,
+          }}
+        >
+          <AppBar
+            position="static"
+            color="default"
+            elevation={0}
+            sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+            className="h-[40px]"
+          >
+            <Toolbar className="pl-2 pr-2">
+              <Grid
+                container
+                sx={{
+                  width: "100%",
+                }}
+              >
+                <Grid xs={6}>
+                  <Typography
+                    variant="subtitle2"
+                    component="span"
+                    sx={{
+                      display: "flex",
+                      alignContent: "center",
+                    }}
+                  >
+                    <AppRegistrationTwoToneIcon /> ประวัติ โอน-ย้าย
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Toolbar>
+          </AppBar>
+
+          <Grid
+            xs={4}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {CustomNoRowsOverlay()}
+          </Grid>
+        </Paper>
+        {/* <Paper
+          sx={{
+            maxWidth: "100%",
+            margin: "auto",
+            overflow: "hidden",
+            mb: 1,
+            mt: 1,
+          }}
+        >
+          <AppBar
+            position="static"
+            color="default"
+            elevation={0}
+            sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+            className="h-[40px]"
+          >
+            <Toolbar className="pl-2 pr-2">
+              <Grid
+                container
+                sx={{
+                  width: "100%",
+                }}
+              >
                 <Grid xs={12}>
                   <Typography
                     variant="subtitle2"
@@ -564,7 +804,7 @@ export default function ProductEdit() {
           >
             {(props) => showFormProductEdit(props)}
           </Formik>
-        </Paper>
+        </Paper> */}
 
         <Grid container spacing={2} alignItems="center" className="mt-1">
           <Grid xs={6} className="text-right">

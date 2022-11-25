@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 // @mui
 import {
@@ -19,11 +19,22 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 
-import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTone";
 
 import Barcode from "react-barcode";
+
+// @redux
+import { useSelector, useDispatch } from "react-redux";
+// @day
+import moment from "moment";
+// @utils
+import { CustomNoRowsOverlay } from "@/utils";
+// @seletor
+import {
+  productSelector,
+  productSearchById,
+} from "@/store/slices/productSlice";
 
 export interface DialogTitleProps {
   id: string;
@@ -76,13 +87,21 @@ function useBarcode(txtBarcode) {
 
 export default function ProductView() {
   const navigate = useNavigate();
+  const dispatch = useDispatch<any>();
+  const productReducer = useSelector(productSelector);
+
   let query = useQuery();
+  let id = query.get("id") || "";
   // let barcode = useBarcode();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    dispatch(productSearchById({ search: id }));
+  }, [dispatch, id]);
 
   return (
     <Box>
@@ -108,7 +127,9 @@ export default function ProductView() {
             </Typography>
 
             <Typography color="text.primary" variant="subtitle2">
-              {query.get("id")}
+              {productReducer.isResultView
+                ? productReducer.isResultView.product_no
+                : ""}
             </Typography>
           </Breadcrumbs>
         </Grid>
@@ -165,70 +186,124 @@ export default function ProductView() {
             </Grid>
           </Toolbar>
         </AppBar>
-        <Grid container spacing={2} sx={{ p: 2 }}>
-          <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              ชื่ออุปกรณ์
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              เครื่องคอมพิวเตอร์ สำหรับสำนักงาน จอขนาด 21.5 นิ้ว
-            </Typography>
-          </Grid>
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              เลขทะเบียนครุภัณฑ์
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              {query.get("id")}
-            </Typography>
-          </Grid>
+        {productReducer.isResultView ? (
+          <Grid container spacing={2} sx={{ p: 2 }}>
+            <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
+              <Typography component={"div"} variant={"body1"}>
+                ชื่ออุปกรณ์
+              </Typography>
+              <Typography
+                component={"div"}
+                variant={"body2"}
+                className="mt-[-2px] text-slate-500 hover:text-blue-600"
+              >
+                {productReducer.isResultView.product_title}
+              </Typography>
+            </Grid>
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+              <Typography component={"div"} variant={"body1"}>
+                เลขทะเบียน/เลขทะเบียนครุภัณฑ์
+              </Typography>
+              <Typography
+                component={"div"}
+                variant={"body2"}
+                className="mt-[-2px] text-slate-500 hover:text-blue-600"
+              >
+                {`${productReducer.isResultView.product_no}/${
+                  productReducer.isResultView.product_inventory_number !== null
+                    ? productReducer.isResultView.product_inventory_number
+                    : "-"
+                }`}
+              </Typography>
+            </Grid>
 
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              สถานะ
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-green-500 hover:text-green-600"
-            >
-              ใช้การได้
-            </Typography>
-          </Grid>
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+              <Typography component={"div"} variant={"body1"}>
+                เลขที่บันทึก
+              </Typography>
+              <Typography
+                component={"div"}
+                variant={"body2"}
+                className="mt-[-2px] text-slate-500 hover:text-blue-600"
+              >
+                {productReducer.isResultView.equipment_no_txt}
+              </Typography>
+            </Grid>
 
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              ประเภทพัสดุ
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              คอมพิวเตอร์
-            </Typography>
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+              <Typography component={"div"} variant={"body1"}>
+                หมวดหมู่
+              </Typography>
+              <Typography
+                component={"div"}
+                variant={"body2"}
+                className="mt-[-2px] text-slate-500 hover:text-blue-600"
+              >
+                {productReducer.isResultView.category_name}
+              </Typography>
+            </Grid>
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+              <Typography component={"div"} variant={"body1"}>
+                หน่วยงานที่รับผิดชอบ
+              </Typography>
+              <Typography
+                component={"div"}
+                variant={"body2"}
+                className="mt-[-2px] text-slate-500 hover:text-blue-600"
+              >
+                {productReducer.isResultView.dept_name}
+              </Typography>
+            </Grid>
+
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+              <Typography component={"div"} variant={"body1"}>
+                วันที่รับอุปกรณ์
+              </Typography>
+              <Typography
+                component={"div"}
+                variant={"body2"}
+                className="mt-[-2px] text-slate-500 hover:text-blue-600"
+              >
+                {moment(productReducer.isResultView.product_create_at).format(
+                  "DD/MM/yyyy"
+                )}
+              </Typography>
+            </Grid>
+
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+              <Typography component={"div"} variant={"body1"}>
+                สถานะ
+              </Typography>
+              <Typography
+                component={"div"}
+                variant={"body2"}
+                className={
+                  productReducer.isResultView.product_status === "เปิดใช้งาน"
+                    ? "text-[14px] mt-[-2px] text-green-500 hover:text-green-600"
+                    : "text-[14px] mt-[-2px] text-red-500 hover:text-red-600"
+                }
+              >
+                {productReducer.isResultView.product_status}
+              </Typography>
+            </Grid>
+            <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
+              <Typography component={"div"} variant={"body1"}>
+                รายละเอียดเพิ่มเติม
+              </Typography>
+              <Typography
+                component={"div"}
+                variant={"body2"}
+                className="mt-[-2px] text-slate-500 hover:text-blue-600"
+              >
+                {productReducer.isResultView.product_note !== null
+                  ? productReducer.isResultView.product_note
+                  : "-"}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-            <Typography component={"div"} variant={"body1"}>
-              หน่วยงานที่รับผิดชอบ
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"body2"}
-              className="mt-[-2px] text-slate-500 hover:text-blue-600"
-            >
-              ศูนย์คอมพิวเตอร์
-            </Typography>
-          </Grid>
-        </Grid>
+        ) : (
+          <></>
+        )}
 
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
@@ -293,15 +368,15 @@ export default function ProductView() {
                     <AppRegistrationTwoToneIcon /> รายละเอียดอุปกรณ์
                   </Typography>
                 </Grid>
-                <Grid xs={6} className="text-right">
+                {/* <Grid xs={6} className="text-right">
                   <Typography variant="subtitle2" component="span">
                     เลขครุภัณฑ์พัสดุ: 7440-001-0001/1308
                   </Typography>
-                </Grid>
+                </Grid> */}
               </Grid>
             </Toolbar>
           </AppBar>
-          <Grid container spacing={2} sx={{ p: 2 }}>
+          {/* <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 รายการ
@@ -363,10 +438,67 @@ export default function ProductView() {
                 -
               </Typography>
             </Grid>
+          </Grid> */}
+          <Grid
+            xs={4}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {CustomNoRowsOverlay()}
           </Grid>
         </Paper>
+        <Paper
+          sx={{
+            maxWidth: "100%",
+            margin: "auto",
+            overflow: "hidden",
+            mb: 1,
+            mt: 1,
+          }}
+        >
+          <AppBar
+            position="static"
+            color="default"
+            elevation={0}
+            sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
+            className="h-[40px]"
+          >
+            <Toolbar className="pl-2 pr-2">
+              <Grid
+                container
+                sx={{
+                  width: "100%",
+                }}
+              >
+                <Grid xs={6}>
+                  <Typography
+                    variant="subtitle2"
+                    component="span"
+                    sx={{
+                      display: "flex",
+                      alignContent: "center",
+                    }}
+                  >
+                    <AppRegistrationTwoToneIcon /> ประวัติ โอน-ย้าย
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Toolbar>
+          </AppBar>
 
-        <Grid container spacing={2} alignItems="center" className="mt-1">
+          <Grid
+            xs={4}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {CustomNoRowsOverlay()}
+          </Grid>
+        </Paper>
+        {/* <Grid container spacing={2} alignItems="center" className="mt-1">
           <Grid xs={12} className="text-center">
             <Button
               variant="contained"
@@ -376,7 +508,7 @@ export default function ProductView() {
               ปริ้นรายการอุปกรณ์
             </Button>
           </Grid>
-        </Grid>
+        </Grid> */}
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Paper
@@ -419,7 +551,11 @@ export default function ProductView() {
           </AppBar>
           <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid xs={12} className="text-center">
-              {useBarcode(query.get("id"))}
+              {useBarcode(
+                productReducer.isResultView
+                  ? productReducer.isResultView.product_no
+                  : ""
+              )}
             </Grid>
           </Grid>
         </Paper>

@@ -7,3 +7,4 @@ export * from "@/types/number.type";
 export * from "@/types/car.type";
 export * from "@/types/equipment.type";
 export * from "@/types/department.type";
+export * from "@/types/product.type";
