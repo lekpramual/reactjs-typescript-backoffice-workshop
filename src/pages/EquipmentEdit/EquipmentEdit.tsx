@@ -13,7 +13,7 @@ import {
   Breadcrumbs,
 } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 // @day
 import moment from "moment";
 // @type
@@ -340,6 +340,7 @@ export default function EquipmentEdit() {
   const initialEquipmentEditValues = (values) => {
     // ตั้งค่าข้อมูลพื้นฐาน ฟอร์ม
     let initailObj = initialEquipmentValues;
+    console.log(values);
     if (values) {
       // มีการแก้ไข้ข้อมูล
       values.map((res) => {
@@ -722,7 +723,21 @@ export default function EquipmentEdit() {
             </FormControl>
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
-            <FormControl fullWidth size="small">
+            <Field
+              id="equipment_note"
+              name="equipment_note"
+              size="small"
+              placeholder="รายละเอียดเพิ่มเติม"
+              component={TextareaAutosize}
+              minRows={2}
+              style={{ width: "100%" }}
+              onChange={(e) => {
+                setFieldValue("equipment_note", e.target.value);
+              }}
+              value={values.equipment_note}
+            />
+
+            {/* <FormControl fullWidth size="small">
               <InputLabel htmlFor="equipment_note">รายละเอียด</InputLabel>
               <Field
                 as={OutlinedInput}
@@ -735,7 +750,7 @@ export default function EquipmentEdit() {
                 }
                 placeholder="รายละเอียดเพิ่มเติม"
               />
-            </FormControl>
+            </FormControl> */}
           </Grid>
           <Grid item lg={12} md={12} xs={12} sx={{ mb: 1 }}>
             <Box sx={{ flexDirection: "row" }}>
@@ -882,8 +897,8 @@ export default function EquipmentEdit() {
         </Typography>
 
         <Typography color="text.primary" variant="subtitle2">
-          {equipmentReducer.isResultEdit
-            ? equipmentReducer.isResultEdit.map((data) => data.equipment_no)
+          {equipmentReducer.isResultView
+            ? equipmentReducer.isResultView.map((data) => data.equipment_no)
             : ""}
         </Typography>
       </Breadcrumbs>
@@ -967,8 +982,8 @@ export default function EquipmentEdit() {
           // initialValues={initialEquipmentValues}
           enableReinitialize
           initialValues={
-            equipmentReducer.isResultEdit
-              ? initialEquipmentEditValues(equipmentReducer.isResultEdit)
+            equipmentReducer.isResultView
+              ? initialEquipmentEditValues(equipmentReducer.isResultView)
               : initialEquipmentValues
           }
           onSubmit={(values, { setSubmitting }) => {

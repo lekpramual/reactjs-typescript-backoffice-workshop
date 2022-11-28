@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 // @form
 import { Formik, Form, Field } from "formik";
@@ -31,6 +31,7 @@ import {
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
+import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import SaveAsTwoToneIcon from "@mui/icons-material/SaveAsTwoTone";
@@ -52,6 +53,7 @@ import { CustomNoRowsOverlay } from "@/utils";
 import {
   productSelector,
   productSearchById,
+  productUpdate,
 } from "@/store/slices/productSlice";
 
 import { categorySelector, categoryAll } from "@/store/slices/categorySlice";
@@ -107,7 +109,7 @@ function useBarcode(txtBarcode) {
 
 export default function ProductEdit() {
   const navigate = useNavigate();
-
+  const formRef = useRef<any>();
   let query = useQuery();
   let id = query.get("id") || "";
   // let barcode = useBarcode();
@@ -158,6 +160,7 @@ export default function ProductEdit() {
         value={parseInt(option.category_id)}
         control={<Radio color="success" />}
         label={option.category_name}
+        disabled
       />
     ));
   };
@@ -196,6 +199,8 @@ export default function ProductEdit() {
     setFieldValue,
     resetForm,
     values,
+    errors,
+    touched,
   }: any) => {
     return (
       <Form noValidate>
@@ -209,7 +214,11 @@ export default function ProductEdit() {
           }}
         >
           <Grid xs={6}>
-            <FormControl fullWidth size="small">
+            <FormControl
+              fullWidth
+              size="small"
+              error={errors.product_title && touched.product_title && true}
+            >
               <InputLabel htmlFor="product_title">ชื่ออุปกรณ์</InputLabel>
               <Field
                 as={OutlinedInput}
@@ -220,6 +229,7 @@ export default function ProductEdit() {
                 startAdornment={
                   <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
                 }
+                placeholder="กรอก ชื่ออุปกรณ์"
               />
             </FormControl>
           </Grid>
@@ -273,6 +283,7 @@ export default function ProductEdit() {
                 startAdornment={
                   <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
                 }
+                placeholder="ตัวอย่าง 7440-001-0001/99"
               />
             </FormControl>
           </Grid>
@@ -287,7 +298,8 @@ export default function ProductEdit() {
               <FormLabel
                 component="legend"
                 sx={{
-                  marginBottom: "-6px",
+                  marginBottom: "-8px",
+                  marginTop: "5px",
                 }}
               >
                 หมวดหมู่
@@ -350,11 +362,21 @@ export default function ProductEdit() {
               component={TextareaAutosize}
               minRows={2}
               style={{ width: "100%" }}
+              onChange={(e) => {
+                setFieldValue("product_note", e.target.value);
+              }}
+              value={values.product_note}
             />
           </Grid>
         </Grid>
       </Form>
     );
+  };
+
+  const handleSubmit = () => {
+    if (formRef.current) {
+      formRef.current.handleSubmit();
+    }
   };
 
   useEffect(() => {
@@ -438,7 +460,7 @@ export default function ProductEdit() {
                     alignContent: "center",
                   }}
                 >
-                  <AppRegistrationTwoToneIcon /> รายการอุปกรณ์ :{" "}
+                  <AppRegistrationTwoToneIcon /> รายการอุปกรณ์เลขทะเบียน :{" "}
                   {productReducer.isResultView
                     ? productReducer.isResultView.product_no
                     : ""}
@@ -457,8 +479,11 @@ export default function ProductEdit() {
         </AppBar>
 
         <Formik
+          innerRef={formRef}
           validate={(values) => {
             let errors: any = {};
+            if (!values.product_title) errors.product_title = "กรอกชื่ออุปกรณ์";
+
             return errors;
           }}
           enableReinitialize
@@ -468,6 +493,28 @@ export default function ProductEdit() {
               : initialProductValues
           }
           onSubmit={(values, { setSubmitting }) => {
+            console.log(values);
+            let formData = new FormData();
+            formData.append("product_no", values.product_no);
+            formData.append("product_title", values.product_title);
+            formData.append(
+              "product_note",
+              values.product_note !== "" ? values.product_note : ""
+            );
+            formData.append(
+              "product_inventory_number",
+              values.product_inventory_number !== ""
+                ? values.product_inventory_number
+                : ""
+            );
+            formData.append(
+              "product_status",
+              values.product_status ? "เปิดใช้งาน" : "ปิดใช้งาน"
+            );
+            formData.append("product_category", values.product_category);
+            formData.append("product_depart", values.product_depart);
+
+            dispatch(productUpdate({ formData: formData, id: id }));
             setSubmitting(false);
           }}
         >
@@ -540,9 +587,18 @@ export default function ProductEdit() {
                     </Typography>
                   </Grid>
                   <Grid xs={6} className="text-right">
-                    <Typography variant="subtitle2" component="span">
-                      เลขครุภัณฑ์พัสดุ: 7440-001-0001/1308
-                    </Typography>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      sx={{ mr: 1, mb: 1 }}
+                      // color="success"
+                      className="w-[128px] bg-green-500 hover:bg-green-600"
+                      onClick={() => {
+                        console.log("Update Images..");
+                      }}
+                    >
+                      <AddTwoToneIcon /> เพิ่มสเปค
+                    </Button>
                   </Grid>
                 </Grid>
               </Toolbar>
@@ -594,6 +650,20 @@ export default function ProductEdit() {
                   >
                     <AppRegistrationTwoToneIcon /> ประวัติ โอน-ย้าย
                   </Typography>
+                </Grid>
+                <Grid xs={6} className="text-right">
+                  <Button
+                    size="small"
+                    variant="contained"
+                    sx={{ mr: 1, mb: 1 }}
+                    // color="success"
+                    className="w-[128px] bg-green-500 hover:bg-green-600"
+                    onClick={() => {
+                      navigate("/app3/transfer");
+                    }}
+                  >
+                    <AddTwoToneIcon /> เพิ่มใบโอน
+                  </Button>
                 </Grid>
               </Grid>
             </Toolbar>
@@ -700,7 +770,7 @@ export default function ProductEdit() {
                     variant="contained"
                     sx={{ mr: 1, mb: 1 }}
                     // color="success"
-                    className="w-[96px] bg-cyan-500 hover:bg-cyan-600"
+                    className="w-[96px] bg-green-500 hover:bg-green-600"
                     onClick={() => {
                       console.log("Update Images..");
                     }}
@@ -816,7 +886,12 @@ export default function ProductEdit() {
           </Button>
         </Grid>
         <Grid xs={6}>
-          <Button variant="contained" color="success" className="w-[128px] ">
+          <Button
+            variant="contained"
+            color="success"
+            className="w-[128px] "
+            onClick={() => handleSubmit()}
+          >
             <SaveAsTwoToneIcon /> ปรับปรุง
           </Button>
         </Grid>

@@ -11,6 +11,7 @@ import {
   InputLabel,
   OutlinedInput,
   Breadcrumbs,
+  TextareaAutosize,
 } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 
@@ -616,7 +617,22 @@ export default function ApprovedEdit() {
             </FormControl>
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
-            <FormControl fullWidth size="small">
+            <Field
+              disabled
+              id="equipment_note"
+              name="equipment_note"
+              size="small"
+              placeholder="รายละเอียดเพิ่มเติม"
+              component={TextareaAutosize}
+              minRows={2}
+              style={{ width: "100%" }}
+              onChange={(e) => {
+                setFieldValue("equipment_note", e.target.value);
+              }}
+              value={values.equipment_note}
+            />
+
+            {/* <FormControl fullWidth size="small">
               <InputLabel htmlFor="equipment_note">รายละเอียด</InputLabel>
               <Field
                 disabled
@@ -630,7 +646,7 @@ export default function ApprovedEdit() {
                 }
                 placeholder="รายละเอียดเพิ่มเติม"
               />
-            </FormControl>
+            </FormControl> */}
           </Grid>
           <Grid item lg={12} md={12} xs={12} sx={{ mb: 1 }}>
             <Box sx={{ flexDirection: "row" }}>
@@ -862,8 +878,8 @@ export default function ApprovedEdit() {
           // initialValues={initialEquipmentValues}
           enableReinitialize
           initialValues={
-            equipmentReducer.isResultEdit
-              ? initialEquipmentEditValues(equipmentReducer.isResultEdit)
+            equipmentReducer.isResultView
+              ? initialEquipmentEditValues(equipmentReducer.isResultView)
               : initialEquipmentValues
           }
           onSubmit={(values, { setSubmitting }) => {
@@ -904,7 +920,7 @@ export default function ApprovedEdit() {
             </Grid>
           </Toolbar>
         </AppBar>
-        {JSON.stringify(equipmentDetailReducer.isResult)}
+
         <BoxDataGrid key={`dataList-EquipmentDetail`}>
           <DataGrid
             rowHeight={28}

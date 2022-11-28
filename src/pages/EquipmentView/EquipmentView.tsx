@@ -86,7 +86,11 @@ export default function EquipmentView() {
                 textAlign: "center",
                 // display: { xs: "none", md: "block" },
               }}
-            ></Typography>
+            >
+              {equipmentReducer.isResultView
+                ? equipmentReducer.isResultView.map((data) => data.equipment_no)
+                : ""}
+            </Typography>
           </Breadcrumbs>
         </Grid>
         <Grid xs={4} className="text-right">
@@ -117,7 +121,7 @@ export default function EquipmentView() {
         <EquipmentToPrint
           ref={componentRef}
           dataEquipment={
-            equipmentReducer.isResultEdit ? equipmentReducer.isResultEdit : []
+            equipmentReducer.isResultView ? equipmentReducer.isResultView : []
           }
           dataEquipmentDetail={
             equipmentDetailReducer.isResult

@@ -11,6 +11,7 @@ import {
   InputLabel,
   OutlinedInput,
 } from "@mui/material";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 
 // @type
 import MenuItem from "@mui/material/MenuItem";
@@ -339,7 +340,20 @@ export default function EquipmentCartForm({
           </Grid>
 
           <Grid item lg={12} md={12} xs={12}>
-            <FormControl fullWidth size="small">
+            <Field
+              id="equipment_detail_note"
+              name="equipment_detail_note"
+              size="small"
+              placeholder="รายละเอียดเพิ่มเติม"
+              component={TextareaAutosize}
+              minRows={2}
+              style={{ width: "100%" }}
+              onChange={(e) => {
+                setFieldValue("equipment_detail_note", e.target.value);
+              }}
+              value={values.equipment_detail_note}
+            />
+            {/* <FormControl fullWidth size="small">
               <InputLabel htmlFor="equipment_detail_note">
                 รายละเอียด
               </InputLabel>
@@ -354,7 +368,7 @@ export default function EquipmentCartForm({
                 }
                 placeholder="รายละเอียดเพิ่มเติม"
               />
-            </FormControl>
+            </FormControl> */}
           </Grid>
         </Grid>
       </Form>

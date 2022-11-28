@@ -109,6 +109,48 @@ export const productSearchById = createAsyncThunk(
   }
 );
 
+// แก้ไขข้อมูลรายละเอียดใบรับอุปกรณ์
+export const productUpdate = createAsyncThunk(
+  "product/update",
+  async ({ formData, id }: { formData: any; id: any }, thunkAPI) => {
+    try {
+      const { data: res } = await axios.put(
+        `${server.BACKOFFICE_URL_V1}/product?id=${id}`,
+        formData,
+        header_get
+      );
+      let data = res;
+      if (data.result === OK) {
+        const message = "แก้ไขรับอุปกรณ์ สำเร็จ";
+        MySwal.fire({
+          icon: "success",
+          title: message,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        return data.data;
+      } else {
+        let message = "บันทึกรับอุปกรณ์ ผิดพลาด";
+        MySwal.fire({
+          icon: "warning",
+          title: message,
+          showConfirmButton: false,
+        });
+        return thunkAPI.rejectWithValue(data.message);
+      }
+    } catch (e: any) {
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
 const wait = (ms: number) =>
   new Promise<void>((resolve) => {
     MySwal.fire({
@@ -156,6 +198,19 @@ const productSlice = createSlice({
       state.errorMessage = action.payload as string;
     });
     builder.addCase(productSearchById.pending, (state, _action) => {
+      state.isFetching = true;
+    });
+    builder.addCase(productUpdate.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      return state;
+    });
+    builder.addCase(productUpdate.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(productUpdate.pending, (state, _action) => {
       state.isFetching = true;
     });
   },

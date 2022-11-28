@@ -25,8 +25,9 @@ import ApprovedEdit from "@/pages/ApprovedEdit";
 // @theme
 import theme from "@/styles/MuiTheme";
 import Product from "./pages/Product";
-import ProductView from "./pages/ProductView";
-import ProductEdit from "./pages/ProductEdit";
+import ProductView from "@/pages/ProductView";
+import ProductEdit from "@/pages/ProductEdit";
+import Transfer from "@/pages/Transfer";
 
 export default function App() {
   useEffect(() => {
@@ -92,6 +93,8 @@ export default function App() {
             <Route path="/app3/product" element={<Product />} />
             <Route path="/app3/product/view" element={<ProductView />} />
             <Route path="/app3/product/edit" element={<ProductEdit />} />
+
+            <Route path="/app3/transfer" element={<Transfer />} />
           </Route>
         </Route>
       </Routes>

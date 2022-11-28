@@ -33,7 +33,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 import Tooltip from "@mui/material/Tooltip";
 
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
@@ -683,7 +683,20 @@ export default function EquipmentCreate() {
             </FormControl>
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
-            <FormControl fullWidth size="small">
+            <Field
+              id="equipment_note"
+              name="equipment_note"
+              size="small"
+              placeholder="รายละเอียดเพิ่มเติม"
+              component={TextareaAutosize}
+              minRows={2}
+              style={{ width: "100%" }}
+              onChange={(e) => {
+                setFieldValue("equipment_note", e.target.value);
+              }}
+              value={values.equipment_note}
+            />
+            {/* <FormControl fullWidth size="small">
               <InputLabel htmlFor="equipment_note">รายละเอียด</InputLabel>
               <Field
                 as={OutlinedInput}
@@ -696,7 +709,7 @@ export default function EquipmentCreate() {
                 }
                 placeholder="รายละเอียดเพิ่มเติม"
               />
-            </FormControl>
+            </FormControl> */}
           </Grid>
           <Grid item lg={12} md={12} xs={12} sx={{ mb: 1 }}>
             <Box sx={{ flexDirection: "row" }}>
@@ -924,6 +937,7 @@ export default function EquipmentCreate() {
           }}
           initialValues={initialEquipmentValues}
           onSubmit={(values, { setSubmitting }) => {
+            console.log(values);
             let formData = new FormData();
             if (equipmentCartReducer.isResult.length !== 0) {
               const newArrayProduct = reverseArrayInPlace(
