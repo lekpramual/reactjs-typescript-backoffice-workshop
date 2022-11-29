@@ -153,7 +153,7 @@ export default function ProductFormSearch() {
                 <Button
                   type="submit"
                   variant="contained"
-                  className="hover:text-[#fce805] w-[28px]"
+                  className="hover:text-[#fce805] w-[28px] ml-2"
                   size="small"
                   onClick={() => {
                     // รีเซตฟอร์ม

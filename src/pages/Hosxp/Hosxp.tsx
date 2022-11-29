@@ -201,6 +201,7 @@ export default function Hosxp() {
                     dispatch(hosxpAll());
                     // เคียสค่า การค้นหา
                     setKeywordSearch("");
+
                     MySwal.fire({
                       icon: "success",
                       title: "ปลดล็อกข้อมูลเรียบร้อย",

@@ -22,6 +22,7 @@ import EquipmentEdit from "@/pages/EquipmentEdit";
 import EquipmentView from "@/pages/EquipmentView";
 import Approved from "@/pages/Approved";
 import ApprovedEdit from "@/pages/ApprovedEdit";
+import TransferCreate from "@/pages/TransferCreate";
 // @theme
 import theme from "@/styles/MuiTheme";
 import Product from "./pages/Product";
@@ -95,6 +96,7 @@ export default function App() {
             <Route path="/app3/product/edit" element={<ProductEdit />} />
 
             <Route path="/app3/transfer" element={<Transfer />} />
+            <Route path="/app3/transfer/create" element={<TransferCreate />} />
           </Route>
         </Route>
       </Routes>

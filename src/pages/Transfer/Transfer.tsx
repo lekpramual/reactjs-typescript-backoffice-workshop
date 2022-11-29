@@ -42,18 +42,37 @@ export default function Transfer() {
 
   useEffect(() => {}, [productReducer.isResult]);
 
-  const rowData = [];
+  const rowData = [
+    {
+      transfer_id: 1,
+      transfer_no: "TRA65110001",
+      transfer_depart: "ศูนย์คอมพิวเตอร์",
+      transfer_depart_move: "X-Ray ชั้น 2 ตึกจุฬาภรณ์",
+      transfer_file: "TRA65110001.pdf",
+      transfer_status: "โอนย้ายเรียบร้อย",
+      transfer_date: "2022-10-18T04:39:02.000Z",
+    },
+    {
+      transfer_id: 2,
+      transfer_no: "TRA65110002",
+      transfer_depart: "ศูนย์คอมพิวเตอร์",
+      transfer_depart_move: "X-Ray ชั้น 2 ตึกจุฬาภรณ์",
+      transfer_file: "TRA65110002.pdf",
+      transfer_status: "โอนย้ายเรียบร้อย",
+      transfer_date: "2022-10-18T04:39:02.000Z",
+    },
+  ];
   const dataColumns = [
     {
       headerName: "เลขที่ใบโอน",
-      field: "equipment_no",
+      field: "transfer_no",
       flex: 1,
       minWidth: 128,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value, row }: any) => (
         <Link
-          to={`/app3/equipment/view?id=${row.product_equipment}`}
+          to={`/app3/equipment/view?id=${row.transfer_id}`}
           className="text-cyan-500 hover:text-cyan-600"
         >
           {value}
@@ -62,7 +81,7 @@ export default function Transfer() {
     },
     {
       headerName: "หน่วยงานที่เก็บเดิม",
-      field: "category_name",
+      field: "transfer_depart",
       flex: 1,
       minWidth: 256,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -75,7 +94,7 @@ export default function Transfer() {
     },
     {
       headerName: "หน่วยงานที่เก็บใหม่",
-      field: "dept_name",
+      field: "transfer_depart_move",
       flex: 1,
       minWidth: 256,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -88,7 +107,7 @@ export default function Transfer() {
     },
     {
       headerName: "วันที่",
-      field: "product_create_at",
+      field: "transfer_date",
       flex: 1,
       minWidth: 124,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -292,7 +311,7 @@ export default function Transfer() {
             sx={{
               minHeight: 505,
             }}
-            rows={productReducer.isResult ? productReducer.isResult : []}
+            rows={rowData ? rowData : []}
             columns={dataColumns}
             pageSize={15}
             hideFooterSelectedRowCount
@@ -301,7 +320,7 @@ export default function Transfer() {
             // loading={hosxpReducer.isFetching}
             getRowId={(row) =>
               // parseInt(row.kskloginname) + Math.random() * (100 - 1)
-              row.product_id
+              row.transfer_id
             }
             localeText={{
               MuiTablePagination: {

@@ -57,6 +57,42 @@ export const BoxDataGrid = styled(Box)<BoxProps>(({ theme }) => ({
     },
 }));
 
+export const BoxDataGridModel = styled(Box)<BoxProps>(({ theme }) => ({
+  // display: "flex",
+  backgroundColor: "white",
+  width: "100%",
+  height: "90%",
+  // maxHeight: "450px",
+
+  "& .MuiDataGrid-root": {
+    borderRadius: "0px",
+    height: "510px",
+  },
+  "& .MuiDataGrid-root .MuiDataGrid-columnHeaders": {
+    borderTopLeftRadius: "0px",
+    borderTopRightRadius: "0px",
+  },
+  "& .MuiDataGrid-root .MuiDataGrid-columnHeaderTitle": {
+    fontFamily: "Mitr-R",
+    fontSize: "14px",
+  },
+  "& .MuiDataGrid-root .MuiDataGrid-columnHeader .MuiDataGrid-iconButtonContainer":
+    {
+      color: "#fff",
+      width: "auto",
+      visibility: "visible",
+    },
+  "& .MuiDataGrid-root .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon": {
+    color: "#fff",
+    opacity: 0.5,
+  },
+  "& .MuiDataGrid-root .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
+    {
+      color: "#fff",
+      opacity: 0.5,
+    },
+}));
+
 export const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(1),

@@ -189,8 +189,9 @@ export function usePrivateRouteDemo() {
         },
       ],
     },
+
     {
-      id: "ใบเบิก",
+      id: "อุปกรณ์",
       children: [
         {
           id: "บันทึกรับอุปกรณ์",
@@ -246,30 +247,6 @@ export function usePrivateRouteDemo() {
           path: "/app3/equipment/edit",
           show: false,
         },
-
-        // {
-        //   id: "โอนย้ายอุปกรณ์",
-        //   icon: (
-        //     <Box
-        //       sx={{
-        //         ...iconCategory,
-        //       }}
-        //     >
-        //       <MoveDownTwoToneIcon
-        //         sx={{
-        //           fontSize: 28,
-        //         }}
-        //       />
-        //     </Box>
-        //   ),
-        //   path: "/app3/move",
-        //   show: true,
-        // },
-      ],
-    },
-    {
-      id: "ตรวจรับ",
-      children: [
         {
           id: "ตรวจรับอุปกรณ์",
           icon: (
@@ -307,11 +284,6 @@ export function usePrivateRouteDemo() {
           path: "/app3/approved/edit",
           show: false,
         },
-      ],
-    },
-    {
-      id: "โอน-ย้าย",
-      children: [
         {
           id: "โอนย้ายอุปกรณ์",
           icon: (
@@ -330,11 +302,24 @@ export function usePrivateRouteDemo() {
           path: "/app3/transfer",
           show: true,
         },
-      ],
-    },
-    {
-      id: "อุปกรณ์",
-      children: [
+        {
+          id: "เพิ่มโอนย้ายอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <ContentPasteGoTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/transfer/create",
+          show: false,
+        },
         {
           id: "รายการอุปกรณ์",
           icon: (
@@ -407,25 +392,6 @@ export function usePrivateRouteDemo() {
           path: "/app3/equipment/view",
           show: false,
         },
-
-        // {
-        //   id: "โอนย้ายอุปกรณ์",
-        //   icon: (
-        //     <Box
-        //       sx={{
-        //         ...iconCategory,
-        //       }}
-        //     >
-        //       <MoveDownTwoToneIcon
-        //         sx={{
-        //           fontSize: 28,
-        //         }}
-        //       />
-        //     </Box>
-        //   ),
-        //   path: "/app3/move",
-        //   show: true,
-        // },
       ],
     },
   ];
