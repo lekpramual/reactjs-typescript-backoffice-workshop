@@ -5,6 +5,9 @@ import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import moment from "moment";
 
 import { useDebounce } from "@react-hook/debounce";
+// @alert
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import { Clear, Search } from "@mui/icons-material";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
@@ -101,6 +104,8 @@ function QuickSearchToolbar(props: QuickSearchToolbarProps) {
   );
 }
 
+const MySwal = withReactContent(Swal);
+
 export default function Hosxp() {
   const dispatch = useDispatch<any>();
   const hosxpReducer = useSelector(hosxpSelector);
@@ -139,8 +144,20 @@ export default function Hosxp() {
       ),
     },
     {
-      headerName: "ชื่อผู้ใช้งาน",
+      headerName: "ชื่อคอมพิวเตอร์",
       field: "loginname",
+      flex: 1,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
+      sortable: true,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]">
+          {value}
+        </Typography>
+      ),
+    },
+    {
+      headerName: "ชื่อผู้ใช้งาน",
+      field: "full_name",
       flex: 1,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
       sortable: true,
@@ -173,8 +190,35 @@ export default function Hosxp() {
               className="hover:text-[#fce805] w-[30px] h-[26px]"
               size="small"
               onClick={() => {
-                setSelectedProduct(row);
-                setOpenDialog(true);
+                // setSelectedProduct(row);
+                // console.log(row);
+                // setOpenDialog(true);
+                Swal.fire({
+                  title: "คุณต้องปลดล็อก ใช่ หรือ ไม่?",
+                  text: `ปลดล็อก รหัส : ${row.kskloginname} - ${row.full_name}.`,
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "ใช่, ต้องการลบ!",
+                  cancelButtonText: "ไม่, ยกเลิก!",
+                  reverseButtons: true,
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    // ลบข้อมูล ตาม รหัส hosxp
+                    dispatch(hosxpDelete({ id: row.kskloginname }));
+                    // รีโหลดข้อมูลใหม่
+                    dispatch(hosxpAll());
+                    // เคียสค่า การค้นหา
+                    setKeywordSearch("");
+                    MySwal.fire({
+                      icon: "success",
+                      title: "ปลดล็อกข้อมูลเรียบร้อย",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  }
+                });
               }}
             >
               <DeleteTwoToneIcon color="inherit" />

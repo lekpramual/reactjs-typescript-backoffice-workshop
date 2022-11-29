@@ -112,7 +112,6 @@ export const hosxpDelete = createAsyncThunk(
   "hosxp/delete",
   async ({ id }: { id: string }, thunkAPI) => {
     try {
-      console.log(id);
       if (id) {
         const { data: res } = await axios.delete<HosxpResult>(
           `${server.HOSXP_URL}/user/?username=${id}`,
