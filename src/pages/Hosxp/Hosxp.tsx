@@ -8,11 +8,8 @@ import { useDebounce } from "@react-hook/debounce";
 // @alert
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-
 import { Clear, Search } from "@mui/icons-material";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
-import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
-import DoneTwoToneIcon from "@mui/icons-material/DoneTwoTone";
 
 // @redux
 import { useSelector, useDispatch } from "react-redux";
@@ -26,16 +23,12 @@ import {
 
 // @component
 import { NumberWithCommas } from "@/utils";
-// @type
-import { HosxpDelete } from "@/types";
+
 import {
   Typography,
   Stack,
   IconButton,
   TextField,
-  Dialog,
-  DialogActions,
-  DialogTitle,
   Paper,
   AppBar,
   Toolbar,
@@ -112,9 +105,6 @@ export default function Hosxp() {
   const [keywordSearch, setKeywordSearch] = useDebounce<string>("", 1000);
   const [keywordSearchNoDelay, setKeywordSearchNoDelay] =
     React.useState<string>("");
-  const [selectedProduct, setSelectedProduct] =
-    React.useState<HosxpDelete | null>(null);
-  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
 
   // คอลัมข้อมูลการแสดง
   const hosxpColumns = [
@@ -240,67 +230,6 @@ export default function Hosxp() {
     }
   }, [dispatch, keywordSearch]);
 
-  // ฟังก์ชั่น ยืนยันการลบข้อมูล
-  const handleDeleteConfirm = () => {
-    // ลบข้อมูล ตาม รหัส hosxp
-    dispatch(hosxpDelete({ id: selectedProduct!.kskloginname! }));
-    // รีโหลดข้อมูลใหม่
-    dispatch(hosxpAll());
-    // เคียสค่า การค้นหา
-    setKeywordSearch("");
-    // ปิด ป๊อปอัพ
-    setOpenDialog(false);
-  };
-
-  const showDialog = () => {
-    if (selectedProduct === null) {
-      return "";
-    }
-
-    return (
-      <Dialog
-        open={openDialog}
-        keepMounted
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">
-          {/* <img
-            src={`${imageUrl}/images/${
-              selectedProduct.image
-            }?dummy=${Math.random()}`}
-            style={{ width: 100, borderRadius: "5%" }}
-          /> */}
-          <br />
-          ยืนยันการ ปลดล็อก รหัส Hosxp? : {selectedProduct.kskloginname}
-        </DialogTitle>
-        {/* <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-          คุณไม่สามารถกู้คืนผลิตภัณฑ์ที่ถูกลบได้.
-          </DialogContentText>
-        </DialogContent> */}
-        <DialogActions>
-          <Button
-            onClick={() => setOpenDialog(false)}
-            variant="contained"
-            color="error"
-            className="w-[96px] "
-          >
-            <CloseTwoToneIcon /> ปิด
-          </Button>
-          <Button
-            onClick={handleDeleteConfirm}
-            variant="contained"
-            color="success"
-            className="w-[96px] "
-          >
-            <DoneTwoToneIcon /> ตกลง
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  };
-
   return (
     <>
       {/* 936  width: "100%"*/}
@@ -391,8 +320,6 @@ export default function Hosxp() {
           />
         </BoxDataGrid>
       </Paper>
-
-      {showDialog()}
     </>
   );
 }
