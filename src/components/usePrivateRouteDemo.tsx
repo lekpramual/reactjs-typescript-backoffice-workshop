@@ -284,24 +284,7 @@ export function usePrivateRouteDemo() {
           path: "/app3/approved/edit",
           show: false,
         },
-        {
-          id: "โอนย้ายอุปกรณ์",
-          icon: (
-            <Box
-              sx={{
-                ...iconCategory,
-              }}
-            >
-              <ContentPasteGoTwoToneIcon
-                sx={{
-                  fontSize: 28,
-                }}
-              />
-            </Box>
-          ),
-          path: "/app3/transfer",
-          show: true,
-        },
+
         {
           id: "เพิ่มโอนย้ายอุปกรณ์",
           icon: (
@@ -336,6 +319,24 @@ export function usePrivateRouteDemo() {
             </Box>
           ),
           path: "/app3/product",
+          show: true,
+        },
+        {
+          id: "โอนย้ายอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <ContentPasteGoTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/transfer",
           show: true,
         },
         {

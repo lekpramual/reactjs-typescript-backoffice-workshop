@@ -151,9 +151,12 @@ export default function ProductFormSearch() {
 
               <Tooltip title="โหลดข้อมูล">
                 <Button
+                  sx={{
+                    marginLeft: "6px",
+                  }}
                   type="submit"
                   variant="contained"
-                  className="hover:text-[#fce805] w-[28px] ml-2"
+                  className="hover:text-[#fce805] w-[28px] ml-3"
                   size="small"
                   onClick={() => {
                     // รีเซตฟอร์ม
@@ -186,7 +189,6 @@ export default function ProductFormSearch() {
       }}
       initialValues={initialValues}
       onSubmit={(values, { setSubmitting }) => {
-        console.log(values.category);
         dispatch(productSearch({ search: values }));
         setSubmitting(false);
       }}

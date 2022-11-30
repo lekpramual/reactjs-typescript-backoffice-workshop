@@ -1,37 +1,18 @@
 import React, { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// @form
-import { Formik, Form, Field } from "formik";
+
 // @mui
 import {
   Button,
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
 } from "@mui/material";
-import TextareaAutosize from "@mui/base/TextareaAutosize";
-// @type
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Stack from "@mui/material/Stack";
 // @icons
-import Tooltip from "@mui/material/Tooltip";
-import Paper from "@mui/material/Paper";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
 
-import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
 import DoneTwoToneIcon from "@mui/icons-material/DoneTwoTone";
-import NoteAltTwoToneIcon from "@mui/icons-material/NoteAltTwoTone";
-import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
-import ToggleOffTwoToneIcon from "@mui/icons-material/ToggleOffTwoTone";
-import ToggleOnTwoToneIcon from "@mui/icons-material/ToggleOnTwoTone";
 
 import { BootstrapDialog } from "@/styles/AppStyle";
 // @styles
@@ -42,10 +23,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { categorySelector, categoryAll } from "@/store/slices/categorySlice";
 import {
-  equipmentCartSelector,
-  addEquipmentCart,
-  updateEquipmentCartEdit,
-} from "@/store/slices/equipmentCartSlice";
+  transferSelector,
+  addTransfer,
+  addSelectTransfer,
+} from "@/store/slices/transferSlice";
 
 // @utils
 import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
@@ -103,22 +84,11 @@ export default function TransferCreateForm({ show, confirm }: any) {
 
   const dispatch = useDispatch<any>();
 
-  const categoryReducer = useSelector(categorySelector);
-  const equipmentCartReducer = useSelector(equipmentCartSelector);
   const productReducer = useSelector(productSelector);
+  const transferReducer = useSelector(transferSelector);
 
   const [selectionModel, setSelectionModel] = React.useState<GridRowId[]>([]);
-
-  const initialValues: any = {
-    id: "",
-    equipment_detail_title: "", // รายการ
-    equipment_detail_category: 0, // หมวดหมู่รหัส *
-    equipment_detail_category_name: "", // หมวดหมู่ชื่อ *
-    equipment_detail_material_type: "empty", // ชนิดวัสดุ *
-    equipment_detail_qty: "", // จำนวน
-    equipment_detail_price: "", // ราคาต่อหน่วย
-    equipment_detail_note: "", // รายละเอียด
-  };
+  const [selectedRows, setSelectedRows] = React.useState<any>([]);
 
   const dataColumns = [
     {
@@ -129,12 +99,9 @@ export default function TransferCreateForm({ show, confirm }: any) {
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value, row }: any) => (
-        <Link
-          to={`/app3/equipment/view?id=${row.product_equipment}`}
-          className="text-cyan-500 hover:text-cyan-600"
-        >
+        <Typography variant="body1" className="text-[14px]">
           {value}
-        </Link>
+        </Typography>
       ),
     },
     {
@@ -145,12 +112,9 @@ export default function TransferCreateForm({ show, confirm }: any) {
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value, row }: any) => (
-        <Link
-          to={`/app3/product/view?id=${row.product_id}`}
-          className="text-cyan-500 hover:text-cyan-600"
-        >
+        <Typography variant="body1" className="text-[14px]">
           {value}
-        </Link>
+        </Typography>
       ),
     },
     {
@@ -194,63 +158,20 @@ export default function TransferCreateForm({ show, confirm }: any) {
     },
   ];
 
-  const CustomizedSelectForFormik = ({ children, form, field, label }: any) => {
-    const { name, value } = field;
-    const { setFieldValue } = form;
+  useEffect(() => {}, []);
 
-    return (
-      <Select
-        label={label}
-        name={name}
-        value={value}
-        onChange={(e) => {
-          setFieldValue(name, e.target.value);
-        }}
-      >
-        {children}
-      </Select>
-    );
-  };
-
-  const CustomizedSelectForFormikV2 = ({
-    children,
-    form,
-    field,
-    label,
-  }: any) => {
-    const { name, value } = field;
-    const { setFieldValue } = form;
-    return (
-      <Select
-        label={label}
-        name={name}
-        value={parseInt(value)}
-        onChange={(e) => {
-          setFieldValue(name, e.target.value);
-        }}
-      >
-        {children}
-      </Select>
-    );
-  };
-
-  const handleProductSubmit = () => {
-    if (formRefProduct.current) {
-      formRefProduct.current.handleSubmit();
+  function selectRowReducer() {
+    const selectRows: any = [];
+    // const departs = [{ label: "--เลือกหน่วยงานที่บันทึก--", value: 0 }];
+    if (transferReducer.isResult) {
+      transferReducer.isResult.map((row) => {
+        return selectRows.push(row.product_id);
+      });
+      return selectRows;
+    } else {
+      return selectRows;
     }
-  };
-
-  const resetProductForm = () => {
-    if (formRefProduct.current) {
-      formRefProduct.current.resetForm();
-    }
-  };
-
-  useEffect(() => {
-    dispatch(categoryAll());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
-
+  }
   return (
     <BootstrapDialog
       fullScreen
@@ -270,6 +191,7 @@ export default function TransferCreateForm({ show, confirm }: any) {
       </BootstrapDialogTitle>
       <DialogContent dividers>
         <ProductFormSearch />
+
         <BoxDataGridModel>
           <DataGrid
             className={classes.root}
@@ -300,13 +222,21 @@ export default function TransferCreateForm({ show, confirm }: any) {
               },
             }}
             checkboxSelection
-            selectionModel={selectionModel}
-            onSelectionModelChange={(selection) => {
-              // const selectedIDs = new Set(ids);
-              // const selectedRowData = productReducer.isResult.filter((row) =>
-              //   selectedIDs.has(row.id.toString())
-              // );
-              setSelectionModel(selection);
+            selectionModel={
+              transferReducer.isResultEdit ? transferReducer.isResultEdit : []
+            }
+            onSelectionModelChange={(ids) => {
+              const selectedIDs = new Set(ids);
+              const productData = productReducer.isResult
+                ? productReducer.isResult
+                : [];
+              const selectedRows = productData.filter((row) =>
+                selectedIDs.has(row.product_id)
+              );
+              setSelectedRows(selectedRows);
+              setSelectionModel(ids);
+              dispatch(addSelectTransfer(ids));
+
               // if (selection.length > 1) {
               //   const selectionSet = new Set(selectionModel);
               //   const result = selection.filter((s) => !selectionSet.has(s));
@@ -327,11 +257,12 @@ export default function TransferCreateForm({ show, confirm }: any) {
       >
         <Button
           onClick={() => {
-            setSelectionModel([]);
+            // setSelectedRows([]);
+            // setSelectionModel([]);
+            const selectedProduct = selectRowReducer();
+            dispatch(addSelectTransfer(selectedProduct));
             // ปิด ฟอร์ม
             confirm(false);
-            // รีเซต ฟอร์ฒ
-            resetProductForm();
           }}
           variant="contained"
           color="error"
@@ -345,7 +276,8 @@ export default function TransferCreateForm({ show, confirm }: any) {
           color="success"
           className="w-[128px] "
           onClick={() => {
-            handleProductSubmit();
+            dispatch(addTransfer(selectedRows));
+            confirm(false);
           }}
         >
           <DoneTwoToneIcon />

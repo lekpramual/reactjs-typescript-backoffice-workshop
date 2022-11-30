@@ -793,8 +793,8 @@ export default function ApprovedEdit() {
         </Typography>
 
         <Typography color="text.primary" variant="subtitle2">
-          {equipmentReducer.isResultEdit
-            ? equipmentReducer.isResultEdit.map((data) => data.equipment_no)
+          {equipmentReducer.isResultView
+            ? equipmentReducer.isResultView.map((data) => data.equipment_no)
             : ""}
         </Typography>
       </Breadcrumbs>
@@ -978,8 +978,8 @@ export default function ApprovedEdit() {
 
       <Grid container spacing={2} alignItems="center" className="mt-2">
         <Grid xs={12} className="text-center">
-          {equipmentReducer.isResultEdit ? (
-            equipmentReducer.isResultEdit.map((data) => {
+          {equipmentReducer.isResultView ? (
+            equipmentReducer.isResultView.map((data) => {
               if (data.equipment_status === "รับเข้า") {
                 return (
                   <span>
