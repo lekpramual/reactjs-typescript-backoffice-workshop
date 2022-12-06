@@ -14,11 +14,13 @@ import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
 import ContentPasteGoTwoToneIcon from "@mui/icons-material/ContentPasteGoTwoTone";
+import CheckBoxTwoToneIcon from "@mui/icons-material/CheckBoxTwoTone";
+import CropDinTwoToneIcon from "@mui/icons-material/CropDinTwoTone";
 // @icons
 import ToggleOffTwoToneIcon from "@mui/icons-material/ToggleOffTwoTone";
 import ToggleOnTwoToneIcon from "@mui/icons-material/ToggleOnTwoTone";
 // @redux
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 // @styles
 import { BoxDataGrid } from "@/styles/AppStyle";
 // @utils
@@ -26,6 +28,7 @@ import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 // @seletor
 import { productSelector } from "@/store/slices/productSlice";
+import { transferSelector, transferAll } from "@/store/slices/transferSlice";
 import TransferFormSearch from "./TransferFormSearch";
 // @day
 import moment from "moment";
@@ -38,36 +41,17 @@ export interface DialogTitleProps {
 
 export default function Transfer() {
   const navigate = useNavigate();
+  const dispatch = useDispatch<any>();
   const productReducer = useSelector(productSelector);
+  const transferReducer = useSelector(transferSelector);
 
   useEffect(() => {}, [productReducer.isResult]);
 
-  const rowData = [
-    {
-      transfer_id: 1,
-      transfer_no: "TRA65110001",
-      transfer_depart: "ศูนย์คอมพิวเตอร์",
-      transfer_depart_move: "X-Ray ชั้น 2 ตึกจุฬาภรณ์",
-      transfer_file: "TRA65110001.pdf",
-      transfer_status: "โอนย้ายเรียบร้อย",
-      transfer_date: "2022-10-18T04:39:02.000Z",
-    },
-    {
-      transfer_id: 2,
-      transfer_no: "TRA65110002",
-      transfer_depart: "ศูนย์คอมพิวเตอร์",
-      transfer_depart_move: "X-Ray ชั้น 2 ตึกจุฬาภรณ์",
-      transfer_file: "TRA65110002.pdf",
-      transfer_status: "โอนย้ายเรียบร้อย",
-      transfer_date: "2022-10-18T04:39:02.000Z",
-    },
-  ];
   const dataColumns = [
     {
       headerName: "เลขที่ใบโอน",
       field: "transfer_no",
-      flex: 1,
-      minWidth: 128,
+      width: 124,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value, row }: any) => (
@@ -80,8 +64,8 @@ export default function Transfer() {
       ),
     },
     {
-      headerName: "หน่วยงานที่เก็บเดิม",
-      field: "transfer_depart",
+      headerName: "เรื่องที่บันทึก",
+      field: "transfer_title",
       flex: 1,
       minWidth: 256,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -93,10 +77,23 @@ export default function Transfer() {
       ),
     },
     {
-      headerName: "หน่วยงานที่เก็บใหม่",
-      field: "transfer_depart_move",
+      headerName: "ผู้บันทึก",
+      field: "transfer_member",
       flex: 1,
-      minWidth: 256,
+      minWidth: 164,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+      sortable: true,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]" noWrap>
+          {value}
+        </Typography>
+      ),
+    },
+    {
+      headerName: "หน่วยงานที่เก็บใหม่",
+      field: "transfer_depart_name",
+      flex: 1,
+      minWidth: 512,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value }: any) => (
@@ -108,8 +105,7 @@ export default function Transfer() {
     {
       headerName: "วันที่",
       field: "transfer_date",
-      flex: 1,
-      minWidth: 124,
+      width: 124,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value }: any) => (
@@ -120,25 +116,27 @@ export default function Transfer() {
     },
     {
       headerName: "สถานะ",
-      field: "product_status",
+      field: "transfer_status",
       // flex: 1,
-      width: 96,
+      width: 84,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
-      sortable: true,
+      sortable: false,
+      align: "center" as "center",
+      headerAlign: "center" as "center",
       renderCell: ({ value, row }: any) => (
         <Typography
           variant="body1"
           className={
-            row.product_status === "เปิดใช้งาน"
+            row.transfer_status === "ยืนยันการโอน"
               ? "text-[14px] text-green-500"
-              : "text-[14px] text-red-500"
+              : "text-[14px] text-yellow-500"
           }
         >
           {/* {value} */}
-          {row.product_status === "เปิดใช้งาน" ? (
-            <ToggleOnTwoToneIcon />
+          {row.transfer_status === "ยืนยันการโอน" ? (
+            <CheckBoxTwoToneIcon />
           ) : (
-            <ToggleOffTwoToneIcon />
+            <CropDinTwoToneIcon />
           )}
         </Typography>
       ),
@@ -171,8 +169,8 @@ export default function Transfer() {
               <VisibilityTwoToneIcon fontSize="inherit" />
             </Button>
           </Tooltip>
-          {row.product_status === "เปิดใช้งาน" ? (
-            <Tooltip title="แก้ไขข้อมูล">
+          {row.transfer_status !== "ยืนยันการโอน" ? (
+            <Tooltip title="ปรับปรุงข้อมูล">
               <Button
                 sx={{
                   minWidth: "30px",
@@ -183,14 +181,14 @@ export default function Transfer() {
                 className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
                 size="small"
                 onClick={() => {
-                  navigate("/app3/product/edit?id=" + row.product_id);
+                  navigate("/app3/transfer/edit?id=" + row.product_id);
                 }}
               >
                 <EditTwoToneIcon fontSize="inherit" />
               </Button>
             </Tooltip>
           ) : (
-            <Tooltip title="ปิดการใช้งาน">
+            <Tooltip title="โอนย้ายแล้ว">
               <span>
                 <Button
                   sx={{
@@ -212,6 +210,11 @@ export default function Transfer() {
       ),
     },
   ];
+
+  useEffect(() => {
+    dispatch(transferAll());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   return (
     <Box>
@@ -311,7 +314,7 @@ export default function Transfer() {
             sx={{
               minHeight: 505,
             }}
-            rows={rowData ? rowData : []}
+            rows={transferReducer.isResult ? transferReducer.isResult : []}
             columns={dataColumns}
             pageSize={15}
             hideFooterSelectedRowCount

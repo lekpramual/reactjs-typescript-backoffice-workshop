@@ -937,7 +937,7 @@ export default function EquipmentCreate() {
           }}
           initialValues={initialEquipmentValues}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
+           
             let formData = new FormData();
             if (equipmentCartReducer.isResult.length !== 0) {
               const newArrayProduct = reverseArrayInPlace(

@@ -67,7 +67,9 @@ import {
 import {
   transferSelector,
   addTransfer,
+  resetTransfer,
   deleteTransfer,
+  transferAdd,
 } from "@/store/slices/transferSlice";
 
 import { companySelector, companyAll } from "@/store/slices/companySlice";
@@ -291,24 +293,6 @@ export default function TransferCreate() {
     transfer_file: "-", // ไฟล์อัปโหลด
   };
 
-  const CustomizedSelectForFormik = ({ children, form, field, label }: any) => {
-    const { name, value } = field;
-    const { setFieldValue } = form;
-
-    return (
-      <Select
-        label={label}
-        name={name}
-        value={value}
-        onChange={(e) => {
-          setFieldValue(name, e.target.value);
-        }}
-      >
-        {children}
-      </Select>
-    );
-  };
-
   const handleSubmit = () => {
     if (formRef.current) {
       formRef.current.handleSubmit();
@@ -319,6 +303,16 @@ export default function TransferCreate() {
     if (formRef.current) {
       formRef.current.resetForm();
     }
+  };
+
+  const reverseArrayInPlace = (departNew, productObj) => {
+    return productObj.map((item) => {
+      return {
+        product_id: `${item.product_id}`,
+        transfer_detail_default_depart: `${item.product_depart}`,
+        transfer_detail_new_depart: `${departNew.value}`,
+      };
+    });
   };
 
   function optionNewDeparts() {
@@ -335,20 +329,6 @@ export default function TransferCreate() {
       return departs;
     }
   }
-
-  const reverseArrayInPlace = (productObj) => {
-    return productObj.map((item) => {
-      return {
-        transfer_detail_title: `${item.transfer_detail_title}`,
-        transfer_detail_category: `${item.transfer_detail_category}`,
-        transfer_detail_material_type: `${item.transfer_detail_material_type}`,
-        transfer_detail_qty: `${item.transfer_detail_qty}`,
-        transfer_detail_price: `${item.transfer_detail_price}`,
-        transfer_detail_price_total: `${item.transfer_detail_price_total}`,
-        transfer_detail_note: `${item.transfer_detail_note}`,
-      };
-    });
-  };
 
   const departOption = optionNewDeparts();
 
@@ -624,7 +604,10 @@ export default function TransferCreate() {
   useEffect(() => {
     dispatch(departmentAll());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [dispatch]); 
+
+  useEffect(() => {
+  }, [transferReducer.isResultView]);
 
   return (
     <Box>
@@ -718,8 +701,40 @@ export default function TransferCreate() {
           }}
           initialValues={initialTransferValues}
           onSubmit={(values, { setSubmitting }) => {
+            let formData = new FormData();
             console.log(values);
+            if (transferReducer.isResultView.length !== 0) {
+              const newArrayProduct = reverseArrayInPlace(
+                values.transfer_depart,
+                transferReducer.isResultView
+              );
+              formData.append("transfer_title", values.transfer_title);
+              formData.append("transfer_depart", values.transfer_depart.value);
+              formData.append("transfer_member", values.transfer_member);
+              formData.append(
+                "transfer_date",
+                moment(values.transfer_date).format("YYYY-MM-DD")
+              );
+              formData.append("transfer_note", values.transfer_note);
+              formData.append("transfer_status", "รอดำเนินการ");
+              formData.append("transfer_file", values.file);
+              formData.append(
+                "transfer_detail",
+                JSON.stringify(newArrayProduct)
+              );
 
+              // บันทึกข้อมูล
+              dispatch(transferAdd({ formData: formData, navigate: navigate }));
+              dispatch(resetTransfer());
+              resetForm();
+            } else {
+              let message = "กรุณาทำการเพิ่มรายการอุปกรณ์";
+              MySwal.fire({
+                icon: "warning",
+                title: message,
+                showConfirmButton: false,
+              });
+            }
             setSubmitting(false);
           }}
         >
@@ -785,7 +800,9 @@ export default function TransferCreate() {
             // sx={{
             //   minHeight: 505,
             // }}
-            rows={transferReducer.isResult ? transferReducer.isResult : []}
+            rows={
+              transferReducer.isResultView ? transferReducer.isResultView : []
+            }
             // rows={[]}
             columns={dataColumns}
             pageSize={15}

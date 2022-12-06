@@ -8,3 +8,4 @@ export * from "@/types/car.type";
 export * from "@/types/equipment.type";
 export * from "@/types/department.type";
 export * from "@/types/product.type";
+export * from "@/types/transfer.type";
