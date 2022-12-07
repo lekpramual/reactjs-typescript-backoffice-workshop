@@ -7148,6 +7148,11 @@ nth-check@^2.0.1:
   dependencies:
     boolbase "^1.0.0"
 
+number-to-words@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/number-to-words/-/number-to-words-1.2.4.tgz#e0f124de9628f8d86c4eeb89bac6c07699264501"
+  integrity sha512-/fYevVkXRcyBiZDg6yzZbm0RuaD6i0qRfn8yr+6D0KgBMOndFPxuW10qCHpzs50nN8qKuv78k8MuotZhcVX6Pw==
+
 nwsapi@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/nwsapi/-/nwsapi-2.2.1.tgz#10a9f268fbf4c461249ebcfe38e359aa36e2577c"
@@ -9610,6 +9615,13 @@ text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
+
+thainumberconverter@^1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/thainumberconverter/-/thainumberconverter-1.4.3.tgz#6e518eaaa1fa6b6dd34fd285847e5f17336c2b88"
+  integrity sha512-DVni3PKmYR/5bO4bshr3UdsyhtTTUwEBeja7EVr55qGrMFN00eZYhfR37dSoTk/2q4GRk/9w5nxfS3Hh9dgBsQ==
+  dependencies:
+    number-to-words "^1.2.4"
 
 throat@^6.0.1:
   version "6.0.1"

@@ -89,6 +89,17 @@ theme = {
         },
       },
     },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderTop: "1px solid #263238",
+          borderBottom: "1px solid #263238",
+          borderLeft: "1px solid #263238",
+          borderRight: "1px solid #263238",
+        },
+      },
+    },
+
     MuiTabs: {
       styleOverrides: {
         root: {

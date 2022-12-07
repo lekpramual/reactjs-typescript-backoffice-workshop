@@ -56,7 +56,7 @@ export default function Transfer() {
       sortable: true,
       renderCell: ({ value, row }: any) => (
         <Link
-          to={`/app3/equipment/view?id=${row.transfer_id}`}
+          to={`/app3/transfer/view?id=${row.transfer_id}`}
           className="text-cyan-500 hover:text-cyan-600"
         >
           {value}
@@ -163,7 +163,7 @@ export default function Transfer() {
               className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
               size="small"
               onClick={() => {
-                navigate("/app3/product/view?id=" + row.product_id);
+                navigate("/app3/transfer/view?id=" + row.transfer_id);
               }}
             >
               <VisibilityTwoToneIcon fontSize="inherit" />
@@ -181,7 +181,7 @@ export default function Transfer() {
                 className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
                 size="small"
                 onClick={() => {
-                  navigate("/app3/transfer/edit?id=" + row.product_id);
+                  navigate("/app3/transfer/edit?id=" + row.transfer_id);
                 }}
               >
                 <EditTwoToneIcon fontSize="inherit" />

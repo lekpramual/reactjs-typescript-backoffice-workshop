@@ -304,6 +304,24 @@ export function usePrivateRouteDemo() {
           show: false,
         },
         {
+          id: "ดูโอนย้ายอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <ContentPasteGoTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/transfer/view",
+          show: false,
+        },
+        {
           id: "รายการอุปกรณ์",
           icon: (
             <Box

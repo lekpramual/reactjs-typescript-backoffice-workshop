@@ -19,3 +19,20 @@
   src: local("Thonburi-B"),
     url("fonts/Thonburi/SFThonburi-Bold.ttf") format("truetype");
 }
+
+@font-face {
+  font-family: "Mitr-B";
+  src: local("Mitr-B"), url("fonts/mitr/Mitr-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Sarabun-R";
+  src: local("Sarabun-R"),
+    url("fonts/sarabun/Sarabun-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Sarabun-B";
+  src: local("Sarabun-B"),
+    url("fonts/sarabun/Sarabun-Bold.ttf") format("truetype");
+}

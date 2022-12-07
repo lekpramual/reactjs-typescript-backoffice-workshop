@@ -172,6 +172,42 @@ export const transferAll = createAsyncThunk(
   }
 );
 
+// ค้นหาข้อมูล จากไอดี
+export const transferSearchById = createAsyncThunk(
+  "transfer/searchbyId",
+  async ({ search }: { search: string }, thunkAPI) => {
+    try {
+      let id = search;
+      const { data: res } = await axios.get(
+        `${server.BACKOFFICE_URL_V1}/transfer?id=${id}`,
+        header_get
+      );
+      let data = res;
+      if (data.result === OK) {
+        // console.log(data.data);
+        // navigate("/phone");
+        return data.data;
+      } else {
+        // console.log("Error Else :", data);
+        return thunkAPI.rejectWithValue({
+          message: "Failed to fetch transfer.",
+        });
+      }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
 const transferSlice = createSlice({
   name: "transfer",
   // initialState: initialState,
@@ -238,6 +274,22 @@ const transferSlice = createSlice({
       state.errorMessage = action.payload as string;
     });
     builder.addCase(transferAll.pending, (state, action) => {
+      state.isFetching = true;
+    });
+
+    builder.addCase(transferSearchById.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      state.isResultView = action.payload;
+      return state;
+    });
+    builder.addCase(transferSearchById.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.isResultView = [];
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(transferSearchById.pending, (state, action) => {
       state.isFetching = true;
     });
   },
