@@ -10,25 +10,27 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 // @icons
+import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
 import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
 import ContentPasteGoTwoToneIcon from "@mui/icons-material/ContentPasteGoTwoTone";
-import CheckBoxTwoToneIcon from "@mui/icons-material/CheckBoxTwoTone";
-import CropDinTwoToneIcon from "@mui/icons-material/CropDinTwoTone";
-// @icons
-import ToggleOffTwoToneIcon from "@mui/icons-material/ToggleOffTwoTone";
-import ToggleOnTwoToneIcon from "@mui/icons-material/ToggleOnTwoTone";
+import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
+
 // @redux
 import { useSelector, useDispatch } from "react-redux";
+// @constats
+import { server } from "@/constants";
 // @styles
 import { BoxDataGrid } from "@/styles/AppStyle";
 // @utils
 import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 // @seletor
-import { productSelector } from "@/store/slices/productSlice";
-import { transferSelector, transferAll } from "@/store/slices/transferSlice";
+import {
+  transferSelector,
+  transferAll,
+  transferSearchById,
+} from "@/store/slices/transferSlice";
 import TransferFormSearch from "./TransferFormSearch";
 // @day
 import moment from "moment";
@@ -42,10 +44,7 @@ export interface DialogTitleProps {
 export default function Transfer() {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const productReducer = useSelector(productSelector);
   const transferReducer = useSelector(transferSelector);
-
-  useEffect(() => {}, [productReducer.isResult]);
 
   const dataColumns = [
     {
@@ -114,45 +113,45 @@ export default function Transfer() {
         </Typography>
       ),
     },
-    {
-      headerName: "สถานะ",
-      field: "transfer_status",
-      // flex: 1,
-      width: 84,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
-      sortable: false,
-      align: "center" as "center",
-      headerAlign: "center" as "center",
-      renderCell: ({ value, row }: any) => (
-        <Typography
-          variant="body1"
-          className={
-            row.transfer_status === "ยืนยันการโอน"
-              ? "text-[14px] text-green-500"
-              : "text-[14px] text-yellow-500"
-          }
-        >
-          {/* {value} */}
-          {row.transfer_status === "ยืนยันการโอน" ? (
-            <CheckBoxTwoToneIcon />
-          ) : (
-            <CropDinTwoToneIcon />
-          )}
-        </Typography>
-      ),
-    },
+    // {
+    //   headerName: "สถานะ",
+    //   field: "transfer_status",
+    //   // flex: 1,
+    //   width: 84,
+    //   headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+    //   sortable: false,
+    //   align: "center" as "center",
+    //   headerAlign: "center" as "center",
+    //   renderCell: ({ value, row }: any) => (
+    //     <Typography
+    //       variant="body1"
+    //       className={
+    //         row.transfer_status === "ยืนยันการโอน"
+    //           ? "text-[14px] text-green-500"
+    //           : "text-[14px] text-yellow-500"
+    //       }
+    //     >
+    //       {/* {value} */}
+    //       {row.transfer_status === "ยืนยันการโอน" ? (
+    //         <CheckBoxTwoToneIcon />
+    //       ) : (
+    //         <CropDinTwoToneIcon />
+    //       )}
+    //     </Typography>
+    //   ),
+    // },
     {
       headerName: "จัดการ",
       field: ".",
       // flex: 1,
-      width: 96,
+      width: 112,
       sortable: false,
       align: "center" as "center",
       headerAlign: "center" as "center",
       headerClassName: "text-center bg-[#36474f] text-[#fff] text-[14px] ",
       renderCell: ({ row }: GridRenderCellParams<string>) => (
         <Stack direction="row" className="text-center">
-          <Tooltip title="ดูข้อมูล">
+          <Tooltip title="ปริ้นข้อมูล">
             <Button
               sx={{
                 minWidth: "30px",
@@ -166,46 +165,69 @@ export default function Transfer() {
                 navigate("/app3/transfer/view?id=" + row.transfer_id);
               }}
             >
-              <VisibilityTwoToneIcon fontSize="inherit" />
+              <PrintTwoToneIcon fontSize="inherit" />
             </Button>
           </Tooltip>
-          {row.transfer_status !== "ยืนยันการโอน" ? (
-            <Tooltip title="ปรับปรุงข้อมูล">
-              <Button
-                sx={{
-                  minWidth: "30px",
-                }}
-                type="submit"
-                color="success"
-                variant="contained"
-                className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
-                size="small"
-                onClick={() => {
-                  navigate("/app3/transfer/edit?id=" + row.transfer_id);
-                }}
+
+          {row.transfer_file !== "" ? (
+            <Tooltip title="ไฟล์แนบ">
+              <a
+                href={`${server.BACKOFFICE_URL_File}/${row.transfer_file}`}
+                target="_blank"
+                rel="noreferrer"
               >
-                <EditTwoToneIcon fontSize="inherit" />
-              </Button>
+                <Button
+                  sx={{
+                    minWidth: "30px",
+                  }}
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
+                  size="small"
+                  onClick={() => {}}
+                >
+                  <AttachFileTwoToneIcon fontSize="inherit" />
+                </Button>
+              </a>
             </Tooltip>
           ) : (
-            <Tooltip title="โอนย้ายแล้ว">
+            <Tooltip title="ไม่มีไฟล์แนบ">
               <span>
                 <Button
                   sx={{
                     minWidth: "30px",
                   }}
                   type="submit"
-                  color="success"
+                  color="primary"
                   variant="contained"
                   className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
                   size="small"
                   disabled
                 >
-                  <EditTwoToneIcon fontSize="inherit" />
+                  <AttachFileTwoToneIcon fontSize="inherit" />
                 </Button>
               </span>
             </Tooltip>
           )}
+
+          <Tooltip title="ปรับปรุงข้อมูล">
+            <Button
+              sx={{
+                minWidth: "30px",
+              }}
+              type="submit"
+              color="success"
+              variant="contained"
+              className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
+              size="small"
+              onClick={() => {
+                navigate("/app3/transfer/edit?id=" + row.transfer_id);
+              }}
+            >
+              <EditTwoToneIcon fontSize="inherit" />
+            </Button>
+          </Tooltip>
         </Stack>
       ),
     },
@@ -213,6 +235,7 @@ export default function Transfer() {
 
   useEffect(() => {
     dispatch(transferAll());
+    dispatch(transferSearchById({ search: "" }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 

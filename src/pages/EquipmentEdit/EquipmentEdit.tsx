@@ -340,7 +340,7 @@ export default function EquipmentEdit() {
   const initialEquipmentEditValues = (values) => {
     // ตั้งค่าข้อมูลพื้นฐาน ฟอร์ม
     let initailObj = initialEquipmentValues;
-    console.log(values);
+
     if (values) {
       // มีการแก้ไข้ข้อมูล
       values.map((res) => {

@@ -64,10 +64,8 @@ export default function TransferView() {
 
   useEffect(() => {
     let id = query.get("id") || "";
-    dispatch(equipmentSearchById({ search: id }));
     dispatch(transferSearchById({ search: id }));
     dispatch(transferDetailSearchById({ search: id }));
-    dispatch(equipmentDetailAll({ search: id }));
   }, [dispatch, query]);
 
   return (

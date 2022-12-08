@@ -11,16 +11,6 @@ import TableRow from "@mui/material/TableRow";
 
 import Barcode from "react-barcode";
 
-// @conver number
-import ThaiNumber_Converter from "thainumberconverter";
-
-// @constats
-import { server } from "@/constants";
-// @utils
-import { NumberWithCommas } from "@/utils";
-// @day
-import moment from "moment";
-
 type MyProps = {
   // using `interface` is also ok
   data: any;
@@ -48,8 +38,7 @@ class TransferViewToPrint extends React.Component<MyProps> {
   };
 
   render() {
-    const { dataEquipment, dataEquipmentDetail, data, dataDetail } = this.props;
-    const total = this.getTotal();
+    const { data, dataDetail } = this.props;
 
     // const dataTotal = this.getTotal(dataEquipmentDetail);
     return (
@@ -69,6 +58,7 @@ class TransferViewToPrint extends React.Component<MyProps> {
                 mdOffset={0}
                 sx={{
                   textAlign: "left",
+                  marginTop: -2,
                 }}
               >
                 <Typography
@@ -89,6 +79,7 @@ class TransferViewToPrint extends React.Component<MyProps> {
                 mdOffset={0}
                 sx={{
                   textAlign: "center",
+                  marginTop: -2,
                 }}
               >
                 <Typography
@@ -117,6 +108,7 @@ class TransferViewToPrint extends React.Component<MyProps> {
                 mdOffset={0}
                 sx={{
                   textAlign: "right",
+                  marginTop: -2,
                 }}
               >
                 <Typography
@@ -150,21 +142,23 @@ class TransferViewToPrint extends React.Component<MyProps> {
                   sx={{
                     fontFamily: "Sarabun-R",
                     fontSize: "14px",
-                    minWidth: 15,
+                    width: "15px",
                   }}
                 >
                   ลำดับ
                 </TableCell>
                 <TableCell
+                  align="center"
                   sx={{
                     fontFamily: "Sarabun-R",
                     fontSize: "14px",
-                    minWidth: 160,
+                    width: "156px",
                   }}
                 >
                   เลขครุภัณฑ์
                 </TableCell>
                 <TableCell
+                  align="center"
                   sx={{
                     fontFamily: "Sarabun-R",
                     fontSize: "14px",
@@ -201,6 +195,7 @@ class TransferViewToPrint extends React.Component<MyProps> {
                 return (
                   <TableRow key={`data-table-${row.transfer_detail_id}`}>
                     <TableCell
+                      align="center"
                       sx={{
                         fontFamily: "Sarabun-R",
                         fontSize: "12px",
@@ -252,12 +247,12 @@ class TransferViewToPrint extends React.Component<MyProps> {
 
         <Grid container spacing={2} sx={{ p: 2 }}>
           <Grid
-            xs={4}
+            xs={12}
             xsOffset={0}
-            md={4}
+            md={12}
             mdOffset={0}
             sx={{
-              textAlign: "center",
+              textAlign: "left",
             }}
           >
             <Typography
@@ -265,6 +260,7 @@ class TransferViewToPrint extends React.Component<MyProps> {
               sx={{
                 fontFamily: "Sarabun-R",
                 fontSize: "14px",
+                marginTop: -1,
               }}
             >
               ตรวจสอบถูกต้องแล้ว
