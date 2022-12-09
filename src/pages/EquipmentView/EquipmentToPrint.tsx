@@ -16,11 +16,17 @@ import { NumberWithCommas } from "@/utils";
 // @day
 import moment from "moment";
 
+import Barcode from "react-barcode";
+
 type MyProps = {
   // using `interface` is also ok
   dataEquipment: any;
   dataEquipmentDetail: any;
 };
+
+function useBarcode(txtBarcode) {
+  return <Barcode value={txtBarcode && txtBarcode} height={36} fontSize={14} />;
+}
 
 class EquipmentToPrint extends React.Component<MyProps> {
   state = {
@@ -51,121 +57,253 @@ class EquipmentToPrint extends React.Component<MyProps> {
               sx={{ p: 2 }}
               key={`grid-content-view-${data.equipment_no}`}
             >
+              <Grid
+                xs={12}
+                xsOffset={0}
+                md={12}
+                mdOffset={0}
+                sx={{
+                  textAlign: "left",
+                  marginTop: -2,
+                }}
+              >
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
+                >
+                  {useBarcode(data.equipment_no)}
+                </Typography>
+              </Grid>
+
+              <Grid
+                xs={12}
+                xsOffset={0}
+                md={12}
+                mdOffset={0}
+                sx={{
+                  textAlign: "center",
+                  marginTop: -2,
+                }}
+              >
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
+                  ใบตรวจรับอุปกรณ์
+                </Typography>
+              </Grid>
+
               <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-                <Typography component={"div"} variant={"body1"}>
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   เรื่องที่บันทึก
                 </Typography>
                 <Typography
                   component={"div"}
-                  variant={"body2"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
                   className="mt-[-2px] text-slate-500 hover:text-blue-600"
                 >
                   {data.equipment_title}
                 </Typography>
               </Grid>
               <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-                <Typography component={"div"} variant={"body1"}>
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   เลขที่บันทึก
                 </Typography>
                 <Typography
                   component={"div"}
-                  variant={"body2"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
                   className="mt-[-2px] text-slate-500 hover:text-blue-600"
                 >
                   {data.equipment_no_txt}
                 </Typography>
               </Grid>
               <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-                <Typography component={"div"} variant={"body1"}>
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   ประเภทการซื้อ
                 </Typography>
                 <Typography
                   component={"div"}
-                  variant={"body2"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
                   className="mt-[-2px] text-slate-500 hover:text-blue-600"
                 >
                   {data.equipment_type}
                 </Typography>
               </Grid>
               <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-                <Typography component={"div"} variant={"body1"}>
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   หน่วยงานที่ซื้อ
                 </Typography>
                 <Typography
                   component={"div"}
-                  variant={"body2"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
                   className="mt-[-2px] text-slate-500 hover:text-blue-600"
                 >
                   {data.dept_name}
                 </Typography>
               </Grid>
               <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-                <Typography component={"div"} variant={"body1"}>
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   ผู้บันทึกข้อความ
                 </Typography>
                 <Typography
                   component={"div"}
-                  variant={"body2"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
                   className="mt-[-2px] text-slate-500 hover:text-blue-600"
                 >
                   {data.equipment_member}
                 </Typography>
               </Grid>
               <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-                <Typography component={"div"} variant={"body1"}>
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   ผู้รับสินค้า
                 </Typography>
                 <Typography
                   component={"div"}
-                  variant={"body2"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
                   className="mt-[-2px] text-slate-500 hover:text-blue-600"
                 >
                   {data.equipment_member_get}
                 </Typography>
               </Grid>
               <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-                <Typography component={"div"} variant={"body1"}>
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   วันที่บันทึกข้อความ
                 </Typography>
                 <Typography
                   component={"div"}
-                  variant={"body2"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
                   className="mt-[-2px] text-slate-500 hover:text-blue-600"
                 >
                   {moment(data.equipment_date).format("DD/MM/yyyy")}
                 </Typography>
               </Grid>
               <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
-                <Typography component={"div"} variant={"body1"}>
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   วันที่รับสินค้า
                 </Typography>
                 <Typography
                   component={"div"}
-                  variant={"body2"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
                   className="mt-[-2px] text-slate-500 hover:text-blue-600"
                 >
                   {moment(data.equipment_date_get).format("DD/MM/yyyy")}
                 </Typography>
               </Grid>
-              <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
-                <Typography component={"div"} variant={"body1"}>
+              <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   ซื้อจาก
                 </Typography>
                 <Typography
                   component={"div"}
-                  variant={"body2"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
                   className="mt-[-2px] text-slate-500 hover:text-blue-600"
                 >
                   {data.company_name}
                 </Typography>
               </Grid>
-              <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
-                <Typography component={"div"} variant={"body1"}>
+              <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   ไฟล์แนบ
                 </Typography>
                 <Typography
                   component={"div"}
-                  variant={"body2"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
                   className="mt-[-2px] text-slate-500 hover:text-blue-600"
                 >
                   {data.equipment_file !== "" ? (
@@ -181,13 +319,23 @@ class EquipmentToPrint extends React.Component<MyProps> {
                   )}
                 </Typography>
               </Grid>
+
               <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
-                <Typography component={"div"} variant={"body1"}>
+                <Typography
+                  component={"div"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   รายละเอียด
                 </Typography>
                 <Typography
                   component={"div"}
-                  variant={"body2"}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
                   className="mt-[-2px] text-slate-500 hover:text-blue-600"
                 >
                   {data.equipment_note}
@@ -205,16 +353,62 @@ class EquipmentToPrint extends React.Component<MyProps> {
           >
             <TableHead>
               <TableRow>
-                <TableCell align="center" colSpan={3}>
+                <TableCell
+                  align="center"
+                  colSpan={3}
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   รายละเอียด
                 </TableCell>
-                <TableCell align="right">ราคา</TableCell>
+                <TableCell
+                  align="right"
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
+                  ราคา
+                </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>ชื่อรายการ</TableCell>
-                <TableCell align="right">จำนวน.</TableCell>
-                <TableCell align="right">ราคา/หน่วย</TableCell>
-                <TableCell align="right">ราคารวม</TableCell>
+                <TableCell
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
+                >
+                  ชื่อรายการ
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
+                >
+                  จำนวน.
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
+                >
+                  ราคา/หน่วย
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "14px",
+                  }}
+                >
+                  ราคารวม
+                </TableCell>
               </TableRow>
             </TableHead>
             {/* {JSON.stringify(dataEquipmentDetail)} */}
@@ -222,14 +416,39 @@ class EquipmentToPrint extends React.Component<MyProps> {
               {dataEquipmentDetail.map((row) => {
                 return (
                   <TableRow key={row.equipment_detail_title}>
-                    <TableCell>{row.equipment_detail_title}</TableCell>
-                    <TableCell align="right">
+                    <TableCell
+                      sx={{
+                        fontFamily: "Sarabun-R",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {row.equipment_detail_title}
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      sx={{
+                        fontFamily: "Sarabun-R",
+                        fontSize: "14px",
+                      }}
+                    >
                       {row.equipment_detail_qty}
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell
+                      align="right"
+                      sx={{
+                        fontFamily: "Sarabun-R",
+                        fontSize: "14px",
+                      }}
+                    >
                       {NumberWithCommas(row.equipment_detail_price | 0)}
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell
+                      align="right"
+                      sx={{
+                        fontFamily: "Sarabun-R",
+                        fontSize: "14px",
+                      }}
+                    >
                       {NumberWithCommas(row.equipment_detail_price_total | 0)}
                     </TableCell>
                   </TableRow>
@@ -237,8 +456,23 @@ class EquipmentToPrint extends React.Component<MyProps> {
               })}
               <TableRow>
                 <TableCell rowSpan={3} />
-                <TableCell colSpan={2}>รวม</TableCell>
-                <TableCell align="right">
+                <TableCell
+                  colSpan={2}
+                  align="right"
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
+                  รวม
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{
+                    fontFamily: "Sarabun-R",
+                    fontSize: "16px",
+                  }}
+                >
                   {NumberWithCommas(total | 0)}
                 </TableCell>
               </TableRow>

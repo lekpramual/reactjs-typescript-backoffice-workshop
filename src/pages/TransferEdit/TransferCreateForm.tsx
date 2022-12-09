@@ -28,6 +28,8 @@ import {
   addSelectTransfer,
 } from "@/store/slices/transferSlice";
 
+import { transferDetailDeleteById } from "@/store/slices/transferDetailSlice";
+
 // @utils
 import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
 import { DataGrid, GridRenderCellParams, GridRowId } from "@mui/x-data-grid";
@@ -158,8 +160,6 @@ export default function TransferCreateForm({ show, confirm }: any) {
     },
   ];
 
-  useEffect(() => {}, []);
-
   function selectRowReducer() {
     const selectRows: any = [];
     // const departs = [{ label: "--เลือกหน่วยงานที่บันทึก--", value: 0 }];
@@ -235,16 +235,12 @@ export default function TransferCreateForm({ show, confirm }: any) {
               );
               setSelectedRows(selectedRows);
               setSelectionModel(ids);
-              dispatch(addSelectTransfer(ids));
-
-              // if (selection.length > 1) {
-              //   const selectionSet = new Set(selectionModel);
-              //   const result = selection.filter((s) => !selectionSet.has(s));
-
-              //   setSelectionModel(result);
-              // } else {
-              //   setSelectionModel(selection);
+              // console.log(selectedRows);
+              // const transferDetail = selectedRows[0];
+              // if (transferDetail) {
+              //   console.log(transferDetail);
               // }
+              dispatch(addSelectTransfer(ids));
             }}
           />
         </BoxDataGridModel>
@@ -276,8 +272,10 @@ export default function TransferCreateForm({ show, confirm }: any) {
           color="success"
           className="w-[128px] "
           onClick={() => {
-            dispatch(addTransfer(selectedRows));
-            confirm(false);
+            console.log(selectedRows);
+            // dispatch(addTransfer(selectedRows));
+
+            // confirm(false);
           }}
         >
           <DoneTwoToneIcon />

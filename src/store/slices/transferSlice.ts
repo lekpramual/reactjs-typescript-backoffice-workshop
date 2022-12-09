@@ -208,6 +208,48 @@ export const transferSearchById = createAsyncThunk(
   }
 );
 
+// แก้ไขข้อมูลรายละเอียดใบรับอุปกรณ์
+export const transferUpdateById = createAsyncThunk(
+  "transfer/update",
+  async ({ formData, id }: { formData: any; id: any }, thunkAPI) => {
+    try {
+      const { data: res } = await axios.put(
+        `${server.BACKOFFICE_URL_V1}/transfer?id=${id}`,
+        formData,
+        header_get
+      );
+      let data = res;
+      if (data.result === OK) {
+        const message = "ปรับปรุงรายการ สำเร็จ";
+        MySwal.fire({
+          icon: "success",
+          title: message,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        return data.data;
+      } else {
+        let message = "ปรับปรุงรายการ ผิดพลาด";
+        MySwal.fire({
+          icon: "warning",
+          title: message,
+          showConfirmButton: false,
+        });
+        return thunkAPI.rejectWithValue(data.message);
+      }
+    } catch (e: any) {
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
 const transferSlice = createSlice({
   name: "transfer",
   // initialState: initialState,
@@ -290,6 +332,20 @@ const transferSlice = createSlice({
       state.errorMessage = action.payload as string;
     });
     builder.addCase(transferSearchById.pending, (state, action) => {
+      state.isFetching = true;
+    });
+
+    builder.addCase(transferUpdateById.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      return state;
+    });
+    builder.addCase(transferUpdateById.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(transferUpdateById.pending, (state, _action) => {
       state.isFetching = true;
     });
   },

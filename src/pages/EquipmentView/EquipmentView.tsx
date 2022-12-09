@@ -144,7 +144,7 @@ export default function EquipmentView() {
               </Button>
             )}
             content={() => componentRef.current}
-            pageStyle="@page { size:A4 landscape } "
+            pageStyle="@page { size:A4 portrait } "
           />
         </Grid>
       </Grid>

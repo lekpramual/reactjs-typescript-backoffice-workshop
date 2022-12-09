@@ -76,10 +76,10 @@ export default function TransferFormSearch() {
           alignItems="center"
           sx={{ pt: "6px", width: "100%" }}
         >
-          <Grid item lg={3} md={6} xs={12}>
+          <Grid item lg={5} md={4} xs={12}>
             <FormControl fullWidth sx={{ m: 1 }}>
               <InputLabel htmlFor="outlined-adornment-no">
-                เลขที่บันทึก
+                เรื่องที่บันทึก
               </InputLabel>
               <Field
                 as={OutlinedInput}
@@ -94,27 +94,10 @@ export default function TransferFormSearch() {
               />
             </FormControl>
           </Grid>
-          <Grid item lg={3.5} md={6} xs={12}>
-            <FormControl fullWidth sx={{ m: 1 }}>
-              <InputLabel htmlFor="outlined-adornment-title">
-                เลขทะเบียน
-              </InputLabel>
-              <Field
-                as={OutlinedInput}
-                id="no"
-                name="no"
-                startAdornment={
-                  <SearchIcon color="inherit" sx={{ display: "block" }} />
-                }
-                label="เลขทะเบียน"
-                size="small"
-                placeholder="ตัวอย่าง M65110077"
-              />
-            </FormControl>
-          </Grid>
-          <Grid item lg={3.5} md={6} xs={12}>
+
+          <Grid item lg={5} md={4} xs={12}>
             <FormControl fullWidth size="small">
-              <InputLabel id="category">หมวดหมู่</InputLabel>
+              <InputLabel id="category">หน่วยงานที่เก็บใหม่</InputLabel>
               <Field
                 name="category"
                 id="category"
@@ -137,7 +120,7 @@ export default function TransferFormSearch() {
               </Field>
             </FormControl>
           </Grid>
-          <Grid item lg={2} md={6} xs={12}>
+          <Grid item lg={2} md={4} xs={12}>
             <Stack direction="row" className="text-center">
               <Button
                 size="small"

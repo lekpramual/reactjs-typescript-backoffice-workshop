@@ -71,13 +71,14 @@ export const transferDetailSearchById = createAsyncThunk(
   async ({ search }: { search: string }, thunkAPI) => {
     try {
       let id = search;
+      console.log(id);
       const { data: res } = await axios.get(
         `${server.BACKOFFICE_URL_V1}/transferdetail?id=${id}`,
         header_get
       );
       let data = res;
       if (data.result === OK) {
-        // console.log(data.data);
+        console.log(data.data);
         // navigate("/phone");
         return data.data;
       } else {
@@ -101,13 +102,136 @@ export const transferDetailSearchById = createAsyncThunk(
   }
 );
 
+// เพิ่มข้อมูล
+export const transferDetailAdd = createAsyncThunk(
+  "transferdetail/add",
+  async (
+    { formData, navigate }: { formData: any; navigate: any },
+    thunkAPI
+  ) => {
+    try {
+      const { data: res } = await axios.post(
+        `${server.BACKOFFICE_URL_V1}/transferdetail`,
+        formData,
+        header_get
+      );
+
+      let data = res;
+
+      MySwal.fire({
+        title: "<p>กำลังประมวลผล ...</p>",
+        didOpen: () => {
+          MySwal.showLoading();
+          if (data.result === OK) {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              const message = "เพิ่มรายการอุปกรณ์ สำเร็จ";
+              MySwal.fire({
+                icon: "success",
+                title: message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              return data.data;
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              let message = "ผิดพลาด กรุณาตรวจสอบ";
+              MySwal.fire({
+                icon: "warning",
+                title: message,
+                showConfirmButton: false,
+              });
+              return thunkAPI.rejectWithValue(data.message);
+            }, 1000);
+          }
+        },
+      });
+      // if (data.result === OK) {
+      //   // console.log(data.data);
+      //   // navigate("/phone");
+      //   await wait(1 * 1000);
+      //   return data.data;
+      // } else {
+      //   // console.log("Error Else :", data);
+      //   return thunkAPI.rejectWithValue({
+      //     message: "Failed to fetch phone.",
+      //   });
+      // }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
+// ลบข้อมูล จากไอดี
+export const transferDetailDeleteById = createAsyncThunk(
+  "transferdetail/deletehbyId",
+  async ({ search }: { search: any }, thunkAPI) => {
+    try {
+      let id = search;
+      const { data: res } = await axios.delete(
+        `${server.BACKOFFICE_URL_V1}/transferdetail?id=${id}`,
+        header_get
+      );
+      let data = res;
+      if (data.result === OK) {
+        // console.log(data.data);
+        // navigate("/phone");
+        return data.data;
+      } else {
+        // console.log("Error Else :", data);
+        return thunkAPI.rejectWithValue({
+          message: "Failed to fetch phone.",
+        });
+      }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
 const transferDetailSlice = createSlice({
   name: "transferdetail",
   // initialState: initialState,
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(transferDetailAdd.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      state.isResult = action.payload;
+      return state;
+    });
+    builder.addCase(transferDetailAdd.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(transferDetailAdd.pending, (state, _action) => {
+      state.isFetching = true;
+    });
+
     builder.addCase(transferDetailSearchById.fulfilled, (state, action) => {
+      console.log(action.payload);
       state.isFetching = false;
       state.isSuccess = true;
       state.isResultView = action.payload;
@@ -120,6 +244,22 @@ const transferDetailSlice = createSlice({
       state.errorMessage = action.payload as string;
     });
     builder.addCase(transferDetailSearchById.pending, (state, action) => {
+      state.isFetching = true;
+    });
+
+    builder.addCase(transferDetailDeleteById.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      // state.isResult = action.payload;
+      return state;
+    });
+    builder.addCase(transferDetailDeleteById.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.isResult = [];
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(transferDetailDeleteById.pending, (state, action) => {
       state.isFetching = true;
     });
   },

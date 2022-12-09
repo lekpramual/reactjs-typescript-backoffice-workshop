@@ -71,11 +71,13 @@ import {
   deleteTransfer,
   transferAdd,
   transferSearchById,
+  transferUpdateById,
 } from "@/store/slices/transferSlice";
 
 import {
   transferDetailSelector,
   transferDetailSearchById,
+  transferDetailDeleteById,
 } from "@/store/slices/transferDetailSlice";
 import {
   equipmentCartSelector,
@@ -237,7 +239,7 @@ export default function TransferEdit() {
                 //console.log(row);
                 Swal.fire({
                   title: "คุณต้องการลบ ใช่ หรือ ไม่?",
-                  text: `คุณไม่สามารถกู้คืนรายการ ${row.transfer_no} ที่ถูกลบได้.! `,
+                  text: `คุณไม่สามารถกู้คืนรายการ ${row.product_inventory_number} ที่ถูกลบได้.! `,
                   icon: "warning",
                   showCancelButton: true,
                   confirmButtonColor: "#3085d6",
@@ -247,7 +249,13 @@ export default function TransferEdit() {
                   reverseButtons: true,
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    dispatch(deleteTransfer(row.transfer_id));
+                    console.log(row.transfer_detail_id);
+                    dispatch(
+                      transferDetailDeleteById({
+                        search: row.transfer_detail_id,
+                      })
+                    );
+                    dispatch(transferDetailSearchById({ search: id }));
                     MySwal.fire({
                       icon: "success",
                       title: "ลบข้อมูลเรียบร้อย",
@@ -611,13 +619,16 @@ export default function TransferEdit() {
   };
 
   useEffect(() => {
+    console.log("reload 1 ");
     dispatch(departmentAll());
     dispatch(transferSearchById({ search: id }));
     dispatch(transferDetailSearchById({ search: id }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  useEffect(() => {}, [transferReducer.isResultView]);
+  useEffect(() => {
+    console.log("reload 2 ");
+  }, [transferDetailReducer.isResultView, transferReducer.isResultView]);
 
   return (
     <Box>
@@ -718,7 +729,35 @@ export default function TransferEdit() {
               : initialTransferValues
           }
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
+            let formData = new FormData();
+            formData.append(
+              "transfer_no",
+              transferReducer.isResultView
+                ? transferReducer.isResultView.map((row) => row.transfer_no)
+                : ""
+            );
+            formData.append("transfer_depart", values.transfer_depart.value);
+            formData.append("transfer_title", values.transfer_title);
+            formData.append("transfer_member", values.transfer_member);
+
+            formData.append(
+              "transfer_date",
+              moment(values.transfer_date).format("YYYY-MM-DD")
+            );
+            formData.append("transfer_note", values.transfer_note);
+            formData.append("transfer_status", "ยืนยันการโอน");
+            if (values.file) {
+              formData.append("transfer_file", values.file);
+            } else {
+              formData.append("transfer_file", values.transfer_file);
+            }
+
+            dispatch(transferUpdateById({ formData: formData, id: id }));
+
+            setTimeout(() => {
+              dispatch(transferDetailSearchById({ search: id }));
+            }, 1000);
+
             setSubmitting(false);
           }}
         >
@@ -754,7 +793,7 @@ export default function TransferEdit() {
                   <AppRegistrationTwoToneIcon /> รายการอุปกรณ์
                 </Typography>
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <Button
                   size="small"
                   variant="contained"
@@ -768,7 +807,7 @@ export default function TransferEdit() {
                   <AddTwoToneIcon />
                   เพิ่ม
                 </Button>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Toolbar>
         </AppBar>
@@ -795,7 +834,7 @@ export default function TransferEdit() {
             hideFooterSelectedRowCount
             rowsPerPageOptions={[15]}
             disableColumnMenu={true}
-            // loading={hosxpReducer.isFetching}
+            loading={transferDetailReducer.isFetching}
             getRowId={(row) =>
               // parseInt(row.kskloginname) + Math.random() * (100 - 1)
               row.product_id

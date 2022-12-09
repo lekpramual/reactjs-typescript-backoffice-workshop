@@ -260,7 +260,7 @@ export default function Transfer() {
         // 936 "100%"
         sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: "8px" }}
       >
-        <TransferFormSearch />
+        {/* <TransferFormSearch /> */}
         {/* <Formik
           validate={(values) => {
             let errors: any = {};
