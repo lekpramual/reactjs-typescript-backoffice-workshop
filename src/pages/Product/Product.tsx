@@ -306,7 +306,7 @@ export default function Product() {
             hideFooterSelectedRowCount
             rowsPerPageOptions={[15]}
             disableColumnMenu={true}
-            // loading={hosxpReducer.isFetching}
+            loading={productReducer.isFetching}
             getRowId={(row) =>
               // parseInt(row.kskloginname) + Math.random() * (100 - 1)
               row.product_id

@@ -73,7 +73,7 @@ import {
 } from "@/store/slices/transferSlice";
 
 import { companySelector, companyAll } from "@/store/slices/companySlice";
-import { categoryAll } from "@/store/slices/categorySlice";
+import { documentCreate } from "@/store/slices/documentSlice";
 import {
   equipmentCartSelector,
   addEquipmentCartEdit,
@@ -83,7 +83,7 @@ import {
 } from "@/store/slices/equipmentCartSlice";
 
 // @component cart
-import TransferCreateForm from "./TransferCreateForm";
+
 import { equipmentAdd } from "../../store/slices/equipmentSlice";
 
 const MySwal = withReactContent(Swal);
@@ -131,7 +131,7 @@ interface FilmOptionType {
 
 const filter = createFilterOptions<FilmOptionType>();
 
-export default function TransferCreate() {
+export default function DocumentCreate() {
   const formRef = useRef<any>();
 
   const navigate = useNavigate();
@@ -146,151 +146,17 @@ export default function TransferCreate() {
   const equipmentCartReducer = useSelector(equipmentCartSelector);
   const transferReducer = useSelector(transferSelector);
 
-  const dataColumns = [
-    {
-      headerName: "เลขทะเบียน",
-      field: "product_no",
-      flex: 1,
-      minWidth: 124,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
-      sortable: true,
-      renderCell: ({ value, row }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {value}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "เลขครุภัณฑ์",
-      field: "product_inventory_number",
-      flex: 1,
-      minWidth: 128,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
-      sortable: true,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {value !== null ? value : "-"}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "เลขที่บันทึก",
-      field: "equipment_no_txt",
-      flex: 1,
-      minWidth: 128,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
-      sortable: true,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {value}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "หมวดหมู่",
-      field: "category_name",
-      flex: 1,
-      minWidth: 128,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
-      sortable: true,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]">
-          {value}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "รายการอุปกรณ์",
-      field: "product_title",
-      flex: 1,
-      minWidth: 364,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
-      sortable: true,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px] " noWrap>
-          {value}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "ที่อยู่เดิม",
-      field: "dept_name",
-      flex: 1,
-      minWidth: 256,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
-      sortable: true,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]" noWrap>
-          {value}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "จัดการ",
-      field: ".",
-      width: 64,
-      sortable: false,
-      align: "center" as "center",
-      headerAlign: "center" as "center",
-      headerClassName:
-        "text-center bg-[#36474f] text-[#fff] text-[14px] h-[36px]",
-      renderCell: ({ row }: GridRenderCellParams<string>) => (
-        <Stack direction="row" className="text-center">
-          <Tooltip title="ยกเลิกข้อมูล">
-            <Button
-              sx={{
-                minWidth: "30px",
-              }}
-              type="submit"
-              color="error"
-              variant="contained"
-              className="hover:text-[#fce805] w-[30px] h-[26px]"
-              size="small"
-              onClick={() => {
-                //setEquipmentCart(row);
-                //console.log(row);
-                Swal.fire({
-                  title: "คุณต้องการลบ ใช่ หรือ ไม่?",
-                  text: `คุณไม่สามารถกู้คืนรายการ ${row.product_no} ที่ถูกลบได้.! `,
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "ใช่, ต้องการลบ!",
-                  cancelButtonText: "ไม่, ยกเลิก!",
-                  reverseButtons: true,
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    dispatch(deleteTransfer(row.product_id));
-                    MySwal.fire({
-                      icon: "success",
-                      title: "ลบข้อมูลเรียบร้อย",
-                      showConfirmButton: false,
-                      timer: 1000,
-                    });
-                  }
-                });
-              }}
-            >
-              <DeleteTwoToneIcon fontSize="inherit" />
-            </Button>
-          </Tooltip>
-        </Stack>
-      ),
-    },
-  ];
-
   const initialTransferValues: any = {
-    transfer_depart: {
+    document_depart: {
       label: "--เลือกหน่วยงานที่บันทึก--",
       value: 0,
     }, // หน่วยงาน *
 
-    transfer_title: "", // เรื่องที่บันทึก
-    transfer_member: "", // ผู้บันทึกข้อความ
-    transfer_date: new Date(), // วันที่บันทึก
-    transfer_note: "", // รายละเอียด
-    transfer_file: "-", // ไฟล์อัปโหลด
+    document_title: "", // เรื่องที่บันทึก
+    document_no_txt: "", // เลขที่หนังสือ
+    document_date: new Date(), // วันที่บันทึก
+    document_note: "", // รายละเอียด
+    document_file: "-", // ไฟล์อัปโหลด
   };
 
   const handleSubmit = () => {
@@ -358,13 +224,13 @@ export default function TransferCreate() {
               fullWidth
               size="small"
               required
-              error={errors.transfer_title && touched.transfer_title && true}
+              error={errors.document_title && touched.document_title && true}
             >
-              <InputLabel htmlFor="transfer_title">เรื่องที่บันทึก</InputLabel>
+              <InputLabel htmlFor="document_title">เรื่องที่บันทึก</InputLabel>
               <Field
                 as={OutlinedInput}
-                id="transfer_title"
-                name="transfer_title"
+                id="document_title"
+                name="document_title"
                 startAdornment={
                   <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
                 }
@@ -378,10 +244,10 @@ export default function TransferCreate() {
             <FormControl
               fullWidth
               size="small"
-              error={errors.transfer_depart && touched.transfer_depart && true}
+              error={errors.document_depart && touched.document_depart && true}
             >
               <Autocomplete
-                value={values.transfer_depart}
+                value={values.document_depart}
                 noOptionsText={"ไม่มีข้อมูล"}
                 onChange={(event, newValue) => {
                   if (typeof newValue === "string") {
@@ -402,7 +268,7 @@ export default function TransferCreate() {
                     //   year: "",
                     // });
                   } else {
-                    setFieldValue("transfer_depart", newValue);
+                    setFieldValue("document_depart", newValue);
                   }
                 }}
                 filterOptions={(options, params) => {
@@ -442,8 +308,8 @@ export default function TransferCreate() {
                     required
                     sx={{ input: { marginTop: "-3px" } }}
                     {...params}
-                    name="transfer_depart"
-                    id="transfer_depart"
+                    name="document_depart"
+                    id="document_depart"
                     label={"ที่เก็บใหม่"}
                     component={TextField}
                     size="small"
@@ -461,19 +327,19 @@ export default function TransferCreate() {
               fullWidth
               size="small"
               required
-              error={errors.transfer_member && touched.transfer_member && true}
+              error={errors.document_no_txt && touched.document_no_txt && true}
             >
-              <InputLabel id="transfer_member">ผู้บันทึก</InputLabel>
+              <InputLabel id="document_no_txt">เลขที่หนังสือ</InputLabel>
               <Field
                 as={OutlinedInput}
-                id="transfer_member"
-                name="transfer_member"
-                label="ผู้บันทึก"
+                id="document_no_txt"
+                name="document_no_txt"
+                label="เลขที่หนังสือ"
                 size="small"
                 startAdornment={
                   <EditTwoToneIcon color="inherit" sx={{ display: "block" }} />
                 }
-                placeholder="กรอก ผู้บันทึกข้อความ"
+                placeholder="กรอก เลขที่หนังสือ"
               />
             </FormControl>
           </Grid>
@@ -486,14 +352,14 @@ export default function TransferCreate() {
                 <DatePicker
                   label="วันที่บันทึก"
                   inputFormat="dd/MM/yyyy"
-                  value={values.transfer_date}
+                  value={values.document_date}
                   onChange={(newValue: Date | null) => {
-                    setFieldValue("transfer_date", newValue, true);
+                    setFieldValue("document_date", newValue, true);
                   }}
                   renderInput={(params) => (
                     <Field
                       component={TextField}
-                      name="transfer_date"
+                      name="document_date"
                       {...params}
                       size="small"
                     />
@@ -505,24 +371,24 @@ export default function TransferCreate() {
 
           <Grid item lg={12} md={12} xs={12}>
             <Field
-              id="transfer_note"
-              name="transfer_note"
+              id="document_note"
+              name="document_note"
               size="small"
               placeholder="รายละเอียดเพิ่มเติม"
               component={TextareaAutosize}
               minRows={2}
               style={{ width: "100%" }}
               onChange={(e) => {
-                setFieldValue("transfer_note", e.target.value);
+                setFieldValue("document_note", e.target.value);
               }}
-              value={values.transfer_note}
+              value={values.document_note}
             />
             {/* <FormControl fullWidth size="small">
-              <InputLabel htmlFor="transfer_note">รายละเอียด</InputLabel>
+              <InputLabel htmlFor="document_note">รายละเอียด</InputLabel>
               <Field
                 as={OutlinedInput}
-                id="transfer_note"
-                name="transfer_note"
+                id="document_note"
+                name="document_note"
                 size="small"
                 label="รายละเอียด"
                 startAdornment={
@@ -541,7 +407,7 @@ export default function TransferCreate() {
                   accept="application/pdf"
                   multiple
                   type="file"
-                  name="transfer_file"
+                  name="document_file"
                   onChange={(e: any) => {
                     e.preventDefault();
                     setFieldValue("file", e.target.files[0]); // for upload
@@ -574,16 +440,16 @@ export default function TransferCreate() {
           </Typography>
         </a>
       );
-    } else if (values.transfer_file !== "-") {
+    } else if (values.document_file !== "-") {
       return (
         <a
-          href={`${server.BACKOFFICE_URL_File}/${values.transfer_file}`}
+          href={`${server.BACKOFFICE_URL_File}/${values.document_file}`}
           target="_blank"
           rel="noreferrer"
           className="ml-2"
         >
           <Typography variant="body2" component={"b"} className="ml-2">
-            {values.transfer_file}
+            {values.document_file}
           </Typography>
         </a>
       );
@@ -594,11 +460,6 @@ export default function TransferCreate() {
         </Typography>
       );
     }
-  };
-
-  const onConfirm = (msg) => {
-    setOpenDialogCreate(msg);
-    dispatch(resetEquipmentCartEdit());
   };
 
   useEffect(() => {
@@ -626,11 +487,11 @@ export default function TransferCreate() {
           component={Link}
           to="/app3/equipment"
         >
-          รายการโอนย้ายอุปกรณ์
+          รายการเอกสาร
         </Typography>
 
         <Typography color="text.primary" variant="subtitle2">
-          เพิ่มรายการโอนย้ายอุปกรณ์
+          สร้างใหม่เอกสาร
         </Typography>
       </Breadcrumbs>
       <Paper
@@ -653,7 +514,7 @@ export default function TransferCreate() {
                     alignContent: "center",
                   }}
                 >
-                  <AppRegistrationTwoToneIcon /> วิธีการได้มา
+                  <AppRegistrationTwoToneIcon /> สร้างรายการใหม่
                 </Typography>
               </Grid>
               <Grid item>
@@ -680,21 +541,21 @@ export default function TransferCreate() {
           validate={(values) => {
             let errors: any = {};
 
-            if (values.transfer_depart === null) errors.transfer_depart = " ";
+            if (values.document_depart === null) errors.document_depart = " ";
 
-            if (!values.transfer_depart.value) {
-              errors.transfer_depart = " ";
+            if (!values.document_depart.value) {
+              errors.document_depart = " ";
             }
 
-            if (values.transfer_depart.value === 0) {
-              errors.transfer_depart = " ";
+            if (values.document_depart.value === 0) {
+              errors.document_depart = " ";
             }
 
-            if (!values.transfer_title)
-              errors.transfer_title = "กรอกเรื่องที่บันทึก";
+            if (!values.document_title)
+              errors.document_title = "กรอกเรื่องที่บันทึก";
 
-            if (!values.transfer_member)
-              errors.transfer_member = "กรอกผู้บันทึกข้อความ";
+            if (!values.document_no_txt)
+              errors.document_no_txt = "กรอกเลขที่หนังสือ";
 
             return errors;
           }}
@@ -702,125 +563,27 @@ export default function TransferCreate() {
           onSubmit={(values, { setSubmitting }) => {
             let formData = new FormData();
 
-            if (transferReducer.isResultView.length !== 0) {
-              const newArrayProduct = reverseArrayInPlace(
-                values.transfer_depart,
-                transferReducer.isResultView
-              );
-              formData.append("transfer_title", values.transfer_title);
-              formData.append("transfer_depart", values.transfer_depart.value);
-              formData.append("transfer_member", values.transfer_member);
-              formData.append(
-                "transfer_date",
-                moment(values.transfer_date).format("YYYY-MM-DD")
-              );
-              formData.append("transfer_note", values.transfer_note);
-              formData.append("transfer_status", "รอดำเนินการ");
-              formData.append("transfer_file", values.file);
-              formData.append(
-                "transfer_detail",
-                JSON.stringify(newArrayProduct)
-              );
+            formData.append("document_title", values.document_title);
+            formData.append("document_depart", values.document_depart.value);
+            formData.append("document_no_txt", values.document_no_txt);
+            formData.append(
+              "document_date",
+              moment(values.document_date).format("YYYY-MM-DD")
+            );
+            formData.append("document_note", values.document_note);
+            formData.append("transfer_status", "รอดำเนินการ");
+            formData.append("document_file", values.file);
 
-              // บันทึกข้อมูล
-              dispatch(transferAdd({ formData: formData, navigate: navigate }));
-              dispatch(resetTransfer());
-              resetForm();
-            } else {
-              let message = "กรุณาทำการเพิ่มรายการอุปกรณ์";
-              MySwal.fire({
-                icon: "warning",
-                title: message,
-                showConfirmButton: false,
-              });
-            }
+            // บันทึกข้อมูล
+            dispatch(
+              documentCreate({ formData: formData, navigate: navigate })
+            );
+            resetForm();
             setSubmitting(false);
           }}
         >
           {(props) => showFormCreate(props)}
         </Formik>
-      </Paper>
-
-      {/* ตาราง: รายละเอียดโอนย้ายอุปกรณ์  */}
-      <Paper
-        sx={{
-          maxWidth: "100%",
-          margin: "auto",
-          overflow: "hidden",
-        }}
-      >
-        <AppBar
-          position="static"
-          color="default"
-          elevation={0}
-          sx={{ borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}
-        >
-          <Toolbar className="pl-2 pr-2">
-            <Grid container alignItems="center">
-              <Grid item xs>
-                <Typography
-                  variant="subtitle2"
-                  component="div"
-                  sx={{
-                    display: "flex",
-                    alignContent: "center",
-                  }}
-                >
-                  <AppRegistrationTwoToneIcon /> รายการอุปกรณ์
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Button
-                  size="small"
-                  variant="contained"
-                  sx={{ mr: 1, mb: 1 }}
-                  color="success"
-                  className="w-[96px]"
-                  onClick={() => {
-                    setOpenDialogCreate(true);
-                  }}
-                >
-                  <AddTwoToneIcon />
-                  เพิ่ม
-                </Button>
-              </Grid>
-            </Grid>
-          </Toolbar>
-        </AppBar>
-
-        <BoxDataGrid>
-          <DataGrid
-            autoHeight
-            rowHeight={28}
-            headerHeight={28}
-            components={{
-              NoRowsOverlay: CustomNoRowsOverlay,
-            }}
-            // sx={{
-            //   minHeight: 505,
-            // }}
-            rows={
-              transferReducer.isResultView ? transferReducer.isResultView : []
-            }
-            // rows={[]}
-            columns={dataColumns}
-            pageSize={15}
-            hideFooterSelectedRowCount
-            rowsPerPageOptions={[15]}
-            disableColumnMenu={true}
-            // loading={hosxpReducer.isFetching}
-            getRowId={(row) =>
-              // parseInt(row.kskloginname) + Math.random() * (100 - 1)
-              row.product_id
-            }
-            localeText={{
-              MuiTablePagination: {
-                labelDisplayedRows: ({ from, to, count }) =>
-                  `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
-              },
-            }}
-          />
-        </BoxDataGrid>
       </Paper>
 
       {/* ปุ่ม: บันทึกโอนย้ายอุปกรณ์  */}
@@ -848,7 +611,6 @@ export default function TransferCreate() {
           </Button>
         </Grid>
       </Grid>
-      <TransferCreateForm show={openDialogCreate} confirm={onConfirm} />
     </Box>
   );
 }

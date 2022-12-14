@@ -14,6 +14,8 @@ import NoteAddTwoToneIcon from "@mui/icons-material/NoteAddTwoTone";
 // import MoveDownTwoToneIcon from "@mui/icons-material/MoveDownTwoTone";
 import ContentPasteGoTwoToneIcon from "@mui/icons-material/ContentPasteGoTwoTone";
 import InventoryTwoToneIcon from "@mui/icons-material/InventoryTwoTone";
+import PostAddTwoToneIcon from "@mui/icons-material/PostAddTwoTone";
+import SummarizeTwoToneIcon from "@mui/icons-material/SummarizeTwoTone";
 
 export function usePrivateRouteDemo() {
   const iconCategory = {
@@ -428,6 +430,88 @@ export function usePrivateRouteDemo() {
           ),
           path: "/app3/equipment/view",
           show: false,
+        },
+      ],
+    },
+    {
+      id: "เอกสาร",
+      children: [
+        {
+          id: "รายการเอกสาร",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <PostAddTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/document",
+          show: true,
+        },
+        {
+          id: "สร้างใหม่เอกสาร",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <PostAddTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/document/create",
+          show: false,
+        },
+        {
+          id: "ปรับปรุงเอกสาร",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <PostAddTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/document/edit",
+          show: false,
+        },
+      ],
+    },
+    {
+      id: "รายงาน",
+      children: [
+        {
+          id: "รายงานอุปกรณ์",
+          icon: (
+            <Box
+              sx={{
+                ...iconCategory,
+              }}
+            >
+              <SummarizeTwoToneIcon
+                sx={{
+                  fontSize: 28,
+                }}
+              />
+            </Box>
+          ),
+          path: "/app3/report",
+          show: true,
         },
       ],
     },

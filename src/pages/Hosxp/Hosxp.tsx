@@ -233,7 +233,6 @@ export default function Hosxp() {
 
   return (
     <>
-      {/* 936  width: "100%"*/}
       <Paper
         sx={{
           maxWidth: "100%",

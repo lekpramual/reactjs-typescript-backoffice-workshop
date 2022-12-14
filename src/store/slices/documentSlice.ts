@@ -8,32 +8,11 @@ import withReactContent from "sweetalert2-react-content";
 // @constants
 import { secretAuth, OK, server } from "@/constants";
 import axios from "axios";
-import { ProductType, TransferByTitleAndDepart, TransferResult } from "@/types";
+import { reducerStateNew, dataResult } from "@/types";
 
 const MySwal = withReactContent(Swal);
 
-// We can safely reuse
-// types created earlier:
-type transferId = string;
-// type transferSelectId = number;
-
-type Transfer = {
-  product_id: transferId;
-  product_no: string;
-  product_inventory_number: string;
-};
-
-type TransferState = {
-  isFetching: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-  isResult: any;
-  isResultEdit: any;
-  isResultView: any;
-  errorMessage: string;
-};
-
-const initialState: TransferState = {
+const initialState: reducerStateNew = {
   isFetching: false,
   isSuccess: false,
   isError: false,
@@ -66,15 +45,15 @@ const wait = (ms: number) =>
   });
 
 // เพิ่มข้อมูล
-export const transferAdd = createAsyncThunk(
-  "transfer/add",
+export const documentCreate = createAsyncThunk(
+  "document/create",
   async (
     { formData, navigate }: { formData: any; navigate: any },
     thunkAPI
   ) => {
     try {
       const { data: res } = await axios.post(
-        `${server.BACKOFFICE_URL_V1}/transfer`,
+        `${server.BACKOFFICE_URL_V1}/document`,
         formData,
         header_get
       );
@@ -88,7 +67,7 @@ export const transferAdd = createAsyncThunk(
           if (data.result === OK) {
             setTimeout(() => {
               MySwal.hideLoading();
-              const message = "บันทึกใบโอนย้าน สำเร็จ";
+              const message = "สร้างใหม่ สำเร็จ";
               MySwal.fire({
                 icon: "success",
                 title: message,
@@ -137,12 +116,12 @@ export const transferAdd = createAsyncThunk(
 );
 
 // โหลดข้อมูลทั้งหมด
-export const transferAll = createAsyncThunk(
-  "transfer/all",
+export const documentAll = createAsyncThunk(
+  "document/all",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get<TransferResult>(
-        `${server.BACKOFFICE_URL_V1}/transfers`,
+      const response = await axios.get<dataResult>(
+        `${server.BACKOFFICE_URL_V1}/documents`,
         header_get
       );
       let data = await response.data;
@@ -172,26 +151,39 @@ export const transferAll = createAsyncThunk(
   }
 );
 
-// ค้นหาข้อมูล จากไอดี
-export const transferSearchById = createAsyncThunk(
-  "transfer/searchbyId",
-  async ({ search }: { search: string }, thunkAPI) => {
+export const documentSearch = createAsyncThunk(
+  "document/search",
+  async ({ keyword }: { keyword: string }, thunkAPI) => {
     try {
-      let id = search;
-      const { data: res } = await axios.get(
-        `${server.BACKOFFICE_URL_V1}/transfer?id=${id}`,
-        header_get
-      );
-      let data = res;
-      if (data.result === OK) {
-        // console.log(data.data);
-        // navigate("/phone");
-        return data.data;
-      } else {
-        // console.log("Error Else :", data);
-        return thunkAPI.rejectWithValue({
-          message: "Failed to fetch transfer.",
-        });
+      if (keyword) {
+        const response = await axios.get<dataResult>(
+          `${server.BACKOFFICE_URL_V1}/documents`,
+          header_get
+        );
+        let data = await response.data;
+        if (data.result === OK) {
+          let resultData = data.data;
+
+          // let val = keyword.toLowerCase();
+          // let matches = resultData.filter((v: any) =>
+          //   v.num.toLowerCase().includes(val)
+          // );
+          // return matches;
+
+          const lowercasedValue = keyword.toLowerCase().trim();
+          const filteredData = resultData.filter((item: any) => {
+            return Object.keys(item).some((key) =>
+              item[key].toString().toLowerCase().includes(lowercasedValue)
+            );
+          });
+          return filteredData;
+        } else {
+          console.log("Error Else :", data.message);
+          // return data.message;
+          return thunkAPI.rejectWithValue({
+            message: "Failed to fetch number.",
+          });
+        }
       }
     } catch (e: any) {
       // console.log("Error", e.error.message);
@@ -208,30 +200,25 @@ export const transferSearchById = createAsyncThunk(
   }
 );
 
-export const transferByTitleAndDepart = createAsyncThunk(
-  "transfer/searchbytitleanddepart",
-  async ({ search }: { search: TransferByTitleAndDepart }, thunkAPI) => {
+// ค้นหาข้อมูล จากไอดี
+export const documentSearchById = createAsyncThunk(
+  "document/searchbyId",
+  async ({ search }: { search: string }, thunkAPI) => {
     try {
-      let title = search.title || null;
-      let depart =
-        search.depart !== null && search.depart["value"] !== 0
-          ? search.depart["value"]
-          : null;
-
+      let id = search;
       const { data: res } = await axios.get(
-        `${server.BACKOFFICE_URL_V1}/transferByNoAndTitleAndDepart?title=${title}&depart=${depart}`,
+        `${server.BACKOFFICE_URL_V1}/document?id=${id}`,
         header_get
       );
       let data = res;
       if (data.result === OK) {
         // console.log(data.data);
         // navigate("/phone");
-        await wait(1 * 500);
         return data.data;
       } else {
         // console.log("Error Else :", data);
         return thunkAPI.rejectWithValue({
-          message: "Failed to fetch transfer.",
+          message: "Failed to fetch document.",
         });
       }
     } catch (e: any) {
@@ -250,12 +237,12 @@ export const transferByTitleAndDepart = createAsyncThunk(
 );
 
 // แก้ไขข้อมูลรายละเอียดใบรับอุปกรณ์
-export const transferUpdateById = createAsyncThunk(
-  "transfer/update",
+export const documentUpdateById = createAsyncThunk(
+  "document/update",
   async ({ formData, id }: { formData: any; id: any }, thunkAPI) => {
     try {
       const { data: res } = await axios.put(
-        `${server.BACKOFFICE_URL_V1}/transfer?id=${id}`,
+        `${server.BACKOFFICE_URL_V1}/document?id=${id}`,
         formData,
         header_get
       );
@@ -291,131 +278,91 @@ export const transferUpdateById = createAsyncThunk(
   }
 );
 
-const transferSlice = createSlice({
-  name: "transfer",
+const documentSlice = createSlice({
+  name: "document",
   // initialState: initialState,
   initialState,
-  reducers: {
-    addTransferEdit: (
-      state: TransferState,
-      action: PayloadAction<ProductType>
-    ) => {
-      state.isResultView.push(action.payload);
-    },
-
-    resetTransferEdit: (state: TransferState) => {
-      state.isResultEdit = [];
-    },
-
-    resetTransfer: (state: TransferState) => {
-      state.isResultView = [];
-      state.isResultEdit = [];
-    },
-
-    addTransfer: (state: TransferState, action: PayloadAction<Transfer>) => {
-      state.isResultView = action.payload;
-    },
-    addSelectTransfer: (state: TransferState, action: PayloadAction<any>) => {
-      state.isResultEdit = action.payload;
-    },
-
-    deleteTransfer: (state: TransferState, action: PayloadAction<any>) => {
-      state.isResultView = state.isResultView.filter(
-        (todo) => todo.product_id !== action.payload
-      );
-
-      state.isResultEdit = state.isResultEdit.filter(
-        (todo) => todo !== action.payload
-      );
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(transferAdd.fulfilled, (state, action) => {
+    builder.addCase(documentCreate.fulfilled, (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
       state.isResult = action.payload;
       return state;
     });
-    builder.addCase(transferAdd.rejected, (state, action) => {
+    builder.addCase(documentCreate.rejected, (state, action) => {
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = action.payload as string;
     });
-    builder.addCase(transferAdd.pending, (state, _action) => {
+    builder.addCase(documentCreate.pending, (state, _action) => {
       state.isFetching = true;
     });
 
-    builder.addCase(transferAll.fulfilled, (state, action) => {
+    builder.addCase(documentAll.fulfilled, (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
       state.isResult = action.payload;
       return state;
     });
-    builder.addCase(transferAll.rejected, (state, action) => {
+    builder.addCase(documentAll.rejected, (state, action) => {
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = action.payload as string;
     });
-    builder.addCase(transferAll.pending, (state, action) => {
+    builder.addCase(documentAll.pending, (state, action) => {
       state.isFetching = true;
     });
 
-    builder.addCase(transferSearchById.fulfilled, (state, action) => {
+    builder.addCase(documentSearchById.fulfilled, (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
       state.isResultView = action.payload;
       return state;
     });
-    builder.addCase(transferSearchById.rejected, (state, action) => {
+    builder.addCase(documentSearchById.rejected, (state, action) => {
       state.isFetching = false;
       state.isError = true;
       state.isResultView = [];
       state.errorMessage = action.payload as string;
     });
-    builder.addCase(transferSearchById.pending, (state, action) => {
+    builder.addCase(documentSearchById.pending, (state, action) => {
       state.isFetching = true;
     });
 
-    builder.addCase(transferByTitleAndDepart.fulfilled, (state, action) => {
+    builder.addCase(documentUpdateById.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      return state;
+    });
+    builder.addCase(documentUpdateById.rejected, (state, action) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = action.payload as string;
+    });
+    builder.addCase(documentUpdateById.pending, (state, _action) => {
+      state.isFetching = true;
+    });
+
+    // ค้นหา
+    builder.addCase(documentSearch.fulfilled, (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
       state.isResult = action.payload;
       return state;
     });
-    builder.addCase(transferByTitleAndDepart.rejected, (state, action) => {
-      state.isFetching = false;
-      state.isError = true;
-      state.isResult = [];
-      state.errorMessage = action.payload as string;
-    });
-    builder.addCase(transferByTitleAndDepart.pending, (state, action) => {
-      state.isFetching = true;
-    });
-
-    builder.addCase(transferUpdateById.fulfilled, (state, action) => {
-      state.isFetching = false;
-      state.isSuccess = true;
-      return state;
-    });
-    builder.addCase(transferUpdateById.rejected, (state, action) => {
+    builder.addCase(documentSearch.rejected, (state, action) => {
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = action.payload as string;
     });
-    builder.addCase(transferUpdateById.pending, (state, _action) => {
+    builder.addCase(documentSearch.pending, (state, action) => {
       state.isFetching = true;
     });
   },
 });
 
 // Export all of the actions:
-export const {
-  addTransfer,
-  addTransferEdit,
-  addSelectTransfer,
-  resetTransfer,
-  resetTransferEdit,
-  deleteTransfer,
-} = transferSlice.actions;
-export const transferSelector = (store: RootState) => store.transferReducer;
-export default transferSlice.reducer;
+export const {} = documentSlice.actions;
+export const documentSelector = (store: RootState) => store.documentReducer;
+export default documentSlice.reducer;

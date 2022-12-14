@@ -1,7 +1,15 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDebounce } from "@react-hook/debounce";
 // @mui
-import { Box, Breadcrumbs, Button } from "@mui/material";
+import {
+  Box,
+  Breadcrumbs,
+  Button,
+  FormControl,
+  IconButton,
+  TextField,
+} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -10,28 +18,28 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 // @icons
-import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
 import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import ContentPasteGoTwoToneIcon from "@mui/icons-material/ContentPasteGoTwoTone";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
-
+import PostAddTwoToneIcon from "@mui/icons-material/PostAddTwoTone";
 // @redux
 import { useSelector, useDispatch } from "react-redux";
 // @constats
 import { server } from "@/constants";
 // @styles
 import { BoxDataGrid } from "@/styles/AppStyle";
+// @alert
+import { Clear, Search } from "@mui/icons-material";
+
 // @utils
 import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 // @seletor
 import {
-  transferSelector,
-  transferAll,
-  transferSearchById,
-} from "@/store/slices/transferSlice";
-import TransferFormSearch from "./TransferFormSearch";
+  documentSelector,
+  documentAll,
+  documentSearch,
+} from "@/store/slices/documentSlice";
 // @day
 import moment from "moment";
 
@@ -41,21 +49,79 @@ export interface DialogTitleProps {
   onClose: () => void;
 }
 
-export default function Transfer() {
+interface QuickSearchToolbarProps {
+  clearSearch: () => void;
+  onChange: () => void;
+  value: string;
+}
+function QuickSearchToolbar(props: QuickSearchToolbarProps) {
+  return (
+    <Box
+      sx={{
+        // p: 0.5,
+        pb: 1.5,
+      }}
+    >
+      <FormControl fullWidth>
+        <TextField
+          variant="outlined"
+          value={props.value}
+          onChange={props.onChange}
+          placeholder="ค้นหา เลขที่หนังสือ, เรื่อง, หน่วยงาน"
+          size="small"
+          InputProps={{
+            startAdornment: <Search fontSize="small" />,
+            endAdornment: (
+              <IconButton
+                title="Clear"
+                aria-label="Clear"
+                size="small"
+                style={{ visibility: props.value ? "visible" : "hidden" }}
+                onClick={props.clearSearch}
+              >
+                <Clear fontSize="small" />
+              </IconButton>
+            ),
+          }}
+          sx={{
+            width: {
+              xs: 1,
+              sm: "auto",
+            },
+            m: (theme) => theme.spacing(1, 0.5, 1.5),
+            "& .MuiSvgIcon-root": {
+              mr: 0.5,
+            },
+            "& .MuiInput-underline:before": {
+              borderBottom: 1,
+              borderColor: "divider",
+            },
+          }}
+        />
+      </FormControl>
+    </Box>
+  );
+}
+
+export default function Document() {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const transferReducer = useSelector(transferSelector);
+  const [keywordSearch, setKeywordSearch] = useDebounce<string>("", 1000);
+  const [keywordSearchNoDelay, setKeywordSearchNoDelay] =
+    React.useState<string>("");
+
+  const documentReducer = useSelector(documentSelector);
 
   const dataColumns = [
     {
-      headerName: "เลขที่ใบโอน",
-      field: "transfer_no",
+      headerName: "เลขที่เอกสาร",
+      field: "document_no",
       width: 124,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value, row }: any) => (
         <Link
-          to={`/app3/transfer/view?id=${row.transfer_id}`}
+          to={`/app3/document/edit?id=${row.document_id}`}
           className="text-cyan-500 hover:text-cyan-600"
         >
           {value}
@@ -63,21 +129,8 @@ export default function Transfer() {
       ),
     },
     {
-      headerName: "เรื่องที่บันทึก",
-      field: "transfer_title",
-      flex: 1,
-      minWidth: 256,
-      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
-      sortable: true,
-      renderCell: ({ value }: any) => (
-        <Typography variant="body1" className="text-[14px]" noWrap>
-          {value}
-        </Typography>
-      ),
-    },
-    {
-      headerName: "ผู้บันทึก",
-      field: "transfer_member",
+      headerName: "เลขที่หนังสือ",
+      field: "document_no_txt",
       flex: 1,
       minWidth: 164,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -89,8 +142,22 @@ export default function Transfer() {
       ),
     },
     {
-      headerName: "หน่วยงานที่เก็บใหม่",
-      field: "transfer_depart_name",
+      headerName: "เรื่อง",
+      field: "document_title",
+      flex: 1,
+      minWidth: 256,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+      sortable: true,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]" noWrap>
+          {value}
+        </Typography>
+      ),
+    },
+
+    {
+      headerName: "หน่วยงาน",
+      field: "document_depart_name",
       flex: 1,
       minWidth: 512,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
@@ -102,8 +169,8 @@ export default function Transfer() {
       ),
     },
     {
-      headerName: "วันที่",
-      field: "transfer_date",
+      headerName: "วันที่จัดเก็บเอกสาร",
+      field: "document_date",
       width: 124,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
@@ -113,33 +180,6 @@ export default function Transfer() {
         </Typography>
       ),
     },
-    // {
-    //   headerName: "สถานะ",
-    //   field: "transfer_status",
-    //   // flex: 1,
-    //   width: 84,
-    //   headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
-    //   sortable: false,
-    //   align: "center" as "center",
-    //   headerAlign: "center" as "center",
-    //   renderCell: ({ value, row }: any) => (
-    //     <Typography
-    //       variant="body1"
-    //       className={
-    //         row.transfer_status === "ยืนยันการโอน"
-    //           ? "text-[14px] text-green-500"
-    //           : "text-[14px] text-yellow-500"
-    //       }
-    //     >
-    //       {/* {value} */}
-    //       {row.transfer_status === "ยืนยันการโอน" ? (
-    //         <CheckBoxTwoToneIcon />
-    //       ) : (
-    //         <CropDinTwoToneIcon />
-    //       )}
-    //     </Typography>
-    //   ),
-    // },
     {
       headerName: "จัดการ",
       field: ".",
@@ -151,28 +191,10 @@ export default function Transfer() {
       headerClassName: "text-center bg-[#36474f] text-[#fff] text-[14px] ",
       renderCell: ({ row }: GridRenderCellParams<string>) => (
         <Stack direction="row" className="text-center">
-          <Tooltip title="ปริ้นข้อมูล">
-            <Button
-              sx={{
-                minWidth: "30px",
-              }}
-              type="submit"
-              color="info"
-              variant="contained"
-              className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
-              size="small"
-              onClick={() => {
-                navigate("/app3/transfer/view?id=" + row.transfer_id);
-              }}
-            >
-              <PrintTwoToneIcon fontSize="inherit" />
-            </Button>
-          </Tooltip>
-
-          {row.transfer_file !== "" ? (
+          {row.document_file !== "" ? (
             <Tooltip title="ไฟล์แนบ">
               <a
-                href={`${server.BACKOFFICE_URL_File}/${row.transfer_file}`}
+                href={`${server.BACKOFFICE_URL_File}/${row.document_file}`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -222,7 +244,7 @@ export default function Transfer() {
               className="hover:text-[#fce805] w-[30px] h-[26px] mr-1"
               size="small"
               onClick={() => {
-                navigate("/app3/transfer/edit?id=" + row.transfer_id);
+                navigate("/app3/document/edit?id=" + row.document_id);
               }}
             >
               <EditTwoToneIcon fontSize="inherit" />
@@ -234,10 +256,17 @@ export default function Transfer() {
   ];
 
   useEffect(() => {
-    dispatch(transferAll());
-    dispatch(transferSearchById({ search: "" }));
+    dispatch(documentAll());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
+
+  // โหลดข้อมูลการค้นหา
+  useEffect(() => {
+    // โหลดข้อมูล กรณี มีการค้นหาเท่านั้น
+    if (keywordSearch !== "") {
+      dispatch(documentSearch({ keyword: keywordSearch }));
+    }
+  }, [dispatch, keywordSearch]);
 
   return (
     <Box>
@@ -252,29 +281,9 @@ export default function Transfer() {
         </Typography>
 
         <Typography color="text.primary" variant="subtitle2">
-          รายการ โอน-ย้าย อุปกรณ์
+          รายการ เอกสาร
         </Typography>
       </Breadcrumbs>
-
-      <Paper
-        // 936 "100%"
-        sx={{ maxWidth: "100%", margin: "auto", overflow: "hidden", mb: "8px" }}
-      >
-        <TransferFormSearch />
-        {/* <Formik
-          validate={(values) => {
-            let errors: any = {};
-
-            return errors;
-          }}
-          initialValues={initialValues}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(false);
-          }}
-        >
-          {(props) => showFormSearch(props)}
-        </Formik> */}
-      </Paper>
 
       <Paper
         sx={{
@@ -306,7 +315,7 @@ export default function Transfer() {
                     alignContent: "center",
                   }}
                 >
-                  <ContentPasteGoTwoToneIcon /> รายการ โอน-ย้าย อุปกรณ์
+                  <PostAddTwoToneIcon /> รายการ เอกสาร
                 </Typography>
               </Grid>
               <Grid xs={6} className="text-right">
@@ -317,10 +326,10 @@ export default function Transfer() {
                   color="success"
                   className="w-[128px]"
                   component={Link}
-                  to="/app3/transfer/create"
+                  to="/app3/document/create"
                 >
                   <AddTwoToneIcon />
-                  เพิ่มใบโอน
+                  สร้างใหม่
                 </Button>
               </Grid>
             </Grid>
@@ -332,22 +341,35 @@ export default function Transfer() {
             rowHeight={28}
             headerHeight={28}
             components={{
+              Toolbar: QuickSearchToolbar,
               NoRowsOverlay: CustomNoRowsOverlay,
+            }}
+            componentsProps={{
+              toolbar: {
+                value: keywordSearchNoDelay,
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                  setKeywordSearch(e.target.value);
+                  setKeywordSearchNoDelay(e.target.value);
+                },
+                clearSearch: () => {
+                  // รีโหลดข้อมูลทั้งหมดใหม่
+                  dispatch(documentAll());
+                  setKeywordSearch("");
+                  setKeywordSearchNoDelay("");
+                },
+              },
             }}
             sx={{
               minHeight: 505,
             }}
-            rows={transferReducer.isResult ? transferReducer.isResult : []}
+            rows={documentReducer.isResult ? documentReducer.isResult : []}
             columns={dataColumns}
             pageSize={15}
             hideFooterSelectedRowCount
             rowsPerPageOptions={[15]}
             disableColumnMenu={true}
-            loading={transferReducer.isFetching}
-            getRowId={(row) =>
-              // parseInt(row.kskloginname) + Math.random() * (100 - 1)
-              row.transfer_id
-            }
+            loading={documentReducer.isFetching}
+            getRowId={(row) => row.document_id}
             localeText={{
               MuiTablePagination: {
                 labelDisplayedRows: ({ from, to, count }) =>

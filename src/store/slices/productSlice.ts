@@ -50,7 +50,7 @@ export const productSearch = createAsyncThunk(
       if (data.result === OK) {
         // console.log(data.data);
         // navigate("/phone");
-        await wait(1 * 1000);
+        // await wait(1 * 1000);
         return data.data;
       } else {
         // console.log("Error Else :", data);

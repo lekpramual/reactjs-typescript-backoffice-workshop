@@ -21,4 +21,17 @@ export interface TransferDetailResult {
   data: TransferDetail[];
 }
 
+export interface TransferDetailByProduct {
+  transfer_id: string;
+  transfer_no: string;
+  transfer_detail_id: string;
+  transfer_detail_new_depart: string;
+  transfer_detail_default_new_name: string;
+  product_id: string;
+  product_no: string;
+  product_inventory_number: string;
+  product_title: string;
+  transfer_date: Date;
+}
+
 export type TransferDetailId = { id: string };

@@ -42,12 +42,16 @@ import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTo
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import TextareaAutosize from "@mui/base/TextareaAutosize";
 import Barcode from "react-barcode";
-
+// @styles
+import { BoxDataGrid } from "@/styles/AppStyle";
+import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+// @day
+import moment from "moment";
 // @redux
 import { useSelector, useDispatch } from "react-redux";
 
 // @utils
-import { CustomNoRowsOverlay } from "@/utils";
+import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
 
 // @seletor
 import {
@@ -55,6 +59,10 @@ import {
   productSearchById,
   productUpdate,
 } from "@/store/slices/productSlice";
+import {
+  transferDetailSelector,
+  transferDetailSearchByProductId,
+} from "@/store/slices/transferDetailSlice";
 
 import { categorySelector, categoryAll } from "@/store/slices/categorySlice";
 
@@ -116,12 +124,70 @@ export default function ProductEdit() {
   const dispatch = useDispatch<any>();
   const productReducer = useSelector(productSelector);
   const categoryReducer = useSelector(categorySelector);
+  const transferDetailReducer = useSelector(transferDetailSelector);
 
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  const dataColumns = [
+    {
+      headerName: "เลขที่ใบโอน",
+      field: "transfer_no",
+      width: 124,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+      sortable: true,
+      renderCell: ({ value, row }: any) => (
+        <Link
+          to={`/app3/transfer/view?id=${row.transfer_id}`}
+          className="text-cyan-500 hover:text-cyan-600"
+        >
+          {value}
+        </Link>
+      ),
+    },
+    {
+      headerName: "เรื่องที่บันทึก",
+      field: "product_title",
+      flex: 1,
+      minWidth: 256,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+      sortable: true,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]" noWrap>
+          {value}
+        </Typography>
+      ),
+    },
+
+    {
+      headerName: "หน่วยงานที่เก็บใหม่",
+      field: "transfer_detail_default_new_name",
+      flex: 1,
+      minWidth: 256,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+      sortable: true,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]" noWrap>
+          {value}
+        </Typography>
+      ),
+    },
+    {
+      headerName: "วันที่",
+      field: "transfer_date",
+      width: 124,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+      sortable: true,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]">
+          {moment(value).format("DD/MM/yyyy")}
+        </Typography>
+      ),
+    },
+  ];
 
   const initialProductValues: any = {
     product_no: "", // เลขทะเบียน
@@ -382,6 +448,7 @@ export default function ProductEdit() {
   useEffect(() => {
     dispatch(categoryAll());
     dispatch(productSearchById({ search: id }));
+    dispatch(transferDetailSearchByProductId({ search: id }));
   }, [dispatch, id]);
 
   return (
@@ -676,7 +743,39 @@ export default function ProductEdit() {
               justifyContent: "center",
             }}
           >
-            {CustomNoRowsOverlay()}
+            <BoxDataGrid>
+              <DataGrid
+                rowHeight={28}
+                headerHeight={28}
+                components={{
+                  NoRowsOverlay: CustomNoRowsOverlay,
+                }}
+                sx={{
+                  minHeight: 450,
+                }}
+                rows={
+                  transferDetailReducer.isResult
+                    ? transferDetailReducer.isResult
+                    : []
+                }
+                columns={dataColumns}
+                pageSize={15}
+                hideFooterSelectedRowCount
+                rowsPerPageOptions={[15]}
+                disableColumnMenu={true}
+                // loading={hosxpReducer.isFetching}
+                getRowId={(row) =>
+                  // parseInt(row.kskloginname) + Math.random() * (100 - 1)
+                  row.transfer_id
+                }
+                localeText={{
+                  MuiTablePagination: {
+                    labelDisplayedRows: ({ from, to, count }) =>
+                      `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
+                  },
+                }}
+              />
+            </BoxDataGrid>
           </Grid>
         </Paper>
       </TabPanel>

@@ -10,3 +10,5 @@ export * from "@/types/department.type";
 export * from "@/types/product.type";
 export * from "@/types/transfer.type";
 export * from "@/types/transfer.detail.type";
+export * from "@/types/document.type";
+export * from "@/types/result.type";

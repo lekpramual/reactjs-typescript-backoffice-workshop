@@ -15,6 +15,7 @@ import equipmentDetailReducer from "@/store/slices/equipmentDetailSlice";
 import productReducer from "@/store/slices/productSlice";
 import transferReducer from "@/store/slices/transferSlice";
 import transferDetailReducer from "@/store/slices/transferDetailSlice";
+import documentReducer from "@/store/slices/documentSlice";
 
 const reducer = {
   loginReducer,
@@ -31,6 +32,7 @@ const reducer = {
   productReducer,
   transferReducer,
   transferDetailReducer,
+  documentReducer,
 };
 
 export const store = configureStore({

@@ -24,17 +24,24 @@ import AppRegistrationTwoToneIcon from "@mui/icons-material/AppRegistrationTwoTo
 
 import Barcode from "react-barcode";
 
+// @styles
+import { BoxDataGrid } from "@/styles/AppStyle";
+import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 // @redux
 import { useSelector, useDispatch } from "react-redux";
 // @day
 import moment from "moment";
 // @utils
-import { CustomNoRowsOverlay } from "@/utils";
+import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
 // @seletor
 import {
   productSelector,
   productSearchById,
 } from "@/store/slices/productSlice";
+import {
+  transferDetailSelector,
+  transferDetailSearchByProductId,
+} from "@/store/slices/transferDetailSlice";
 
 export interface DialogTitleProps {
   id: string;
@@ -89,6 +96,7 @@ export default function ProductView() {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const productReducer = useSelector(productSelector);
+  const transferDetailReducer = useSelector(transferDetailSelector);
 
   let query = useQuery();
   let id = query.get("id") || "";
@@ -99,8 +107,93 @@ export default function ProductView() {
     setValue(newValue);
   };
 
+  const dataColumns = [
+    {
+      headerName: "เลขที่ใบโอน",
+      field: "transfer_no",
+      width: 124,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+      sortable: true,
+      renderCell: ({ value, row }: any) => (
+        <Link
+          to={`/app3/transfer/view?id=${row.transfer_id}`}
+          className="text-cyan-500 hover:text-cyan-600"
+        >
+          {value}
+        </Link>
+      ),
+    },
+    {
+      headerName: "เรื่องที่บันทึก",
+      field: "product_title",
+      flex: 1,
+      minWidth: 256,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+      sortable: true,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]" noWrap>
+          {value}
+        </Typography>
+      ),
+    },
+
+    {
+      headerName: "หน่วยงานที่เก็บใหม่",
+      field: "transfer_detail_default_new_name",
+      flex: 1,
+      minWidth: 256,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+      sortable: true,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]" noWrap>
+          {value}
+        </Typography>
+      ),
+    },
+    {
+      headerName: "วันที่",
+      field: "transfer_date",
+      width: 124,
+      headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+      sortable: true,
+      renderCell: ({ value }: any) => (
+        <Typography variant="body1" className="text-[14px]">
+          {moment(value).format("DD/MM/yyyy")}
+        </Typography>
+      ),
+    },
+    // {
+    //   headerName: "สถานะ",
+    //   field: "transfer_status",
+    //   // flex: 1,
+    //   width: 84,
+    //   headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
+    //   sortable: false,
+    //   align: "center" as "center",
+    //   headerAlign: "center" as "center",
+    //   renderCell: ({ value, row }: any) => (
+    //     <Typography
+    //       variant="body1"
+    //       className={
+    //         row.transfer_status === "ยืนยันการโอน"
+    //           ? "text-[14px] text-green-500"
+    //           : "text-[14px] text-yellow-500"
+    //       }
+    //     >
+    //       {/* {value} */}
+    //       {row.transfer_status === "ยืนยันการโอน" ? (
+    //         <CheckBoxTwoToneIcon />
+    //       ) : (
+    //         <CropDinTwoToneIcon />
+    //       )}
+    //     </Typography>
+    //   ),
+    // },
+  ];
+
   useEffect(() => {
     dispatch(productSearchById({ search: id }));
+    dispatch(transferDetailSearchByProductId({ search: id }));
   }, [dispatch, id]);
 
   return (
@@ -495,7 +588,39 @@ export default function ProductView() {
               justifyContent: "center",
             }}
           >
-            {CustomNoRowsOverlay()}
+            <BoxDataGrid>
+              <DataGrid
+                rowHeight={28}
+                headerHeight={28}
+                components={{
+                  NoRowsOverlay: CustomNoRowsOverlay,
+                }}
+                sx={{
+                  minHeight: 450,
+                }}
+                rows={
+                  transferDetailReducer.isResult
+                    ? transferDetailReducer.isResult
+                    : []
+                }
+                columns={dataColumns}
+                pageSize={15}
+                hideFooterSelectedRowCount
+                rowsPerPageOptions={[15]}
+                disableColumnMenu={true}
+                // loading={hosxpReducer.isFetching}
+                getRowId={(row) =>
+                  // parseInt(row.kskloginname) + Math.random() * (100 - 1)
+                  row.transfer_id
+                }
+                localeText={{
+                  MuiTablePagination: {
+                    labelDisplayedRows: ({ from, to, count }) =>
+                      `${from} ถึง ${to} จาก ${NumberWithCommas(count)}`,
+                  },
+                }}
+              />
+            </BoxDataGrid>
           </Grid>
         </Paper>
         {/* <Grid container spacing={2} alignItems="center" className="mt-1">

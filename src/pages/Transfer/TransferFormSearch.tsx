@@ -7,16 +7,22 @@ import {
   FormControl,
   InputLabel,
   OutlinedInput,
-  MenuItem,
+  TextField,
   Select,
 } from "@mui/material";
+
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+
 // @redux
 import { useSelector, useDispatch } from "react-redux";
 
 // @seletor
 import { productSearch } from "@/store/slices/productSlice";
 import { categorySelector, categoryAll } from "@/store/slices/categorySlice";
-
+import {
+  departmentSelector,
+  departmentAll,
+} from "@/store/slices/departmentSlice";
 // @mui
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
@@ -27,38 +33,44 @@ import { ProductTypeSearch } from "@/types";
 import SearchTwoToneIcon from "@mui/icons-material/SearchTwoTone";
 import SearchIcon from "@mui/icons-material/Search";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import { transferByTitleAndDepart } from "@/store/slices/transferSlice";
+
+interface FilmOptionType {
+  inputValue?: string;
+  label: string;
+  value?: number;
+}
+const filter = createFilterOptions<FilmOptionType>();
 
 export default function TransferFormSearch() {
   const dispatch = useDispatch<any>();
   const categoryReducer = useSelector(categorySelector);
+  const departmentReducer = useSelector(departmentSelector);
 
-  const initialValues: ProductTypeSearch = {
-    no: "",
-    no_txt: "",
-    category: 0,
+  const initialValues: any = {
+    title: "",
+    depart: {
+      label: "--เลือกหน่วยงาน--",
+      value: 0,
+    },
   };
 
-  const CustomizedSelectForFormikV2 = ({
-    children,
-    form,
-    field,
-    label,
-  }: any) => {
-    const { name, value } = field;
-    const { setFieldValue } = form;
-    return (
-      <Select
-        label={label}
-        name={name}
-        value={parseInt(value)}
-        onChange={(e) => {
-          setFieldValue(name, e.target.value);
-        }}
-      >
-        {children}
-      </Select>
-    );
-  };
+  function optionNewDeparts() {
+    const departs = [{ label: "--เลือกหน่วยงาน--", value: 0 }];
+    if (departmentReducer.isResult) {
+      departmentReducer.isResult.map((i, index) => {
+        return departs.push({
+          label: `(${i.CCID}) - ${i.dept_name}`,
+          value: i.dept_id,
+        });
+      });
+      return departs;
+    } else {
+      return departs;
+    }
+  }
+
+  const departOption = optionNewDeparts();
 
   const showFormSearch = ({
     handleSubmit,
@@ -83,41 +95,93 @@ export default function TransferFormSearch() {
               </InputLabel>
               <Field
                 as={OutlinedInput}
-                id="no_txt"
-                name="no_txt"
+                id="title"
+                name="title"
                 startAdornment={
                   <SearchIcon color="inherit" sx={{ display: "block" }} />
                 }
                 label="เลขที่บันทึก"
                 size="small"
-                placeholder="ตัวอย่าง รอ. 0032.102/93"
+                placeholder="ตัวอย่าง ติดตั้ง"
               />
             </FormControl>
           </Grid>
 
           <Grid item lg={5} md={4} xs={12}>
             <FormControl fullWidth size="small">
-              <InputLabel id="category">หน่วยงานที่เก็บใหม่</InputLabel>
-              <Field
-                name="category"
-                id="category"
-                label="หมวดหมู่"
-                component={CustomizedSelectForFormikV2}
-              >
-                <MenuItem value={0}>-- เลือกหมวดหมู่ --</MenuItem>
-                {categoryReducer.isResult
-                  ? categoryReducer.isResult.map((row, i) => {
-                      return (
-                        <MenuItem
-                          value={parseInt(row.category_id)}
-                          key={`category-${i}`}
-                        >
-                          {row.category_name}
-                        </MenuItem>
-                      );
-                    })
-                  : []}
-              </Field>
+              <Autocomplete
+                value={values.depart}
+                noOptionsText={"ไม่มีข้อมูล"}
+                onChange={(event, newValue) => {
+                  if (typeof newValue === "string") {
+                    console.log("if");
+                    // timeout to avoid instant validation of the dialog's form.
+                    // setTimeout(() => {
+                    //   toggleOpen(true);
+                    //   setDialogValue({
+                    //     title: newValue,
+                    //     year: "",
+                    //   });
+                    // });
+                  } else if (newValue && newValue.inputValue) {
+                    console.log("else if");
+                    // toggleOpen(true);
+                    // setDialogValue({
+                    //   title: newValue.inputValue,
+                    //   year: "",
+                    // });
+                  } else {
+                    setFieldValue("depart", newValue);
+                  }
+                }}
+                filterOptions={(options, params) => {
+                  // const filtered = options.filter(row => row.label === params.inputValue)
+                  const filtered = filter(options, params);
+                  // if (params.inputValue !== "") {
+                  //   filtered.push({
+                  //     inputValue: params.inputValue,
+                  //     title: `Add "${params.inputValue}"`,
+                  //   });
+                  // }
+                  return filtered;
+                }}
+                id="free-solo-dialog-demo"
+                options={departOption}
+                getOptionLabel={(option) => {
+                  // e.g value selected with enter, right from the input
+                  if (typeof option === "string") {
+                    return option;
+                  }
+                  if (option.inputValue) {
+                    return option.inputValue;
+                  }
+                  return option.label;
+                }}
+                isOptionEqualToValue={(option: any, value: any) =>
+                  option.value === value.value && option.label === value.label
+                }
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+                renderOption={(props, option) => (
+                  <li {...props}>{option.label}</li>
+                )}
+                renderInput={(params) => (
+                  <Field
+                    required
+                    sx={{ input: { marginTop: "-3px" } }}
+                    {...params}
+                    name="depart"
+                    id="depart"
+                    label={"หน่วยงานที่บันทึก"}
+                    component={TextField}
+                    size="small"
+                    InputLabelProps={{
+                      style: { marginTop: "-3px" },
+                    }}
+                  />
+                )}
+              />
             </FormControl>
           </Grid>
           <Grid item lg={2} md={4} xs={12}>
@@ -155,8 +219,7 @@ export default function TransferFormSearch() {
   };
 
   useEffect(() => {
-    dispatch(categoryAll());
-    dispatch(productSearch({ search: initialValues }));
+    dispatch(departmentAll());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -169,8 +232,7 @@ export default function TransferFormSearch() {
       }}
       initialValues={initialValues}
       onSubmit={(values, { setSubmitting }) => {
-        console.log(values.category);
-        dispatch(productSearch({ search: values }));
+        dispatch(transferByTitleAndDepart({ search: values }));
         setSubmitting(false);
       }}
     >

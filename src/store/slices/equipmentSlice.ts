@@ -231,7 +231,7 @@ export const equipmentAll = createAsyncThunk(
       let data = await response.data;
       if (data.result === OK) {
         // console.log(data.data);
-        await wait(1 * 1000);
+        // await wait(1 * 1000);
         return data.data;
       } else {
         console.log("Error Else :", data.message);

@@ -67,7 +67,6 @@ export const hosxpSearch = createAsyncThunk(
   "hosxp/search",
   async ({ keyword }: { keyword: string }, thunkAPI) => {
     try {
-      console.log(keyword);
       if (keyword) {
         const { data: res } = await axios.get<HosxpResult>(
           `${server.HOSXP_URL}/user/?username=${keyword}`,

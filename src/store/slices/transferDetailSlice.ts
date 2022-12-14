@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // @store PayloadAction
 import { RootState } from "@/store";
 import { encode } from "base-64";
@@ -71,14 +71,49 @@ export const transferDetailSearchById = createAsyncThunk(
   async ({ search }: { search: string }, thunkAPI) => {
     try {
       let id = search;
-      console.log(id);
+
       const { data: res } = await axios.get(
         `${server.BACKOFFICE_URL_V1}/transferdetail?id=${id}`,
         header_get
       );
       let data = res;
       if (data.result === OK) {
-        console.log(data.data);
+        // navigate("/phone");
+        return data.data;
+      } else {
+        // console.log("Error Else :", data);
+        return thunkAPI.rejectWithValue({
+          message: "Failed to fetch transfer detail.",
+        });
+      }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+
+// ค้นหาข้อมูล จากไอดี
+export const transferDetailSearchByProductId = createAsyncThunk(
+  "transferdetail/searchbyProductId",
+  async ({ search }: { search: string }, thunkAPI) => {
+    try {
+      let id = search;
+
+      const { data: res } = await axios.get(
+        `${server.BACKOFFICE_URL_V1}/transferdetailByProductId?id=${id}`,
+        header_get
+      );
+      let data = res;
+      if (data.result === OK) {
         // navigate("/phone");
         return data.data;
       } else {
@@ -231,7 +266,6 @@ const transferDetailSlice = createSlice({
     });
 
     builder.addCase(transferDetailSearchById.fulfilled, (state, action) => {
-      console.log(action.payload);
       state.isFetching = false;
       state.isSuccess = true;
       state.isResultView = action.payload;
@@ -246,6 +280,30 @@ const transferDetailSlice = createSlice({
     builder.addCase(transferDetailSearchById.pending, (state, action) => {
       state.isFetching = true;
     });
+    builder.addCase(
+      transferDetailSearchByProductId.fulfilled,
+      (state, action) => {
+        state.isFetching = false;
+        state.isSuccess = true;
+        state.isResult = action.payload;
+        return state;
+      }
+    );
+    builder.addCase(
+      transferDetailSearchByProductId.rejected,
+      (state, action) => {
+        state.isFetching = false;
+        state.isError = true;
+        state.isResult = [];
+        state.errorMessage = action.payload as string;
+      }
+    );
+    builder.addCase(
+      transferDetailSearchByProductId.pending,
+      (state, action) => {
+        state.isFetching = true;
+      }
+    );
 
     builder.addCase(transferDetailDeleteById.fulfilled, (state, action) => {
       state.isFetching = false;

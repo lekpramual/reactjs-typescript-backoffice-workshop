@@ -16,12 +16,8 @@ import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 
 // @day
 import moment from "moment";
-// @type
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 
 // @icons
-import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
@@ -39,8 +35,6 @@ import Tooltip from "@mui/material/Tooltip";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
-import ToggleOffTwoToneIcon from "@mui/icons-material/ToggleOffTwoTone";
-import ToggleOnTwoToneIcon from "@mui/icons-material/ToggleOnTwoTone";
 
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -66,10 +60,6 @@ import {
 } from "@/store/slices/departmentSlice";
 import {
   transferSelector,
-  addTransfer,
-  resetTransfer,
-  deleteTransfer,
-  transferAdd,
   transferSearchById,
   transferUpdateById,
 } from "@/store/slices/transferSlice";
@@ -81,15 +71,11 @@ import {
 } from "@/store/slices/transferDetailSlice";
 import {
   equipmentCartSelector,
-  addEquipmentCartEdit,
   resetEquipmentCartEdit,
-  deleteEquipmentCart,
-  resetEquipmentCart,
 } from "@/store/slices/equipmentCartSlice";
 
 // @component cart
 import TransferCreateForm from "./TransferCreateForm";
-import { equipmentAdd } from "../../store/slices/equipmentSlice";
 
 const MySwal = withReactContent(Swal);
 
@@ -109,23 +95,6 @@ export interface DialogTitleProps {
   id: string;
   children?: React.ReactNode;
   onClose: () => void;
-}
-
-function CustomFooterTotal(props: CustomFooterTotalProps) {
-  return (
-    <Box
-      sx={{
-        padding: "10px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "right",
-      }}
-    >
-      <Typography variant="subtitle2" component={"b"}>
-        รวม : {NumberWithCommas(props.total)}
-      </Typography>
-    </Box>
-  );
 }
 
 interface FilmOptionType {
@@ -320,16 +289,6 @@ export default function TransferEdit() {
     if (formRef.current) {
       formRef.current.resetForm();
     }
-  };
-
-  const reverseArrayInPlace = (departNew, productObj) => {
-    return productObj.map((item) => {
-      return {
-        product_id: `${item.product_id}`,
-        transfer_detail_default_depart: `${item.product_depart}`,
-        transfer_detail_new_depart: `${departNew.value}`,
-      };
-    });
   };
 
   function optionNewDeparts() {
@@ -619,16 +578,16 @@ export default function TransferEdit() {
   };
 
   useEffect(() => {
-    console.log("reload 1 ");
     dispatch(departmentAll());
     dispatch(transferSearchById({ search: id }));
     dispatch(transferDetailSearchById({ search: id }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  useEffect(() => {
-    console.log("reload 2 ");
-  }, [transferDetailReducer.isResultView, transferReducer.isResultView]);
+  useEffect(() => {}, [
+    transferDetailReducer.isResultView,
+    transferReducer.isResultView,
+  ]);
 
   return (
     <Box>
@@ -751,6 +710,11 @@ export default function TransferEdit() {
             } else {
               formData.append("transfer_file", values.transfer_file);
             }
+
+            formData.append(
+              "transfer_product",
+              JSON.stringify(transferDetailReducer.isResultView)
+            );
 
             dispatch(transferUpdateById({ formData: formData, id: id }));
 

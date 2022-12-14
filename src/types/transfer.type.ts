@@ -23,3 +23,7 @@ export interface TransferResult {
 }
 
 export type TransferId = { id: string };
+export type TransferByTitleAndDepart = {
+  title: string;
+  depart: string;
+};
