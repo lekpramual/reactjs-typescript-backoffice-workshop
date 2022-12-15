@@ -7,14 +7,13 @@ import { reducerStateNew, ProductTypeSearch } from "@/types";
 // @alert
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+//@ http
+import axios from "axios";
 // @constants
 import { secretAuth, OK, server } from "@/constants";
-// @utils
-// import { httpPhoneClient } from "@/utils";
-import axios from "axios";
 
 const MySwal = withReactContent(Swal);
-
+// STATE : Default
 const initialValues: reducerStateNew = {
   isFetching: false,
   isSuccess: false,
@@ -24,7 +23,7 @@ const initialValues: reducerStateNew = {
   isResultView: [],
   errorMessage: "",
 };
-
+// HEADER : Http
 const header_get = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -32,8 +31,7 @@ const header_get = {
     authorization: "Basic " + encode(secretAuth),
   },
 };
-
-// ค้นหาข้อมูล
+// GET : Search Product By No And no_txt And category
 export const productSearch = createAsyncThunk(
   "product/search",
   async ({ search }: { search: ProductTypeSearch }, thunkAPI) => {
@@ -72,8 +70,7 @@ export const productSearch = createAsyncThunk(
     }
   }
 );
-
-// ค้นหาข้อมูล จากไอดี
+// GET : Search Product By Product ID
 export const productSearchById = createAsyncThunk(
   "equipment/searchbyId",
   async ({ search }: { search: string }, thunkAPI) => {
@@ -108,8 +105,7 @@ export const productSearchById = createAsyncThunk(
     }
   }
 );
-
-// แก้ไขข้อมูลรายละเอียดใบรับอุปกรณ์
+// PUT : Update Product By ID
 export const productUpdate = createAsyncThunk(
   "product/update",
   async ({ formData, id }: { formData: any; id: any }, thunkAPI) => {
@@ -150,20 +146,6 @@ export const productUpdate = createAsyncThunk(
     }
   }
 );
-
-const wait = (ms: number) =>
-  new Promise<void>((resolve) => {
-    MySwal.fire({
-      title: "<p>กำลังโหลดข้อมูล ...</p>",
-      showConfirmButton: false,
-      timer: ms,
-      didOpen: () => {
-        MySwal.showLoading();
-      },
-    });
-
-    setTimeout(() => resolve(), ms);
-  });
 
 const productSlice = createSlice({
   name: "product",
@@ -215,7 +197,7 @@ const productSlice = createSlice({
     });
   },
 });
-
+// Export all of the actions:
 // export const {} = loginSlice.actions;
 export const productSelector = (store: RootState) => store.productReducer;
 export default productSlice.reducer;

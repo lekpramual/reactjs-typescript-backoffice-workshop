@@ -1,4 +1,8 @@
 {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "workbench.colorCustomizations": {
+    "tab.activeBorder": "#f73378",
+    "tab.unfocusedActiveBorder": "#000000"
+  }
 }

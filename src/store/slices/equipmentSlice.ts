@@ -3,7 +3,12 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@/store";
 import { encode } from "base-64";
 // @type
-import { EquipmentResult, EquipmentSearch, reducerStateNew } from "@/types";
+import {
+  dataResult,
+  EquipmentResult,
+  EquipmentSearch,
+  reducerStateNew,
+} from "@/types";
 // @alert
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -14,7 +19,7 @@ import { secretAuth, OK, server } from "@/constants";
 import axios from "axios";
 
 const MySwal = withReactContent(Swal);
-
+// STATE : Default
 const initialValues: reducerStateNew = {
   isFetching: false,
   isSuccess: false,
@@ -24,7 +29,7 @@ const initialValues: reducerStateNew = {
   isResultView: [],
   errorMessage: "",
 };
-
+// HEADER : Http
 const header_get = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -33,7 +38,7 @@ const header_get = {
   },
 };
 
-// เพิ่มข้อมูล
+// POST : Create New Data Equipment
 export const equipmentAdd = createAsyncThunk(
   "equipment/add",
   async (
@@ -41,7 +46,7 @@ export const equipmentAdd = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const { data: res } = await axios.post(
+      const { data: res } = await axios.post<dataResult>(
         `${server.BACKOFFICE_URL_V1}/equipment`,
         formData,
         header_get
@@ -104,7 +109,7 @@ export const equipmentAdd = createAsyncThunk(
   }
 );
 
-// ตรวจรับอุปกรณ์
+// POST : Create Equipment Approved
 export const equipmentApproved = createAsyncThunk(
   "equipment/approved",
   async (
@@ -112,7 +117,7 @@ export const equipmentApproved = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const { data: res } = await axios.post(
+      const { data: res } = await axios.post<dataResult>(
         `${server.BACKOFFICE_URL_V1}/equipment_approved`,
         formData,
         header_get
@@ -174,12 +179,12 @@ export const equipmentApproved = createAsyncThunk(
     }
   }
 );
-
+// GET : Search Equipment By ID
 export const equipmentUpdateById = createAsyncThunk(
   "equipment/update",
   async ({ formData, id }: { formData: any; id: any }, thunkAPI) => {
     try {
-      const { data: res } = await axios.put(
+      const { data: res } = await axios.put<dataResult>(
         `${server.BACKOFFICE_URL_V1}/equipment?id=${id}`,
         formData,
         header_get
@@ -218,8 +223,7 @@ export const equipmentUpdateById = createAsyncThunk(
     }
   }
 );
-
-// โหลดข้อมูลทั้งหมด
+// GET : ALL Equipment
 export const equipmentAll = createAsyncThunk(
   "equipment/all",
   async (_, thunkAPI) => {
@@ -254,8 +258,7 @@ export const equipmentAll = createAsyncThunk(
     }
   }
 );
-
-// ค้นหาข้อมูล
+// GET : Search Equipment By Keyword
 export const equipmentSearch = createAsyncThunk(
   "equipment/search",
   async (
@@ -301,8 +304,7 @@ export const equipmentSearch = createAsyncThunk(
     }
   }
 );
-
-// ค้นหาข้อมูล จากไอดี
+// GET : Search Equipment By ID
 export const equipmentSearchById = createAsyncThunk(
   "equipment/searchbyId",
   async ({ search }: { search: string }, thunkAPI) => {
@@ -337,8 +339,7 @@ export const equipmentSearchById = createAsyncThunk(
     }
   }
 );
-
-// ลบข้อมูล จากไอดี
+// DELETE : Search Equipment By ID
 export const equipmentDeleteById = createAsyncThunk(
   "equipment/deletehbyId",
   async ({ search }: { search: string }, thunkAPI) => {
@@ -387,7 +388,7 @@ const wait = (ms: number) =>
 
     setTimeout(() => resolve(), ms);
   });
-
+// GET : Search Equipment By ID V2
 export const equipmentSearchByIdV2 = createAsyncThunk(
   "equipment/searchbyIdV2",
   async ({ search }: { search: string }, thunkAPI) => {

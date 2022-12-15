@@ -6,16 +6,16 @@ import { PhoneResult, PhoneSearch, reducerState } from "@/types";
 // @alert
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+//@ http
+import axios from "axios";
 // @constants
 import { apiPhoneUrl, secretKey } from "@/constants";
-// @utils
-// import { httpPhoneClient } from "@/utils";
-import axios from "axios";
 // @day
 import moment from "moment";
 
 const MySwal = withReactContent(Swal);
 
+// STATE : Default
 const initialValues: reducerState = {
   isFetching: false,
   isSuccess: false,
@@ -23,7 +23,7 @@ const initialValues: reducerState = {
   isResult: [],
   errorMessage: "",
 };
-
+// HEADER : Http
 const header_get = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -31,7 +31,7 @@ const header_get = {
     secretkey: secretKey,
   },
 };
-
+// GET : Search All Phone
 export const phoneAll = createAsyncThunk("phone/all", async (_, thunkAPI) => {
   try {
     const response = await axios.get<PhoneResult>(
@@ -62,7 +62,7 @@ export const phoneAll = createAsyncThunk("phone/all", async (_, thunkAPI) => {
     return thunkAPI.rejectWithValue(e.error.message);
   }
 });
-
+// GET : Search Phone By Keyword
 export const phoneSearch = createAsyncThunk(
   "phone/search",
   async (

@@ -32,7 +32,7 @@ type EquipmentCartState = {
   isResultEdit: EquipmentCart[];
   errorMessage: string;
 };
-
+// STATE : Default
 const initialState: EquipmentCartState = {
   isFetching: false,
   isSuccess: false,

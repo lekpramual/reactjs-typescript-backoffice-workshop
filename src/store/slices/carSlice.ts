@@ -13,7 +13,7 @@ import { server, secretKey } from "@/constants";
 import axios from "axios";
 
 const MySwal = withReactContent(Swal);
-
+// STATE : Default
 const initialValues: reducerState = {
   isFetching: false,
   isSuccess: false,
@@ -21,7 +21,7 @@ const initialValues: reducerState = {
   isResult: [],
   errorMessage: "",
 };
-
+// HEADER : Http
 const header_get = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -29,7 +29,7 @@ const header_get = {
     secretkey: secretKey,
   },
 };
-
+// GET : Search Car All
 export const carAll = createAsyncThunk("car/all", async (_, thunkAPI) => {
   try {
     const response = await axios.get<carResult>(

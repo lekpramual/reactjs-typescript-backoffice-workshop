@@ -15,7 +15,7 @@ import axios from "axios";
 // import moment from "moment";
 
 const MySwal = withReactContent(Swal);
-
+// STATE : Default
 const initialValues: reducerState = {
   isFetching: false,
   isSuccess: false,
@@ -23,7 +23,7 @@ const initialValues: reducerState = {
   isResult: [],
   errorMessage: "",
 };
-
+// HEADER : Http
 const header_get = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -31,7 +31,7 @@ const header_get = {
     secretkey: secretKey,
   },
 };
-
+// GET : Search All Hosxp
 export const hosxpAll = createAsyncThunk("hosxp/all", async (_, thunkAPI) => {
   try {
     const response = await axios.get<HosxpResult>(
@@ -62,7 +62,7 @@ export const hosxpAll = createAsyncThunk("hosxp/all", async (_, thunkAPI) => {
     return thunkAPI.rejectWithValue(e.error.message);
   }
 });
-
+// GET : Search Hosxp By Keyword
 export const hosxpSearch = createAsyncThunk(
   "hosxp/search",
   async ({ keyword }: { keyword: string }, thunkAPI) => {
@@ -106,7 +106,7 @@ export const hosxpSearch = createAsyncThunk(
     }
   }
 );
-
+// DLETE : Hosxp By Hosxp User
 export const hosxpDelete = createAsyncThunk(
   "hosxp/delete",
   async ({ id }: { id: string }, thunkAPI) => {

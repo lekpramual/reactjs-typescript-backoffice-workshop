@@ -6,14 +6,13 @@ import { reducerState, NumberResult } from "@/types";
 // @alert
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+//@ http
+import axios from "axios";
 // @constants
 import { server, secretKey } from "@/constants";
-// @utils
-// import { httpPhoneClient } from "@/utils";
-import axios from "axios";
 
 const MySwal = withReactContent(Swal);
-
+// STATE : Default
 const initialValues: reducerState = {
   isFetching: false,
   isSuccess: false,
@@ -21,7 +20,7 @@ const initialValues: reducerState = {
   isResult: [],
   errorMessage: "",
 };
-
+// HEADER : Http
 const header_get = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -29,7 +28,7 @@ const header_get = {
     secretkey: secretKey,
   },
 };
-
+// GET : Search All Number
 export const numberAll = createAsyncThunk("number/all", async (_, thunkAPI) => {
   try {
     const response = await axios.get<NumberResult>(
@@ -60,7 +59,7 @@ export const numberAll = createAsyncThunk("number/all", async (_, thunkAPI) => {
     return thunkAPI.rejectWithValue(e.error.message);
   }
 });
-
+// GET : Search Number By Keyword
 export const numberSearch = createAsyncThunk(
   "number/search",
   async ({ keyword }: { keyword: string }, thunkAPI) => {
@@ -148,6 +147,7 @@ const numberSlice = createSlice({
     });
   },
 });
-
+// Export all of the actions:
+// export const {} = transferDetailSlice.actions;
 export const numberSelector = (store: RootState) => store.numberReducer;
 export default numberSlice.reducer;

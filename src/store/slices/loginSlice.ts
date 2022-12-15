@@ -7,6 +7,7 @@ import { User, LoginResult, reducerState } from "@/types";
 // @alert
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+
 // @constants
 import {
   OK,
@@ -21,7 +22,7 @@ import {
 import { httpClient } from "@/utils";
 
 const MySwal = withReactContent(Swal);
-
+// STATE : Default
 const initialValues: reducerState = {
   isFetching: false,
   isSuccess: false,
@@ -29,7 +30,7 @@ const initialValues: reducerState = {
   isResult: [],
   errorMessage: "",
 };
-
+// HEADER : Http
 const auth_headers = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -38,12 +39,12 @@ const auth_headers = {
     authorization: "Basic " + encode(secretAuth),
   },
 };
-
+// Handle : Login Storage
 export const isLoggedIn = () => {
   const loginStatus = localStorage.getItem(LOGIN_STATUS_V2);
   return loginStatus === OK;
 };
-
+// Handle : Logout Storage
 export const isLogout = (navigate: any) => {
   return Swal.fire({
     title: "ยืนยันออกจากระบบ",
@@ -65,7 +66,7 @@ export const isLogout = (navigate: any) => {
     }
   });
 };
-
+// POST : Login User
 export const loginUser = createAsyncThunk(
   "user/login",
   async ({ user, navigate }: { user: User; navigate: any }, thunkAPI) => {

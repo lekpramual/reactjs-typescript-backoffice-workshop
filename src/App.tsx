@@ -68,7 +68,14 @@ export default function App() {
         fallback={
           <div className="flex h-screen">
             <div className="m-auto">
-              <h3>โหลดข้อมูล ...</h3>
+              <h3
+                style={{
+                  fontFamily: "Mitr-R",
+                  fontSize: "18px",
+                }}
+              >
+                โหลดข้อมูล ...
+              </h3>
             </div>
           </div>
         }

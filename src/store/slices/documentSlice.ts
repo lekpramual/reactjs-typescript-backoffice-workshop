@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // @store PayloadAction
 import { RootState } from "@/store";
 import { encode } from "base-64";
@@ -11,7 +11,7 @@ import axios from "axios";
 import { reducerStateNew, dataResult } from "@/types";
 
 const MySwal = withReactContent(Swal);
-
+// STATE : Default
 const initialState: reducerStateNew = {
   isFetching: false,
   isSuccess: false,
@@ -21,7 +21,7 @@ const initialState: reducerStateNew = {
   isResultView: [],
   errorMessage: "",
 };
-
+// HEADER : Http
 const header_get = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -30,21 +30,21 @@ const header_get = {
   },
 };
 
-const wait = (ms: number) =>
-  new Promise<void>((resolve) => {
-    MySwal.fire({
-      title: "<p>กำลังโหลดข้อมูล ...</p>",
-      showConfirmButton: false,
-      timer: ms,
-      didOpen: () => {
-        MySwal.showLoading();
-      },
-    });
+// const wait = (ms: number) =>
+//   new Promise<void>((resolve) => {
+//     MySwal.fire({
+//       title: "<p>กำลังโหลดข้อมูล ...</p>",
+//       showConfirmButton: false,
+//       timer: ms,
+//       didOpen: () => {
+//         MySwal.showLoading();
+//       },
+//     });
 
-    setTimeout(() => resolve(), ms);
-  });
+//     setTimeout(() => resolve(), ms);
+//   });
 
-// เพิ่มข้อมูล
+// POST : Create New Data Document
 export const documentCreate = createAsyncThunk(
   "document/create",
   async (
@@ -114,8 +114,7 @@ export const documentCreate = createAsyncThunk(
     }
   }
 );
-
-// โหลดข้อมูลทั้งหมด
+// GET : Search Document All
 export const documentAll = createAsyncThunk(
   "document/all",
   async (_, thunkAPI) => {
@@ -150,7 +149,7 @@ export const documentAll = createAsyncThunk(
     }
   }
 );
-
+// GET : Search Document BY Keyword
 export const documentSearch = createAsyncThunk(
   "document/search",
   async ({ keyword }: { keyword: string }, thunkAPI) => {
@@ -199,14 +198,13 @@ export const documentSearch = createAsyncThunk(
     }
   }
 );
-
-// ค้นหาข้อมูล จากไอดี
+// GET : Search Document BY ID
 export const documentSearchById = createAsyncThunk(
   "document/searchbyId",
   async ({ search }: { search: string }, thunkAPI) => {
     try {
       let id = search;
-      const { data: res } = await axios.get(
+      const { data: res } = await axios.get<dataResult>(
         `${server.BACKOFFICE_URL_V1}/document?id=${id}`,
         header_get
       );
@@ -235,8 +233,7 @@ export const documentSearchById = createAsyncThunk(
     }
   }
 );
-
-// แก้ไขข้อมูลรายละเอียดใบรับอุปกรณ์
+// PUT :  Document BY ID
 export const documentUpdateById = createAsyncThunk(
   "document/update",
   async ({ formData, id }: { formData: any; id: any }, thunkAPI) => {
@@ -263,7 +260,9 @@ export const documentUpdateById = createAsyncThunk(
           title: message,
           showConfirmButton: false,
         });
-        return thunkAPI.rejectWithValue(data.message);
+        return thunkAPI.rejectWithValue({
+          message: "ปรับปรุงรายการ ผิดพลาด",
+        });
       }
     } catch (e: any) {
       let message = e.error.message;
@@ -272,7 +271,7 @@ export const documentUpdateById = createAsyncThunk(
         title: message,
         showConfirmButton: false,
       });
-      console.log(e.error.message);
+
       return thunkAPI.rejectWithValue(e.error.message);
     }
   }
@@ -363,6 +362,6 @@ const documentSlice = createSlice({
 });
 
 // Export all of the actions:
-export const {} = documentSlice.actions;
+// export const {} = documentSlice.actions;
 export const documentSelector = (store: RootState) => store.documentReducer;
 export default documentSlice.reducer;

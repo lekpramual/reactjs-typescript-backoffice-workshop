@@ -5,10 +5,16 @@ import { encode } from "base-64";
 // @alert
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+//@ http
+import axios from "axios";
 // @constants
 import { secretAuth, OK, server } from "@/constants";
-import axios from "axios";
-import { ProductType, TransferByTitleAndDepart, TransferResult } from "@/types";
+import {
+  dataResult,
+  ProductType,
+  reducerStateNew,
+  TransferByTitleAndDepart,
+} from "@/types";
 
 const MySwal = withReactContent(Swal);
 
@@ -23,17 +29,17 @@ type Transfer = {
   product_inventory_number: string;
 };
 
-type TransferState = {
-  isFetching: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-  isResult: any;
-  isResultEdit: any;
-  isResultView: any;
-  errorMessage: string;
-};
-
-const initialState: TransferState = {
+// type TransferState = {
+//   isFetching: boolean;
+//   isSuccess: boolean;
+//   isError: boolean;
+//   isResult: any;
+//   isResultEdit: any;
+//   isResultView: any;
+//   errorMessage: string;
+// };
+// STATE : Default
+const initialState: reducerStateNew = {
   isFetching: false,
   isSuccess: false,
   isError: false,
@@ -42,7 +48,7 @@ const initialState: TransferState = {
   isResultView: [],
   errorMessage: "",
 };
-
+// HEADER : Http
 const header_get = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -50,7 +56,7 @@ const header_get = {
     authorization: "Basic " + encode(secretAuth),
   },
 };
-
+// ALERT : Loadding
 const wait = (ms: number) =>
   new Promise<void>((resolve) => {
     MySwal.fire({
@@ -64,8 +70,7 @@ const wait = (ms: number) =>
 
     setTimeout(() => resolve(), ms);
   });
-
-// เพิ่มข้อมูล
+// POST : Create New Data Transfer
 export const transferAdd = createAsyncThunk(
   "transfer/add",
   async (
@@ -73,7 +78,7 @@ export const transferAdd = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const { data: res } = await axios.post(
+      const { data: res } = await axios.post<dataResult>(
         `${server.BACKOFFICE_URL_V1}/transfer`,
         formData,
         header_get
@@ -135,13 +140,12 @@ export const transferAdd = createAsyncThunk(
     }
   }
 );
-
-// โหลดข้อมูลทั้งหมด
+// GET : All Data Transfer
 export const transferAll = createAsyncThunk(
   "transfer/all",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get<TransferResult>(
+      const response = await axios.get<dataResult>(
         `${server.BACKOFFICE_URL_V1}/transfers`,
         header_get
       );
@@ -171,14 +175,13 @@ export const transferAll = createAsyncThunk(
     }
   }
 );
-
-// ค้นหาข้อมูล จากไอดี
+// GET : Search Transfer By ID
 export const transferSearchById = createAsyncThunk(
   "transfer/searchbyId",
   async ({ search }: { search: string }, thunkAPI) => {
     try {
       let id = search;
-      const { data: res } = await axios.get(
+      const { data: res } = await axios.get<dataResult>(
         `${server.BACKOFFICE_URL_V1}/transfer?id=${id}`,
         header_get
       );
@@ -207,7 +210,7 @@ export const transferSearchById = createAsyncThunk(
     }
   }
 );
-
+// GET : Search Transfer By Title And Depart
 export const transferByTitleAndDepart = createAsyncThunk(
   "transfer/searchbytitleanddepart",
   async ({ search }: { search: TransferByTitleAndDepart }, thunkAPI) => {
@@ -218,7 +221,7 @@ export const transferByTitleAndDepart = createAsyncThunk(
           ? search.depart["value"]
           : null;
 
-      const { data: res } = await axios.get(
+      const { data: res } = await axios.get<dataResult>(
         `${server.BACKOFFICE_URL_V1}/transferByNoAndTitleAndDepart?title=${title}&depart=${depart}`,
         header_get
       );
@@ -248,13 +251,12 @@ export const transferByTitleAndDepart = createAsyncThunk(
     }
   }
 );
-
-// แก้ไขข้อมูลรายละเอียดใบรับอุปกรณ์
+// PUT : Update Transfer By ID
 export const transferUpdateById = createAsyncThunk(
   "transfer/update",
   async ({ formData, id }: { formData: any; id: any }, thunkAPI) => {
     try {
-      const { data: res } = await axios.put(
+      const { data: res } = await axios.put<dataResult>(
         `${server.BACKOFFICE_URL_V1}/transfer?id=${id}`,
         formData,
         header_get
@@ -293,33 +295,32 @@ export const transferUpdateById = createAsyncThunk(
 
 const transferSlice = createSlice({
   name: "transfer",
-  // initialState: initialState,
   initialState,
   reducers: {
     addTransferEdit: (
-      state: TransferState,
+      state: reducerStateNew,
       action: PayloadAction<ProductType>
     ) => {
       state.isResultView.push(action.payload);
     },
 
-    resetTransferEdit: (state: TransferState) => {
+    resetTransferEdit: (state: reducerStateNew) => {
       state.isResultEdit = [];
     },
 
-    resetTransfer: (state: TransferState) => {
+    resetTransfer: (state: reducerStateNew) => {
       state.isResultView = [];
       state.isResultEdit = [];
     },
 
-    addTransfer: (state: TransferState, action: PayloadAction<Transfer>) => {
+    addTransfer: (state: reducerStateNew, action: PayloadAction<Transfer>) => {
       state.isResultView = action.payload;
     },
-    addSelectTransfer: (state: TransferState, action: PayloadAction<any>) => {
+    addSelectTransfer: (state: reducerStateNew, action: PayloadAction<any>) => {
       state.isResultEdit = action.payload;
     },
 
-    deleteTransfer: (state: TransferState, action: PayloadAction<any>) => {
+    deleteTransfer: (state: reducerStateNew, action: PayloadAction<any>) => {
       state.isResultView = state.isResultView.filter(
         (todo) => todo.product_id !== action.payload
       );

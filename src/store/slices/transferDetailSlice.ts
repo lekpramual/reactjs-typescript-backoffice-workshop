@@ -5,35 +5,16 @@ import { encode } from "base-64";
 // @alert
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+//@ http
+import axios from "axios";
 // @constants
 import { secretAuth, OK, server } from "@/constants";
-import axios from "axios";
-import { ProductType, TransferResult, TransferDetailResult } from "@/types";
+// @types
+import { reducerStateNew, dataResult } from "@/types";
 
 const MySwal = withReactContent(Swal);
-
-// We can safely reuse
-// types created earlier:
-type transferId = string;
-// type transferSelectId = number;
-
-type Transfer = {
-  product_id: transferId;
-  product_no: string;
-  product_inventory_number: string;
-};
-
-type TransferState = {
-  isFetching: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-  isResult: any;
-  isResultEdit: any;
-  isResultView: any;
-  errorMessage: string;
-};
-
-const initialState: TransferState = {
+// STATE : Default
+const initialState: reducerStateNew = {
   isFetching: false,
   isSuccess: false,
   isError: false,
@@ -42,7 +23,7 @@ const initialState: TransferState = {
   isResultView: [],
   errorMessage: "",
 };
-
+// HEADER : Http
 const header_get = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -50,94 +31,7 @@ const header_get = {
     authorization: "Basic " + encode(secretAuth),
   },
 };
-
-const wait = (ms: number) =>
-  new Promise<void>((resolve) => {
-    MySwal.fire({
-      title: "<p>กำลังโหลดข้อมูล ...</p>",
-      showConfirmButton: false,
-      timer: ms,
-      didOpen: () => {
-        MySwal.showLoading();
-      },
-    });
-
-    setTimeout(() => resolve(), ms);
-  });
-
-// ค้นหาข้อมูล จากไอดี
-export const transferDetailSearchById = createAsyncThunk(
-  "transferdetail/searchbyId",
-  async ({ search }: { search: string }, thunkAPI) => {
-    try {
-      let id = search;
-
-      const { data: res } = await axios.get(
-        `${server.BACKOFFICE_URL_V1}/transferdetail?id=${id}`,
-        header_get
-      );
-      let data = res;
-      if (data.result === OK) {
-        // navigate("/phone");
-        return data.data;
-      } else {
-        // console.log("Error Else :", data);
-        return thunkAPI.rejectWithValue({
-          message: "Failed to fetch transfer detail.",
-        });
-      }
-    } catch (e: any) {
-      // console.log("Error", e.error.message);
-      let message = e.error.message;
-      MySwal.fire({
-        icon: "error",
-        title: message,
-        showConfirmButton: false,
-      });
-      console.log(e.error.message);
-
-      return thunkAPI.rejectWithValue(e.error.message);
-    }
-  }
-);
-
-// ค้นหาข้อมูล จากไอดี
-export const transferDetailSearchByProductId = createAsyncThunk(
-  "transferdetail/searchbyProductId",
-  async ({ search }: { search: string }, thunkAPI) => {
-    try {
-      let id = search;
-
-      const { data: res } = await axios.get(
-        `${server.BACKOFFICE_URL_V1}/transferdetailByProductId?id=${id}`,
-        header_get
-      );
-      let data = res;
-      if (data.result === OK) {
-        // navigate("/phone");
-        return data.data;
-      } else {
-        // console.log("Error Else :", data);
-        return thunkAPI.rejectWithValue({
-          message: "Failed to fetch transfer detail.",
-        });
-      }
-    } catch (e: any) {
-      // console.log("Error", e.error.message);
-      let message = e.error.message;
-      MySwal.fire({
-        icon: "error",
-        title: message,
-        showConfirmButton: false,
-      });
-      console.log(e.error.message);
-
-      return thunkAPI.rejectWithValue(e.error.message);
-    }
-  }
-);
-
-// เพิ่มข้อมูล
+// POST : Create New Data Transfer Detail
 export const transferDetailAdd = createAsyncThunk(
   "transferdetail/add",
   async (
@@ -145,7 +39,7 @@ export const transferDetailAdd = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const { data: res } = await axios.post(
+      const { data: res } = await axios.post<dataResult>(
         `${server.BACKOFFICE_URL_V1}/transferdetail`,
         formData,
         header_get
@@ -183,19 +77,7 @@ export const transferDetailAdd = createAsyncThunk(
           }
         },
       });
-      // if (data.result === OK) {
-      //   // console.log(data.data);
-      //   // navigate("/phone");
-      //   await wait(1 * 1000);
-      //   return data.data;
-      // } else {
-      //   // console.log("Error Else :", data);
-      //   return thunkAPI.rejectWithValue({
-      //     message: "Failed to fetch phone.",
-      //   });
-      // }
     } catch (e: any) {
-      // console.log("Error", e.error.message);
       let message = e.error.message;
       MySwal.fire({
         icon: "error",
@@ -207,14 +89,82 @@ export const transferDetailAdd = createAsyncThunk(
     }
   }
 );
+// GET : Search Transfer Detail By ID
+export const transferDetailSearchById = createAsyncThunk(
+  "transferdetail/searchbyId",
+  async ({ search }: { search: string }, thunkAPI) => {
+    try {
+      let id = search;
+      const { data: res } = await axios.get<dataResult>(
+        `${server.BACKOFFICE_URL_V1}/transferdetail?id=${id}`,
+        header_get
+      );
+      let data = res;
+      if (data.result === OK) {
+        // navigate("/phone");
+        return data.data;
+      } else {
+        // console.log("Error Else :", data);
+        return thunkAPI.rejectWithValue({
+          message: "Failed to fetch transfer detail.",
+        });
+      }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
 
-// ลบข้อมูล จากไอดี
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+// GET : Search Transfer Detail By Product ID
+export const transferDetailSearchByProductId = createAsyncThunk(
+  "transferdetail/searchbyProductId",
+  async ({ search }: { search: string }, thunkAPI) => {
+    try {
+      let id = search;
+
+      const { data: res } = await axios.get<dataResult>(
+        `${server.BACKOFFICE_URL_V1}/transferdetailByProductId?id=${id}`,
+        header_get
+      );
+      let data = res;
+      if (data.result === OK) {
+        // navigate("/phone");
+        return data.data;
+      } else {
+        // console.log("Error Else :", data);
+        return thunkAPI.rejectWithValue({
+          message: "Failed to fetch transfer detail.",
+        });
+      }
+    } catch (e: any) {
+      // console.log("Error", e.error.message);
+      let message = e.error.message;
+      MySwal.fire({
+        icon: "error",
+        title: message,
+        showConfirmButton: false,
+      });
+      console.log(e.error.message);
+
+      return thunkAPI.rejectWithValue(e.error.message);
+    }
+  }
+);
+// DELETE : Delete Transfer Detail By ID
 export const transferDetailDeleteById = createAsyncThunk(
   "transferdetail/deletehbyId",
   async ({ search }: { search: any }, thunkAPI) => {
     try {
       let id = search;
-      const { data: res } = await axios.delete(
+      const { data: res } = await axios.delete<dataResult>(
         `${server.BACKOFFICE_URL_V1}/transferdetail?id=${id}`,
         header_get
       );
@@ -246,7 +196,6 @@ export const transferDetailDeleteById = createAsyncThunk(
 
 const transferDetailSlice = createSlice({
   name: "transferdetail",
-  // initialState: initialState,
   initialState,
   reducers: {},
   extraReducers: (builder) => {

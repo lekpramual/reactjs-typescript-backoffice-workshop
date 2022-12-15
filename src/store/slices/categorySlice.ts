@@ -12,7 +12,7 @@ import { secretAuth, OK, server } from "@/constants";
 import axios from "axios";
 
 const MySwal = withReactContent(Swal);
-
+// STATE : Default
 const initialValues: reducerState = {
   isFetching: false,
   isSuccess: false,
@@ -20,7 +20,7 @@ const initialValues: reducerState = {
   isResult: [],
   errorMessage: "",
 };
-
+// HEADER : Http
 const header_get = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -29,7 +29,7 @@ const header_get = {
   },
 };
 
-// โหลดข้อมูลทั้งหมด
+// GET : Search Category All
 export const categoryAll = createAsyncThunk(
   "category/all",
   async (_, thunkAPI) => {
