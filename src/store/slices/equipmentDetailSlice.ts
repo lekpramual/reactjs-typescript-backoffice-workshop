@@ -30,6 +30,12 @@ const header_get = {
     authorization: "Basic " + encode(secretAuth),
   },
 };
+
+// LOADDING : Delay Loadding
+const loadding = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
 // POST : Create New Data Equipment Detail
 export const equipmentDetailAdd = createAsyncThunk(
   "equipmentdetail/add",
@@ -41,83 +47,72 @@ export const equipmentDetailAdd = createAsyncThunk(
         header_get
       );
       let data = res;
-      if (data.result === OK) {
-        const message = "บันทึกรับอุปกรณ์ สำเร็จ";
-        MySwal.fire({
-          icon: "success",
-          title: message,
-          showConfirmButton: false,
-          timer: 1000,
-        });
-        return data.data;
-        // setTimeout(() => {
-        //   const message = "บันทึกรับอุปกรณ์ สำเร็จ";
-        //   MySwal.fire({
-        //     icon: "success",
-        //     title: message,
-        //     showConfirmButton: false,
-        //     timer: 1000,
-        //   });
-        //   return data.data;
-        // }, 1000);
-      } else {
-        let message = "บันทึกรับอุปกรณ์ ผิดพลาด";
-        MySwal.fire({
-          icon: "warning",
-          title: message,
-          showConfirmButton: false,
-        });
-        return thunkAPI.rejectWithValue(data.message);
-        // setTimeout(() => {
-        //   let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
-        //   MySwal.fire({
-        //     icon: "warning",
-        //     title: message,
-        //     showConfirmButton: false,
-        //   });
-        //   return thunkAPI.rejectWithValue(data.message);
-        // }, 1000);
-      }
-      //   MySwal.fire({
-      //     title: "<p>กำลังประมวลผล ...</p>",
-      //     didOpen: () => {
-      //       MySwal.showLoading();
-      //       if (data.result === OK) {
-      //         setTimeout(() => {
-      //           MySwal.hideLoading();
-      //           const message = "บันทึกรับอุปกรณ์ สำเร็จ";
-      //           MySwal.fire({
-      //             icon: "success",
-      //             title: message,
-      //             showConfirmButton: false,
-      //             timer: 1000,
-      //           });
-      //           return data.data;
-      //         }, 1000);
-      //       } else {
-      //         setTimeout(() => {
-      //           MySwal.hideLoading();
-      //           let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
-      //           MySwal.fire({
-      //             icon: "warning",
-      //             title: message,
-      //             showConfirmButton: false,
-      //           });
-      //           return thunkAPI.rejectWithValue(data.message);
-      //         }, 1000);
-      //       }
-      //     },
-      //   });
+      MySwal.fire({
+        title: "<p>กำลังประมวลผล ...</p>",
+        didOpen: () => {
+          MySwal.showLoading();
+          if (data.result === OK) {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              const message = "บันทึกข้อมูล สำเร็จ";
+              MySwal.fire({
+                icon: "success",
+                title: message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              return data.data;
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              let message = "ผิดพลาด กรุณาตรวจสอบ";
+              MySwal.fire({
+                icon: "warning",
+                title: message,
+                showConfirmButton: false,
+              });
+              return thunkAPI.rejectWithValue(data.message);
+            }, 1000);
+          }
+        },
+      });
       // if (data.result === OK) {
-      //   // console.log(data.data);
-      //   // navigate("/phone");
-      //   await wait(1 * 1000);
-      //   return data.data;
-      // } else {
-      //   // console.log("Error Else :", data);
-      //   return thunkAPI.rejectWithValue({
-      //     message: "Failed to fetch phone.",
+      //   const message = "บันทึกรับอุปกรณ์ สำเร็จ";
+      //   MySwal.fire({
+      //     icon: "success",
+      //     title: message,
+      //     showConfirmButton: false,
+      //     timer: 1000,
       //   });
+      //   return data.data;
+      //   // setTimeout(() => {
+      //   //   const message = "บันทึกรับอุปกรณ์ สำเร็จ";
+      //   //   MySwal.fire({
+      //   //     icon: "success",
+      //   //     title: message,
+      //   //     showConfirmButton: false,
+      //   //     timer: 1000,
+      //   //   });
+      //   //   return data.data;
+      //   // }, 1000);
+      // } else {
+      //   let message = "บันทึกรับอุปกรณ์ ผิดพลาด";
+      //   MySwal.fire({
+      //     icon: "warning",
+      //     title: message,
+      //     showConfirmButton: false,
+      //   });
+      //   return thunkAPI.rejectWithValue(data.message);
+      //   // setTimeout(() => {
+      //   //   let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
+      //   //   MySwal.fire({
+      //   //     icon: "warning",
+      //   //     title: message,
+      //   //     showConfirmButton: false,
+      //   //   });
+      //   //   return thunkAPI.rejectWithValue(data.message);
+      //   // }, 1000);
       // }
     } catch (e: any) {
       // console.log("Error", e.error.message);
@@ -143,43 +138,36 @@ export const equipmentDetailUpdate = createAsyncThunk(
         header_get
       );
       let data = res;
-      if (data.result === OK) {
-        const message = "แก้ไขรับอุปกรณ์ สำเร็จ";
-        MySwal.fire({
-          icon: "success",
-          title: message,
-          showConfirmButton: false,
-          timer: 1000,
-        });
-        return data.data;
-        // setTimeout(() => {
-        //   const message = "บันทึกรับอุปกรณ์ สำเร็จ";
-        //   MySwal.fire({
-        //     icon: "success",
-        //     title: message,
-        //     showConfirmButton: false,
-        //     timer: 1000,
-        //   });
-        //   return data.data;
-        // }, 1000);
-      } else {
-        let message = "บันทึกรับอุปกรณ์ ผิดพลาด";
-        MySwal.fire({
-          icon: "warning",
-          title: message,
-          showConfirmButton: false,
-        });
-        return thunkAPI.rejectWithValue(data.message);
-        // setTimeout(() => {
-        //   let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
-        //   MySwal.fire({
-        //     icon: "warning",
-        //     title: message,
-        //     showConfirmButton: false,
-        //   });
-        //   return thunkAPI.rejectWithValue(data.message);
-        // }, 1000);
-      }
+      MySwal.fire({
+        title: "<p>กำลังประมวลผล ...</p>",
+        didOpen: () => {
+          MySwal.showLoading();
+          if (data.result === OK) {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              const message = "ปรับปรุงข้อมูล สำเร็จ";
+              MySwal.fire({
+                icon: "success",
+                title: message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              return data.data;
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              let message = "ผิดพลาดกรุณา ตรวจสอบ";
+              MySwal.fire({
+                icon: "warning",
+                title: message,
+                showConfirmButton: false,
+              });
+              return thunkAPI.rejectWithValue(data.message);
+            }, 1000);
+          }
+        },
+      });
       //   MySwal.fire({
       //     title: "<p>กำลังประมวลผล ...</p>",
       //     didOpen: () => {
@@ -247,7 +235,7 @@ export const equipmentDetailAll = createAsyncThunk(
       let data = await response.data;
       if (data.result === OK) {
         // console.log(data.data);
-        // await wait(1 * 1000);
+        await loadding(1 * 1000);
         return data.data;
       } else {
         console.log("Error Else :", data.message);
@@ -294,9 +282,7 @@ export const equipmentDetailSearch = createAsyncThunk(
       let data = res;
 
       if (data.result === OK) {
-        // console.log(data.data);
-        // navigate("/phone");
-        await wait(1 * 1000);
+        await loadding(1 * 1000);
         return data.data;
       } else {
         // console.log("Error Else :", data);
@@ -330,8 +316,6 @@ export const equipmentDetailSearchById = createAsyncThunk(
       );
       let data = res;
       if (data.result === OK) {
-        // console.log(data.data);
-        // navigate("/phone");
         return data.data;
       } else {
         // console.log("Error Else :", data);

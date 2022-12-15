@@ -16,15 +16,9 @@ import { useSelector, useDispatch } from "react-redux";
 // @pdf---
 import ReactToPrint from "react-to-print";
 // @seletor
-import {
-  equipmentSelector,
-  equipmentSearchById,
-} from "@/store/slices/equipmentSlice";
+import { equipmentSelector } from "@/store/slices/equipmentSlice";
 
-import {
-  equipmentDetailSelector,
-  equipmentDetailAll,
-} from "@/store/slices/equipmentDetailSlice";
+import { equipmentDetailSelector } from "@/store/slices/equipmentDetailSlice";
 
 import {
   transferSelector,

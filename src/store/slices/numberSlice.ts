@@ -28,6 +28,12 @@ const header_get = {
     secretkey: secretKey,
   },
 };
+
+// LOADDING : Delay Loadding
+const loadding = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
 // GET : Search All Number
 export const numberAll = createAsyncThunk("number/all", async (_, thunkAPI) => {
   try {
@@ -37,7 +43,7 @@ export const numberAll = createAsyncThunk("number/all", async (_, thunkAPI) => {
     );
     let data = await response.data;
     if (data.status === true) {
-      // console.log(data.data);
+      await loadding(1 * 1000);
       return data.data;
     } else {
       console.log("Error Else :", data.message);
@@ -72,19 +78,13 @@ export const numberSearch = createAsyncThunk(
         let data = await response.data;
         if (data.status === true) {
           let resultData = data.data;
-
-          // let val = keyword.toLowerCase();
-          // let matches = resultData.filter((v: any) =>
-          //   v.num.toLowerCase().includes(val)
-          // );
-          // return matches;
-
           const lowercasedValue = keyword.toLowerCase().trim();
           const filteredData = resultData.filter((item: any) => {
             return Object.keys(item).some((key) =>
               item[key].toString().toLowerCase().includes(lowercasedValue)
             );
           });
+          await loadding(1 * 1000);
           return filteredData;
         } else {
           console.log("Error Else :", data.message);

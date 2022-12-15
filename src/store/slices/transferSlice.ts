@@ -57,17 +57,23 @@ const header_get = {
   },
 };
 // ALERT : Loadding
-const wait = (ms: number) =>
-  new Promise<void>((resolve) => {
-    MySwal.fire({
-      title: "<p>กำลังโหลดข้อมูล ...</p>",
-      showConfirmButton: false,
-      timer: ms,
-      didOpen: () => {
-        MySwal.showLoading();
-      },
-    });
+// const wait = (ms: number) =>
+//   new Promise<void>((resolve) => {
+//     MySwal.fire({
+//       title: "<p>กำลังโหลดข้อมูล ...</p>",
+//       showConfirmButton: false,
+//       timer: ms,
+//       didOpen: () => {
+//         MySwal.showLoading();
+//       },
+//     });
 
+//     setTimeout(() => resolve(), ms);
+//   });
+
+// LOADDING : Delay Loadding
+const loadding = (ms: number) =>
+  new Promise<void>((resolve) => {
     setTimeout(() => resolve(), ms);
   });
 // POST : Create New Data Transfer
@@ -116,17 +122,6 @@ export const transferAdd = createAsyncThunk(
           }
         },
       });
-      // if (data.result === OK) {
-      //   // console.log(data.data);
-      //   // navigate("/phone");
-      //   await wait(1 * 1000);
-      //   return data.data;
-      // } else {
-      //   // console.log("Error Else :", data);
-      //   return thunkAPI.rejectWithValue({
-      //     message: "Failed to fetch phone.",
-      //   });
-      // }
     } catch (e: any) {
       // console.log("Error", e.error.message);
       let message = e.error.message;
@@ -151,11 +146,9 @@ export const transferAll = createAsyncThunk(
       );
       let data = await response.data;
       if (data.result === OK) {
-        // console.log(data.data);
-        // await wait(1 * 1000);
+        await loadding(1 * 1000);
         return data.data;
       } else {
-        console.log("Error Else :", data.message);
         // return data.message;
         return thunkAPI.rejectWithValue({
           message: "Failed to fetch equipment.",
@@ -169,7 +162,6 @@ export const transferAll = createAsyncThunk(
         title: message,
         showConfirmButton: false,
       });
-      // console.log(e.error.message);
 
       return thunkAPI.rejectWithValue(e.error.message);
     }
@@ -189,6 +181,7 @@ export const transferSearchById = createAsyncThunk(
       if (data.result === OK) {
         // console.log(data.data);
         // navigate("/phone");
+        await loadding(1 * 1000);
         return data.data;
       } else {
         // console.log("Error Else :", data);
@@ -227,9 +220,7 @@ export const transferByTitleAndDepart = createAsyncThunk(
       );
       let data = res;
       if (data.result === OK) {
-        // console.log(data.data);
-        // navigate("/phone");
-        await wait(1 * 500);
+        await loadding(1 * 1000);
         return data.data;
       } else {
         // console.log("Error Else :", data);
@@ -262,24 +253,36 @@ export const transferUpdateById = createAsyncThunk(
         header_get
       );
       let data = res;
-      if (data.result === OK) {
-        const message = "ปรับปรุงรายการ สำเร็จ";
-        MySwal.fire({
-          icon: "success",
-          title: message,
-          showConfirmButton: false,
-          timer: 1000,
-        });
-        return data.data;
-      } else {
-        let message = "ปรับปรุงรายการ ผิดพลาด";
-        MySwal.fire({
-          icon: "warning",
-          title: message,
-          showConfirmButton: false,
-        });
-        return thunkAPI.rejectWithValue(data.message);
-      }
+      MySwal.fire({
+        title: "<p>กำลังประมวลผล ...</p>",
+        didOpen: () => {
+          MySwal.showLoading();
+          if (data.result === OK) {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              const message = "ปรับปรุงข้อมูล สำเร็จ";
+              MySwal.fire({
+                icon: "success",
+                title: message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              return data.data;
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              let message = "ผิดพลาดกรุณา ตรวจสอบ";
+              MySwal.fire({
+                icon: "warning",
+                title: message,
+                showConfirmButton: false,
+              });
+              return thunkAPI.rejectWithValue(data.message);
+            }, 1000);
+          }
+        },
+      });
     } catch (e: any) {
       let message = e.error.message;
       MySwal.fire({
@@ -287,7 +290,7 @@ export const transferUpdateById = createAsyncThunk(
         title: message,
         showConfirmButton: false,
       });
-      console.log(e.error.message);
+
       return thunkAPI.rejectWithValue(e.error.message);
     }
   }

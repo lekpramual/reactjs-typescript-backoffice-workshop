@@ -38,6 +38,12 @@ const header_get = {
   },
 };
 
+// LOADDING : Delay Loadding
+const loadding = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
+
 // POST : Create New Data Equipment
 export const equipmentAdd = createAsyncThunk(
   "equipment/add",
@@ -73,7 +79,7 @@ export const equipmentAdd = createAsyncThunk(
           } else {
             setTimeout(() => {
               MySwal.hideLoading();
-              let message = "ชื่อผู้ใช้งาน หรือ รหัสผ่านไม่ถูกต้อง";
+              let message = "ผิดพลาดกรุณา ตรวจสอบ";
               MySwal.fire({
                 icon: "warning",
                 title: message,
@@ -84,17 +90,6 @@ export const equipmentAdd = createAsyncThunk(
           }
         },
       });
-      // if (data.result === OK) {
-      //   // console.log(data.data);
-      //   // navigate("/phone");
-      //   await wait(1 * 1000);
-      //   return data.data;
-      // } else {
-      //   // console.log("Error Else :", data);
-      //   return thunkAPI.rejectWithValue({
-      //     message: "Failed to fetch phone.",
-      //   });
-      // }
     } catch (e: any) {
       // console.log("Error", e.error.message);
       let message = e.error.message;
@@ -122,9 +117,7 @@ export const equipmentApproved = createAsyncThunk(
         formData,
         header_get
       );
-
       let data = res;
-
       MySwal.fire({
         title: "<p>กำลังประมวลผล ...</p>",
         didOpen: () => {
@@ -155,17 +148,6 @@ export const equipmentApproved = createAsyncThunk(
           }
         },
       });
-      // if (data.result === OK) {
-      //   // console.log(data.data);
-      //   // navigate("/phone");
-      //   await wait(1 * 1000);
-      //   return data.data;
-      // } else {
-      //   // console.log("Error Else :", data);
-      //   return thunkAPI.rejectWithValue({
-      //     message: "Failed to fetch phone.",
-      //   });
-      // }
     } catch (e: any) {
       // console.log("Error", e.error.message);
       let message = e.error.message;
@@ -192,24 +174,36 @@ export const equipmentUpdateById = createAsyncThunk(
 
       let data = res;
 
-      if (data.result === OK) {
-        const message = "แก้ไขรับอุปกรณ์ สำเร็จ";
-        MySwal.fire({
-          icon: "success",
-          title: message,
-          showConfirmButton: false,
-          timer: 1000,
-        });
-        return data.data;
-      } else {
-        let message = "บันทึกรับอุปกรณ์ ผิดพลาด";
-        MySwal.fire({
-          icon: "warning",
-          title: message,
-          showConfirmButton: false,
-        });
-        return thunkAPI.rejectWithValue(data.message);
-      }
+      MySwal.fire({
+        title: "<p>กำลังประมวลผล ...</p>",
+        didOpen: () => {
+          MySwal.showLoading();
+          if (data.result === OK) {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              const message = "ปรับปรุงข้อมูล สำเร็จ";
+              MySwal.fire({
+                icon: "success",
+                title: message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              return data.data;
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              MySwal.hideLoading();
+              let message = "ผิดพลาดกรุณา ตรวจสอบ";
+              MySwal.fire({
+                icon: "warning",
+                title: message,
+                showConfirmButton: false,
+              });
+              return thunkAPI.rejectWithValue(data.message);
+            }, 1000);
+          }
+        },
+      });
     } catch (e: any) {
       // console.log("Error", e.error.message);
       let message = e.error.message;
@@ -236,6 +230,7 @@ export const equipmentAll = createAsyncThunk(
       if (data.result === OK) {
         // console.log(data.data);
         // await wait(1 * 1000);
+        await loadding(1 * 1000);
         return data.data;
       } else {
         console.log("Error Else :", data.message);
@@ -275,14 +270,14 @@ export const equipmentSearch = createAsyncThunk(
 
       const urlSearch = `${server.BACKOFFICE_URL_V1}/equipments?no=${no}&title=${title}&depart=${depart}`;
 
-      const { data: res } = await axios.get(urlSearch, header_get);
+      const { data: res } = await axios.get<dataResult>(urlSearch, header_get);
 
       let data = res;
 
       if (data.result === OK) {
         // console.log(data.data);
         // navigate("/phone");
-        await wait(1 * 1000);
+        await loadding(1 * 1000);
         return data.data;
       } else {
         // console.log("Error Else :", data);
@@ -318,6 +313,7 @@ export const equipmentSearchById = createAsyncThunk(
       if (data.result === OK) {
         // console.log(data.data);
         // navigate("/phone");
+        await loadding(1 * 1000);
         return data.data;
       } else {
         // console.log("Error Else :", data);
@@ -351,8 +347,6 @@ export const equipmentDeleteById = createAsyncThunk(
       );
       let data = res;
       if (data.result === OK) {
-        // console.log(data.data);
-        // navigate("/phone");
         return data.data;
       } else {
         // console.log("Error Else :", data);
@@ -375,19 +369,19 @@ export const equipmentDeleteById = createAsyncThunk(
   }
 );
 
-const wait = (ms: number) =>
-  new Promise<void>((resolve) => {
-    MySwal.fire({
-      title: "<p>กำลังโหลดข้อมูล ...</p>",
-      showConfirmButton: false,
-      timer: ms,
-      didOpen: () => {
-        MySwal.showLoading();
-      },
-    });
+// const wait = (ms: number) =>
+//   new Promise<void>((resolve) => {
+//     MySwal.fire({
+//       title: "<p>กำลังโหลดข้อมูล ...</p>",
+//       showConfirmButton: false,
+//       timer: ms,
+//       didOpen: () => {
+//         MySwal.showLoading();
+//       },
+//     });
 
-    setTimeout(() => resolve(), ms);
-  });
+//     setTimeout(() => resolve(), ms);
+//   });
 // GET : Search Equipment By ID V2
 export const equipmentSearchByIdV2 = createAsyncThunk(
   "equipment/searchbyIdV2",

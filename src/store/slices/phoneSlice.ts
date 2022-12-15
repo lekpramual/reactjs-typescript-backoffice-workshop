@@ -31,6 +31,12 @@ const header_get = {
     secretkey: secretKey,
   },
 };
+
+// LOADDING : Delay Loadding
+const loadding = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
 // GET : Search All Phone
 export const phoneAll = createAsyncThunk("phone/all", async (_, thunkAPI) => {
   try {
@@ -40,7 +46,7 @@ export const phoneAll = createAsyncThunk("phone/all", async (_, thunkAPI) => {
     );
     let data = await response.data;
     if (data.code === 200) {
-      // console.log(data.data);
+      await loadding(1 * 1000);
       return data.data;
     } else {
       console.log("Error Else :", data.message);
@@ -95,8 +101,7 @@ export const phoneSearch = createAsyncThunk(
       let data = res;
 
       if (data.code === 200) {
-        // console.log(data.data);
-        // navigate("/phone");
+        await loadding(1 * 1000);
         return data.data;
       } else {
         // console.log("Error Else :", data);

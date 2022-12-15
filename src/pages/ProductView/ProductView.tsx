@@ -302,11 +302,21 @@ export default function ProductView() {
                 variant={"body2"}
                 className="mt-[-2px] text-slate-500 hover:text-blue-600"
               >
-                {`${productReducer.isResultView.product_no}/${
-                  productReducer.isResultView.product_inventory_number !== null
-                    ? productReducer.isResultView.product_inventory_number
-                    : "-"
-                }`}
+                {`${productReducer.isResultView.product_no}`}
+              </Typography>
+            </Grid>
+            <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
+              <Typography component={"div"} variant={"body1"}>
+                เลขทะเบียนครุภัณฑ์
+              </Typography>
+              <Typography
+                component={"div"}
+                variant={"body2"}
+                className="mt-[-2px] text-slate-500 hover:text-blue-600"
+              >
+                {productReducer.isResultView.product_inventory_number !== null
+                  ? productReducer.isResultView.product_inventory_number
+                  : "-"}
               </Typography>
             </Grid>
 
@@ -363,6 +373,21 @@ export default function ProductView() {
               </Typography>
             </Grid>
 
+            <Grid xs={12} xsOffset={0} md={4} mdOffset={2}>
+              <Typography component={"div"} variant={"body1"}>
+                รายละเอียดเพิ่มเติม
+              </Typography>
+              <Typography
+                component={"div"}
+                variant={"body2"}
+                className="mt-[-2px] text-slate-500 hover:text-blue-600"
+              >
+                {productReducer.isResultView.product_note !== null &&
+                productReducer.isResultView.product_note !== ""
+                  ? productReducer.isResultView.product_note
+                  : "-"}
+              </Typography>
+            </Grid>
             <Grid xs={6} xsOffset={0} md={4} mdOffset={2}>
               <Typography component={"div"} variant={"body1"}>
                 สถานะ
@@ -377,20 +402,6 @@ export default function ProductView() {
                 }
               >
                 {productReducer.isResultView.product_status}
-              </Typography>
-            </Grid>
-            <Grid xs={12} xsOffset={0} md={10} mdOffset={2}>
-              <Typography component={"div"} variant={"body1"}>
-                รายละเอียดเพิ่มเติม
-              </Typography>
-              <Typography
-                component={"div"}
-                variant={"body2"}
-                className="mt-[-2px] text-slate-500 hover:text-blue-600"
-              >
-                {productReducer.isResultView.product_note !== null
-                  ? productReducer.isResultView.product_note
-                  : "-"}
               </Typography>
             </Grid>
           </Grid>

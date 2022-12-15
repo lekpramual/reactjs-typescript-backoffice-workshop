@@ -105,15 +105,15 @@ export default function TransferCreateForm({ show, confirm }: any) {
       ),
     },
     {
-      headerName: "เลขทะเบียน",
-      field: "product_no",
+      headerName: "เลขครุภัณฑ์",
+      field: "product_inventory_number",
       flex: 1,
       minWidth: 124,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value, row }: any) => (
         <Typography variant="body1" className="text-[14px]">
-          {value}
+          {value !== null && value !== "" ? value : "-"}
         </Typography>
       ),
     },

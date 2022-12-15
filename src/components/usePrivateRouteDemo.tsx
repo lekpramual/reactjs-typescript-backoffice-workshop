@@ -437,7 +437,7 @@ export function usePrivateRouteDemo() {
       id: "เอกสาร",
       children: [
         {
-          id: "รายการเอกสาร",
+          id: "ระบบจัดเก็บเอกสาร",
           icon: (
             <Box
               sx={{

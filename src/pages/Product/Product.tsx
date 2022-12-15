@@ -57,19 +57,16 @@ export default function Product() {
       ),
     },
     {
-      headerName: "เลขทะเบียน",
-      field: "product_no",
+      headerName: "เลขครุภัณฑ์",
+      field: "product_inventory_number",
       flex: 1,
-      minWidth: 124,
+      minWidth: 196,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value, row }: any) => (
-        <Link
-          to={`/app3/product/view?id=${row.product_id}`}
-          className="text-cyan-500 hover:text-cyan-600"
-        >
-          {value}
-        </Link>
+        <Typography variant="body1" className="text-[14px]">
+          {value !== null && value !== "" ? value : "-"}
+        </Typography>
       ),
     },
     {

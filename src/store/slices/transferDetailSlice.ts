@@ -31,6 +31,12 @@ const header_get = {
     authorization: "Basic " + encode(secretAuth),
   },
 };
+// LOADDING : Delay Loadding
+const loadding = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
+
 // POST : Create New Data Transfer Detail
 export const transferDetailAdd = createAsyncThunk(
   "transferdetail/add",
@@ -62,7 +68,7 @@ export const transferDetailAdd = createAsyncThunk(
                 timer: 1500,
               });
               return data.data;
-            }, 1000);
+            }, 800);
           } else {
             setTimeout(() => {
               MySwal.hideLoading();
@@ -101,7 +107,7 @@ export const transferDetailSearchById = createAsyncThunk(
       );
       let data = res;
       if (data.result === OK) {
-        // navigate("/phone");
+        await loadding(1 * 1000);
         return data.data;
       } else {
         // console.log("Error Else :", data);
@@ -136,7 +142,7 @@ export const transferDetailSearchByProductId = createAsyncThunk(
       );
       let data = res;
       if (data.result === OK) {
-        // navigate("/phone");
+        await loadding(1 * 1000);
         return data.data;
       } else {
         // console.log("Error Else :", data);
@@ -170,8 +176,6 @@ export const transferDetailDeleteById = createAsyncThunk(
       );
       let data = res;
       if (data.result === OK) {
-        // console.log(data.data);
-        // navigate("/phone");
         return data.data;
       } else {
         // console.log("Error Else :", data);
