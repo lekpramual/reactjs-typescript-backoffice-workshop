@@ -408,7 +408,7 @@ export default function DocumentEdit() {
               id="document_note"
               name="document_note"
               size="small"
-              placeholder="รายละเอียดเพิ่มเติม"
+              placeholder="รายละเอียดเพิ่มเติม / เลขที่ใบ Invoice"
               component={TextareaAutosize}
               minRows={2}
               style={{ width: "100%" }}

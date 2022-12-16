@@ -207,7 +207,7 @@ const transferDetailSlice = createSlice({
       action: PayloadAction<any>
     ) => {
       console.log(action.payload);
-      state.isResultView.push(action.payload);
+      state.isResultEdit.push(action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -227,7 +227,6 @@ const transferDetailSlice = createSlice({
     });
 
     builder.addCase(transferDetailSearchById.fulfilled, (state, action) => {
-      console.log(action.payload);
       state.isFetching = false;
       state.isSuccess = true;
       state.isResultView = action.payload;

@@ -191,7 +191,7 @@ export default function TransferCreateForm({ show, confirm }: any) {
       </BootstrapDialogTitle>
       <DialogContent dividers>
         <ProductFormSearch />
-
+        {JSON.stringify(transferReducer.isResultEdit, null, 4)}
         <BoxDataGridModel>
           <DataGrid
             className={classes.root}

@@ -97,7 +97,7 @@ export default function ProductFormSearch() {
           <Grid item lg={3.5} md={6} xs={12}>
             <FormControl fullWidth sx={{ m: 1 }}>
               <InputLabel htmlFor="outlined-adornment-title">
-                เลขทะเบียน
+                เลขครุภัณฑ์
               </InputLabel>
               <Field
                 as={OutlinedInput}
@@ -106,9 +106,9 @@ export default function ProductFormSearch() {
                 startAdornment={
                   <SearchIcon color="inherit" sx={{ display: "block" }} />
                 }
-                label="เลขทะเบียน"
+                label="เลขครุภัณฑ์"
                 size="small"
-                placeholder="ตัวอย่าง M65110077"
+                placeholder="ตัวอย่าง 7440-009-0002/137"
               />
             </FormControl>
           </Grid>

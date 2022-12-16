@@ -18,6 +18,7 @@ import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import moment from "moment";
 
 // @icons
+import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import RestartAltTwoToneIcon from "@mui/icons-material/RestartAltTwoTone";
@@ -62,6 +63,8 @@ import {
   transferSelector,
   transferSearchById,
   transferUpdateById,
+  addSelectTransfer,
+  addTransfer,
 } from "@/store/slices/transferSlice";
 
 import {
@@ -69,6 +72,10 @@ import {
   transferDetailSearchById,
   transferDetailDeleteById,
 } from "@/store/slices/transferDetailSlice";
+import {
+  transferDetailCartSelector,
+  transferDetailCartSearchById,
+} from "@/store/slices/transferDetailCartSlice";
 import {
   equipmentCartSelector,
   resetEquipmentCartEdit,
@@ -127,6 +134,7 @@ export default function TransferEdit() {
   const equipmentCartReducer = useSelector(equipmentCartSelector);
   const transferReducer = useSelector(transferSelector);
   const transferDetailReducer = useSelector(transferDetailSelector);
+  const transferDetailCartReducer = useSelector(transferDetailCartSelector);
 
   const dataColumns = [
     {
@@ -290,6 +298,21 @@ export default function TransferEdit() {
       formRef.current.resetForm();
     }
   };
+
+  function reverseArrayInPlaceProduct() {
+    const products: any[] = [];
+    if (transferDetailReducer.isResultView.length > 0) {
+      transferDetailReducer.isResultView.map((row) => {
+        let rowData: any = row.product_id;
+        return products.push(rowData);
+      });
+      return products;
+    } else {
+      return products;
+    }
+  }
+
+  const productSelector = reverseArrayInPlaceProduct();
 
   function optionNewDeparts() {
     const departs = [{ label: "--เลือกหน่วยงานที่บันทึก--", value: 0 }];
@@ -581,6 +604,8 @@ export default function TransferEdit() {
     dispatch(departmentAll());
     dispatch(transferSearchById({ search: id }));
     dispatch(transferDetailSearchById({ search: id }));
+    dispatch(transferDetailCartSearchById({ search: id }));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -757,7 +782,7 @@ export default function TransferEdit() {
                   <AppRegistrationTwoToneIcon /> รายการอุปกรณ์
                 </Typography>
               </Grid>
-              {/* <Grid item>
+              <Grid item>
                 <Button
                   size="small"
                   variant="contained"
@@ -765,17 +790,19 @@ export default function TransferEdit() {
                   color="success"
                   className="w-[96px]"
                   onClick={() => {
+                    console.log(productSelector);
+                    dispatch(addSelectTransfer(productSelector));
                     setOpenDialogCreate(true);
                   }}
                 >
                   <AddTwoToneIcon />
                   เพิ่ม
                 </Button>
-              </Grid> */}
+              </Grid>
             </Grid>
           </Toolbar>
         </AppBar>
-
+        {JSON.stringify(transferDetailCartReducer.isResult)}
         <BoxDataGrid>
           <DataGrid
             autoHeight
@@ -788,8 +815,8 @@ export default function TransferEdit() {
             //   minHeight: 505,
             // }}
             rows={
-              transferDetailReducer.isResultView
-                ? transferDetailReducer.isResultView
+              transferDetailCartReducer.isResult
+                ? transferDetailCartReducer.isResult
                 : []
             }
             // rows={[]}
@@ -798,10 +825,10 @@ export default function TransferEdit() {
             hideFooterSelectedRowCount
             rowsPerPageOptions={[15]}
             disableColumnMenu={true}
-            loading={transferDetailReducer.isFetching}
+            loading={transferDetailCartReducer.isFetching}
             getRowId={(row) =>
               // parseInt(row.kskloginname) + Math.random() * (100 - 1)
-              row.product_id
+              row.transfer_detail_id
             }
             localeText={{
               MuiTablePagination: {

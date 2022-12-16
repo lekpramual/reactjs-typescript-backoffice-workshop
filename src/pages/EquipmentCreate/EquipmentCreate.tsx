@@ -687,7 +687,7 @@ export default function EquipmentCreate() {
               id="equipment_note"
               name="equipment_note"
               size="small"
-              placeholder="รายละเอียดเพิ่มเติม"
+              placeholder="รายละเอียดเพิ่มเติม / เลขที่ใบ Invoice"
               component={TextareaAutosize}
               minRows={2}
               style={{ width: "100%" }}
@@ -937,7 +937,6 @@ export default function EquipmentCreate() {
           }}
           initialValues={initialEquipmentValues}
           onSubmit={(values, { setSubmitting }) => {
-           
             let formData = new FormData();
             if (equipmentCartReducer.isResult.length !== 0) {
               const newArrayProduct = reverseArrayInPlace(

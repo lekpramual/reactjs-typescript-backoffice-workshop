@@ -28,7 +28,10 @@ import {
   addSelectTransfer,
 } from "@/store/slices/transferSlice";
 
-import { transferDetailDeleteById } from "@/store/slices/transferDetailSlice";
+import {
+  addTransferDetailEdit,
+  transferDetailDeleteById,
+} from "@/store/slices/transferDetailSlice";
 
 // @utils
 import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
@@ -36,6 +39,7 @@ import { DataGrid, GridRenderCellParams, GridRowId } from "@mui/x-data-grid";
 // @seletor
 import { productSelector } from "@/store/slices/productSlice";
 import ProductFormSearch from "@/pages/Product/ProductFormSearch";
+import { addTransferDetailCartEdit } from "../../store/slices/transferDetailCartSlice";
 
 export interface DialogTitleProps {
   id: string;
@@ -107,15 +111,15 @@ export default function TransferCreateForm({ show, confirm }: any) {
       ),
     },
     {
-      headerName: "เลขทะเบียน",
-      field: "product_no",
+      headerName: "เลขครุภัณฑ์",
+      field: "product_inventory_number",
       flex: 1,
       minWidth: 124,
       headerClassName: "bg-[#36474f] text-[#fff] text-[14px] ",
       sortable: true,
       renderCell: ({ value, row }: any) => (
         <Typography variant="body1" className="text-[14px]">
-          {value}
+          {value !== null && value !== "" ? value : "-"}
         </Typography>
       ),
     },
@@ -170,6 +174,61 @@ export default function TransferCreateForm({ show, confirm }: any) {
       return selectRows;
     } else {
       return selectRows;
+    }
+  }
+
+  function reverseArrayInPlaceProduct(dataProduct, dataTransfer) {
+    console.log(dataProduct);
+    console.log(dataTransfer);
+    const products: any[] = [];
+    if (dataProduct.length > 0) {
+      const newDataTransfer = dataTransfer ? dataTransfer[0] : [];
+      let row_transfer_id: any = newDataTransfer.transfer_id;
+      let row_transfer_no: any = newDataTransfer.transfer_no;
+      let row_transfer_detail_id: any = Date.now().toString();
+      let row_transfer_detail_new_depart: any = newDataTransfer.transfer_depart;
+      let row_transfer_detail_default_new_name: any =
+        newDataTransfer.transfer_depart_name;
+
+      dataProduct.map((row) => {
+        let row_product_id: any = row.product_id;
+        let row_product_no: any = row.product_no;
+        let row_product_inventory_number: any = row.product_inventory_number;
+        let row_product_title: any = row.product_title;
+        let row_transfer_detail_default_depart: any = row.product_depart;
+        let row_transfer_detail_default_depart_name: any = row.dept_name;
+
+        // *"transfer_id": 6,
+        // *"transfer_no": "TRA65120006",
+        // *"transfer_detail_id": 15,
+        // *"transfer_detail_default_depart": 362,
+        // *"transfer_detail_default_depart_name": "งานบริการ Hos-XP",
+        // *"transfer_detail_new_depart": 328,
+        // *"transfer_detail_default_new_name": "งานรังสีรักษา",
+        // "product_id": 26,
+        // "product_no": "P65120026",
+        // "product_inventory_number": "7440-009-0002/137",
+        // "product_title": "Brother Scanner ADS-2200"
+
+        return products.push({
+          transfer_id: row_transfer_id,
+          transfer_no: row_transfer_no,
+          transfer_detail_id: row_transfer_detail_id,
+          transfer_detail_default_depart: row_transfer_detail_default_depart,
+          transfer_detail_default_depart_name:
+            row_transfer_detail_default_depart_name,
+          transfer_detail_new_depart: row_transfer_detail_new_depart,
+          transfer_detail_default_new_name:
+            row_transfer_detail_default_new_name,
+          product_id: row_product_id,
+          product_no: row_product_no,
+          product_inventory_number: row_product_inventory_number,
+          product_title: row_product_title,
+        });
+      });
+      return products;
+    } else {
+      return products;
     }
   }
   return (
@@ -273,7 +332,14 @@ export default function TransferCreateForm({ show, confirm }: any) {
           className="w-[128px] "
           onClick={() => {
             console.log(selectedRows);
-            // dispatch(addTransfer(selectedRows));
+
+            const newSelectRows = reverseArrayInPlaceProduct(
+              selectedRows,
+              transferReducer.isResultView
+            );
+
+            console.log(newSelectRows);
+            // dispatch(addTransferDetailCartEdit(newSelectRows));
 
             // confirm(false);
           }}
