@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
 
 // @mui
 import {
@@ -21,21 +20,14 @@ import { BoxDataGridModel } from "@/styles/AppStyle";
 // @redux
 import { useSelector, useDispatch } from "react-redux";
 
-import { categorySelector, categoryAll } from "@/store/slices/categorySlice";
 import {
   transferSelector,
-  addTransfer,
   addSelectTransfer,
 } from "@/store/slices/transferSlice";
 
-import {
-  addTransferDetailEdit,
-  transferDetailDeleteById,
-} from "@/store/slices/transferDetailSlice";
-
 // @utils
 import { CustomNoRowsOverlay, NumberWithCommas } from "@/utils";
-import { DataGrid, GridRenderCellParams, GridRowId } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 // @seletor
 import { productSelector } from "@/store/slices/productSlice";
 import ProductFormSearch from "@/pages/Product/ProductFormSearch";
@@ -85,15 +77,13 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
 
 export default function TransferCreateForm({ show, confirm }: any) {
   const classes = useStyles();
-  const navigate = useNavigate();
-  const formRefProduct = useRef<any>();
 
   const dispatch = useDispatch<any>();
 
   const productReducer = useSelector(productSelector);
   const transferReducer = useSelector(transferSelector);
 
-  const [selectionModel, setSelectionModel] = React.useState<GridRowId[]>([]);
+  // const [selectionModel, setSelectionModel] = React.useState<GridRowId[]>([]);
   const [selectedRows, setSelectedRows] = React.useState<any>([]);
 
   const dataColumns = [
@@ -293,7 +283,7 @@ export default function TransferCreateForm({ show, confirm }: any) {
                 selectedIDs.has(row.product_id)
               );
               setSelectedRows(selectedRows);
-              setSelectionModel(ids);
+              // setSelectionModel(ids);
               // console.log(selectedRows);
               // const transferDetail = selectedRows[0];
               // if (transferDetail) {
@@ -331,17 +321,14 @@ export default function TransferCreateForm({ show, confirm }: any) {
           color="success"
           className="w-[128px] "
           onClick={() => {
-            console.log(selectedRows);
-
             const newSelectRows = reverseArrayInPlaceProduct(
               selectedRows,
               transferReducer.isResultView
             );
-
             console.log(newSelectRows);
-            // dispatch(addTransferDetailCartEdit(newSelectRows));
+            dispatch(addTransferDetailCartEdit(newSelectRows));
 
-            // confirm(false);
+            confirm(false);
           }}
         >
           <DoneTwoToneIcon />

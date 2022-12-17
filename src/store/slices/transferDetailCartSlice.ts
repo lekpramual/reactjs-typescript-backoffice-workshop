@@ -14,19 +14,7 @@ const MySwal = withReactContent(Swal);
 
 // We can safely reuse
 // types created earlier:
-type equipmentCartId = string;
-
-type transferDetailCart = {
-  id: equipmentCartId;
-  equipment_detail_title: string;
-  equipment_detail_category: string;
-  equipment_detail_category_name: string;
-  equipment_detail_material_type: string;
-  equipment_detail_qty: number;
-  equipment_detail_price: number;
-  equipment_detail_price_total: number;
-  equipment_detail_note: string;
-};
+// type equipmentCartId = string;
 
 type transferDetailCartState = {
   isFetching: boolean;
@@ -104,75 +92,28 @@ const transferDetailCartSlice = createSlice({
       state: transferDetailCartState,
       action: PayloadAction<any>
     ) => {
-      console.log(action.payload);
-      state.isResult.push(action.payload);
+      state.isResult = action.payload;
     },
 
-    resetanyEdit: (state: transferDetailCartState) => {
-      state.isResultEdit = [];
-    },
+    // loadTransferDetailCartEdit: (state: transferDetailCartState) => {
+    //   state.isResult = state.isResult;
+    // },
 
-    resetany: (state: transferDetailCartState) => {
+    resetTransferDetailCartEdit: (state: transferDetailCartState) => {
       state.isResult = [];
     },
 
-    updateanyEdit: (
+    deleteTransferDetailCart: (
       state: transferDetailCartState,
       action: PayloadAction<any>
-    ) => {
-      const index = state.isResult.findIndex(
-        ({ id }) => id === action.payload.id
-      );
-      state.isResult[index].equipment_detail_title =
-        action.payload.equipment_detail_title;
-      state.isResult[index].equipment_detail_category =
-        action.payload.equipment_detail_category;
-      state.isResult[index].equipment_detail_category_name =
-        action.payload.equipment_detail_category_name;
-
-      state.isResult[index].equipment_detail_material_type =
-        action.payload.equipment_detail_material_type;
-
-      state.isResult[index].equipment_detail_qty =
-        action.payload.equipment_detail_qty;
-
-      state.isResult[index].equipment_detail_price =
-        action.payload.equipment_detail_price;
-
-      state.isResult[index].equipment_detail_price_total =
-        action.payload.equipment_detail_qty *
-        action.payload.equipment_detail_price;
-
-      state.isResult[index].equipment_detail_note =
-        action.payload.equipment_detail_note;
-
-      const message = "แก้ไขรับอุปกรณ์ สำเร็จ";
-      MySwal.fire({
-        icon: "success",
-        title: message,
-        showConfirmButton: false,
-        timer: 1000,
-      });
-    },
-    addTransferDetailCart: (
-      state: transferDetailCartState,
-      action: PayloadAction<any>
-    ) => {
-      state.isResult.push(action.payload);
-    },
-
-    deleteany: (
-      state: transferDetailCartState,
-      action: PayloadAction<equipmentCartId>
     ) => {
       state.isResult = state.isResult.filter(
-        (todo) => todo.id !== action.payload
+        (todo) => todo.product_id !== action.payload
       );
     },
   },
   extraReducers: (builder) => {
     builder.addCase(transferDetailCartSearchById.fulfilled, (state, action) => {
-      console.log(action.payload);
       state.isFetching = false;
       state.isSuccess = true;
       state.isResult = action.payload;
@@ -192,12 +133,10 @@ const transferDetailCartSlice = createSlice({
 
 // Export all of the actions:
 export const {
-  addTransferDetailCart,
   addTransferDetailCartEdit,
-  resetany,
-  resetanyEdit,
-  updateanyEdit,
-  deleteany,
+  resetTransferDetailCartEdit,
+  deleteTransferDetailCart,
+  // loadTransferDetailCartEdit,
 } = transferDetailCartSlice.actions;
 export const transferDetailCartSelector = (store: RootState) =>
   store.transferDetailCartReducer;

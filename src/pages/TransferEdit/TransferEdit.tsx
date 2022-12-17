@@ -64,22 +64,16 @@ import {
   transferSearchById,
   transferUpdateById,
   addSelectTransfer,
-  addTransfer,
 } from "@/store/slices/transferSlice";
 
-import {
-  transferDetailSelector,
-  transferDetailSearchById,
-  transferDetailDeleteById,
-} from "@/store/slices/transferDetailSlice";
+import { transferDetailSearchById } from "@/store/slices/transferDetailSlice";
 import {
   transferDetailCartSelector,
   transferDetailCartSearchById,
+  deleteTransferDetailCart,
+  resetTransferDetailCartEdit,
 } from "@/store/slices/transferDetailCartSlice";
-import {
-  equipmentCartSelector,
-  resetEquipmentCartEdit,
-} from "@/store/slices/equipmentCartSlice";
+import { resetEquipmentCartEdit } from "@/store/slices/equipmentCartSlice";
 
 // @component cart
 import TransferCreateForm from "./TransferCreateForm";
@@ -93,10 +87,6 @@ const localeMap = {
 const Input = styled("input")({
   display: "none",
 });
-
-interface CustomFooterTotalProps {
-  total: number;
-}
 
 export interface DialogTitleProps {
   id: string;
@@ -125,15 +115,13 @@ export default function TransferEdit() {
 
   let query = useQuery();
   let id = query.get("id") || "";
-  const [total, setTotal] = React.useState(0);
+
   const [openDialogCreate, setOpenDialogCreate] =
     React.useState<boolean>(false);
 
   const departmentReducer = useSelector(departmentSelector);
 
-  const equipmentCartReducer = useSelector(equipmentCartSelector);
   const transferReducer = useSelector(transferSelector);
-  const transferDetailReducer = useSelector(transferDetailSelector);
   const transferDetailCartReducer = useSelector(transferDetailCartSelector);
 
   const dataColumns = [
@@ -212,8 +200,6 @@ export default function TransferEdit() {
               className="hover:text-[#fce805] w-[30px] h-[26px]"
               size="small"
               onClick={() => {
-                //setEquipmentCart(row);
-                //console.log(row);
                 Swal.fire({
                   title: "คุณต้องการลบ ใช่ หรือ ไม่?",
                   text: `คุณไม่สามารถกู้คืนรายการ ${row.product_inventory_number} ที่ถูกลบได้.! `,
@@ -226,13 +212,8 @@ export default function TransferEdit() {
                   reverseButtons: true,
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    console.log(row.transfer_detail_id);
-                    dispatch(
-                      transferDetailDeleteById({
-                        search: row.transfer_detail_id,
-                      })
-                    );
-                    dispatch(transferDetailSearchById({ search: id }));
+                    dispatch(deleteTransferDetailCart(row.product_id));
+                    // dispatch(loadTransferDetailCartEdit());
                     MySwal.fire({
                       icon: "success",
                       title: "ลบข้อมูลเรียบร้อย",
@@ -293,16 +274,16 @@ export default function TransferEdit() {
     }
   };
 
-  const resetForm = () => {
-    if (formRef.current) {
-      formRef.current.resetForm();
-    }
-  };
+  // const resetForm = () => {
+  //   if (formRef.current) {
+  //     formRef.current.resetForm();
+  //   }
+  // };
 
   function reverseArrayInPlaceProduct() {
     const products: any[] = [];
-    if (transferDetailReducer.isResultView.length > 0) {
-      transferDetailReducer.isResultView.map((row) => {
+    if (transferDetailCartReducer.isResult.length > 0) {
+      transferDetailCartReducer.isResult.map((row) => {
         let rowData: any = row.product_id;
         return products.push(rowData);
       });
@@ -610,7 +591,7 @@ export default function TransferEdit() {
   }, [dispatch]);
 
   useEffect(() => {}, [
-    transferDetailReducer.isResultView,
+    transferDetailCartReducer.isResult,
     transferReducer.isResultView,
   ]);
 
@@ -736,15 +717,16 @@ export default function TransferEdit() {
               formData.append("transfer_file", values.transfer_file);
             }
 
+            // รายการอุปกรณ์ใหม่
             formData.append(
-              "transfer_product",
-              JSON.stringify(transferDetailReducer.isResultView)
+              "transfer_detail",
+              JSON.stringify(transferDetailCartReducer.isResult)
             );
 
             dispatch(transferUpdateById({ formData: formData, id: id }));
 
             setTimeout(() => {
-              dispatch(transferDetailSearchById({ search: id }));
+              dispatch(transferDetailCartSearchById({ search: id }));
             }, 1000);
 
             setSubmitting(false);
@@ -790,7 +772,6 @@ export default function TransferEdit() {
                   color="success"
                   className="w-[96px]"
                   onClick={() => {
-                    console.log(productSelector);
                     dispatch(addSelectTransfer(productSelector));
                     setOpenDialogCreate(true);
                   }}
@@ -802,7 +783,7 @@ export default function TransferEdit() {
             </Grid>
           </Toolbar>
         </AppBar>
-        {JSON.stringify(transferDetailCartReducer.isResult)}
+
         <BoxDataGrid>
           <DataGrid
             autoHeight
@@ -826,10 +807,7 @@ export default function TransferEdit() {
             rowsPerPageOptions={[15]}
             disableColumnMenu={true}
             loading={transferDetailCartReducer.isFetching}
-            getRowId={(row) =>
-              // parseInt(row.kskloginname) + Math.random() * (100 - 1)
-              row.transfer_detail_id
-            }
+            getRowId={(row) => row.product_id}
             localeText={{
               MuiTablePagination: {
                 labelDisplayedRows: ({ from, to, count }) =>
@@ -847,7 +825,10 @@ export default function TransferEdit() {
             variant="contained"
             color="error"
             className="w-[128px] "
-            onClick={() => resetForm()}
+            onClick={() => {
+              navigate(-1);
+              dispatch(resetTransferDetailCartEdit());
+            }}
           >
             <RestartAltTwoToneIcon />
             ยกเลิก

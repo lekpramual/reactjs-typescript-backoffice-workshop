@@ -206,7 +206,6 @@ const transferDetailSlice = createSlice({
       state: reducerStateNew,
       action: PayloadAction<any>
     ) => {
-      console.log(action.payload);
       state.isResultEdit.push(action.payload);
     },
   },
