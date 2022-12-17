@@ -44,7 +44,7 @@ import TextareaAutosize from "@mui/base/TextareaAutosize";
 import Barcode from "react-barcode";
 // @styles
 import { BoxDataGrid } from "@/styles/AppStyle";
-import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 // @day
 import moment from "moment";
 // @redux
@@ -726,7 +726,7 @@ export default function ProductEdit() {
                     // color="success"
                     className="w-[128px] bg-green-500 hover:bg-green-600"
                     onClick={() => {
-                      navigate("/app3/transfer");
+                      navigate("/app3/transfer/create");
                     }}
                   >
                     <AddTwoToneIcon /> เพิ่มใบโอน
@@ -745,14 +745,15 @@ export default function ProductEdit() {
           >
             <BoxDataGrid>
               <DataGrid
+                autoHeight
                 rowHeight={28}
                 headerHeight={28}
                 components={{
                   NoRowsOverlay: CustomNoRowsOverlay,
                 }}
-                sx={{
-                  minHeight: 450,
-                }}
+                // sx={{
+                //   minHeight: 450,
+                // }}
                 rows={
                   transferDetailReducer.isResult
                     ? transferDetailReducer.isResult

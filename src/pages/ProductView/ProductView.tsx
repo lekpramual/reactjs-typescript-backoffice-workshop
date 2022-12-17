@@ -26,7 +26,7 @@ import Barcode from "react-barcode";
 
 // @styles
 import { BoxDataGrid } from "@/styles/AppStyle";
-import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 // @redux
 import { useSelector, useDispatch } from "react-redux";
 // @day
@@ -601,14 +601,15 @@ export default function ProductView() {
           >
             <BoxDataGrid>
               <DataGrid
+                autoHeight
                 rowHeight={28}
                 headerHeight={28}
                 components={{
                   NoRowsOverlay: CustomNoRowsOverlay,
                 }}
-                sx={{
-                  minHeight: 450,
-                }}
+                // sx={{
+                //   minHeight: 450,
+                // }}
                 rows={
                   transferDetailReducer.isResult
                     ? transferDetailReducer.isResult
