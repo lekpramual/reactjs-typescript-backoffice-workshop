@@ -75,7 +75,7 @@ import {
 
 // @component cart
 import EquipmentCartForm from "./EquipmentCartForm";
-import { equipmentAdd } from "../../store/slices/equipmentSlice";
+import { equipmentAdd, equipmentAll } from "@/store/slices/equipmentSlice";
 
 const MySwal = withReactContent(Swal);
 
@@ -975,6 +975,7 @@ export default function EquipmentCreate() {
                 equipmentAdd({ formData: formData, navigate: navigate })
               );
               dispatch(resetEquipmentCart());
+              dispatch(equipmentAll());
               resetForm();
             } else {
               let message = "กรุณาทำการเพิ่มรายการอุปกรณ์";

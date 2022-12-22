@@ -29,6 +29,12 @@ const header_get = {
     secretkey: secretKey,
   },
 };
+
+// LOADDING : Delay Loadding
+const loadding = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
 // GET : Search Car All
 export const carAll = createAsyncThunk("car/all", async (_, thunkAPI) => {
   try {
@@ -39,6 +45,7 @@ export const carAll = createAsyncThunk("car/all", async (_, thunkAPI) => {
     let data = await response.data;
     if (data.status === true) {
       // console.log(data.data);
+      await loadding(1 * 1000);
       return data.data;
     } else {
       // return data.message;
