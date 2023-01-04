@@ -581,7 +581,9 @@ export default function ProductEdit() {
             formData.append("product_category", values.product_category);
             formData.append("product_depart", values.product_depart);
 
-            dispatch(productUpdate({ formData: formData, id: id }));
+            dispatch(
+              productUpdate({ formData: formData, id: id, navigate: navigate })
+            );
             setSubmitting(false);
           }}
         >

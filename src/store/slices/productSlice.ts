@@ -113,7 +113,10 @@ export const productSearchById = createAsyncThunk(
 // PUT : Update Product By ID
 export const productUpdate = createAsyncThunk(
   "product/update",
-  async ({ formData, id }: { formData: any; id: any }, thunkAPI) => {
+  async (
+    { formData, id, navigate }: { formData: any; id: any; navigate: any },
+    thunkAPI
+  ) => {
     try {
       const { data: res } = await axios.put(
         `${server.BACKOFFICE_URL_V1}/product?id=${id}`,
@@ -135,6 +138,8 @@ export const productUpdate = createAsyncThunk(
                 showConfirmButton: false,
                 timer: 1500,
               });
+
+              navigate("/app3/product");
               return data.data;
             }, 1000);
           } else {
